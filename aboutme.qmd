@@ -2,6 +2,22 @@
 title: "About me"
 ---
 
-Add some text and a figure describing myself.
+## **Education**
 
-For details, see the exercise instructions. 
+::: columns
+::: {.column width="50%"}
+Under
+:::
+
+::: {.column width="50%"}
+this is a tests
+:::
+:::
+
+## **Professional**
+
+For details, see the exercise instructions.
+
+# Stats and programming
+
+this is the

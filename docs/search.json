@@ -74,7 +74,7 @@
     "href": "aboutme.html",
     "title": "About me",
     "section": "",
-    "text": "Add some text and a figure describing myself.\nFor details, see the exercise instructions."
+    "text": "Under\n\nthis is a tests"
   },
   {
     "objectID": "presentation-exercise/presentation-exercise.html",
@@ -208,5 +208,26 @@
     "title": "YOURNAME Data Analysis Portfolio",
     "section": "",
     "text": "This folder contains a simple made-up data-set in an Excel file.\nIt contains the variables Height, Weight and Gender of a few imaginary individuals.\nThe dataset purposefully contains some faulty entries that need to be cleaned.\nGenerally, any dataset should contain some meta-data explaining what each variable in the dataset is. (This is often called a Codebook.) For this simple example, the codebook is given as a second sheet in the Excel file.\nThis raw data-set should generally not be edited by hand. It should instead be loaded and processed/cleaned using code."
+  },
+  {
+    "objectID": "aboutme.html#personal",
+    "href": "aboutme.html#personal",
+    "title": "About me",
+    "section": "",
+    "text": "Doctor of Public Health candidate\njlsadkjf\n\n\nthis is a tests"
+  },
+  {
+    "objectID": "aboutme.html#professional",
+    "href": "aboutme.html#professional",
+    "title": "About me",
+    "section": "Professional",
+    "text": "Professional\nFor details, see the exercise instructions."
+  },
+  {
+    "objectID": "aboutme.html#education",
+    "href": "aboutme.html#education",
+    "title": "About me",
+    "section": "",
+    "text": "Under\n\nthis is a tests"
   }
 ]

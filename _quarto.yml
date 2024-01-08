@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "YOURNAME Data Analysis Portfolio"
+  title: "Andrew Ruiz's Data Analysis Portfolio"
   navbar:
     left:
       - text: "About Me"
@@ -24,7 +24,7 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme: yeti
     highlight: zenburn
     css: styles.css
     toc: FALSE
