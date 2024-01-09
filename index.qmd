@@ -2,12 +2,16 @@
 title: "My website and data analysis portfolio"
 ---
 
-# Hello
+# Hello, World!
 
-### And hello again
+## Thanks for dropping by!
 
-Welcome to **my website** and *data analysis portfolio.*
+This is **my website** and *data analysis portfolio.* It currently under development. More content will be added throughout the semester, so make sure to visit again.
 
 -   Please use the `Menu Bar` above to look around.
--   Have fun!
+    -   **The "About Me" section is complete**
+    
+### Feel free to interact with me!
+**Email:** [andrew.ruiz@uga.edu](mailto:andrew.ruiz@uga.edu)
 
+**LinkedIn:** [Connect with me here](https://www.linkedin.com/in/andrew-j-ruiz-168ab92/)

@@ -53,7 +53,7 @@
     "href": "index.html",
     "title": "My website and data analysis portfolio",
     "section": "",
-    "text": "Hello\n\nAnd hello again\nWelcome to my website and data analysis portfolio.\n\nPlease use the Menu Bar above to look around.\nHave fun!\n\nFeel free to change this text any way you want 😁!"
+    "text": "This is my website and data analysis portfolio. It currently under development. More content will be added throughout the semester, so make sure to visit again.\n\nPlease use the Menu Bar above to look around.\n\nThe “About Me” section is complete\n\n\n\n\nEmail: andrew.ruiz@uga.edu\nLinkedIn: Connect with me here"
   },
   {
     "objectID": "tidytuesday-exercise/tidytuesday-exercise.html",
@@ -74,7 +74,7 @@
     "href": "aboutme.html",
     "title": "About me",
     "section": "",
-    "text": "Doctor of Public Health candidate, board-certified medical entomologist, and health scientist at CDC’s National Center for Environmental Health."
+    "text": "Doctor of Public Health candidate, board-certified medical entomologist, and health scientist at CDC’s National Center for Environmental Health. My background is in mosquito control and surveillance. My dissertation research involves using AI to predict human cases of eastern equine encephalitis in Bristol County, Massachusetts based on mosquito surveillance, ecological, environmental, and demographic data. I have lived in 10 states (including DC) and 2 other countries (Germany and Ghana). I currently live in the Lenox/Morningside area of Atlanta. Outside of work and school, I like spending time with my pets and family.\n\n\n\n\nKayaking at Stone Mountain"
   },
   {
     "objectID": "presentation-exercise/presentation-exercise.html",
@@ -228,6 +228,20 @@
     "href": "aboutme.html#education",
     "title": "About me",
     "section": "Education",
-    "text": "Education\n\n\nUnder\n\nthis is a tests"
+    "text": "Education\n\n\nUniversity of New Mexico Tulane University University of Georgia\n\nBA -Geography/GIS MSPH -Tropical Medicine DrPH Candidate -Health Policy & Management"
+  },
+  {
+    "objectID": "index.html#thanks-for-dropping-by",
+    "href": "index.html#thanks-for-dropping-by",
+    "title": "My website and data analysis portfolio",
+    "section": "",
+    "text": "This is my website and data analysis portfolio. It currently under development. More content will be added throughout the semester, so make sure to visit again.\n\nPlease use the Menu Bar above to look around.\n\nThe “About Me” section is complete\n\n\n\n\nEmail: andrew.ruiz@uga.edu\nLinkedIn: Connect with me here"
+  },
+  {
+    "objectID": "index.html#feel-free-to-contact-me-if-you-have-questions",
+    "href": "index.html#feel-free-to-contact-me-if-you-have-questions",
+    "title": "My website and data analysis portfolio",
+    "section": "",
+    "text": "Email: andrew.ruiz@uga.edu\nLinkedIn: Your LinkedIn Profile"
   }
 ]

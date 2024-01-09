@@ -1,17 +1,26 @@
 ---
 title: "About me"
 ---
-Doctor of Public Health candidate, board-certified medical entomologist, and health scientist at CDC's National Center for Environmental Health.
+
+::: columns
+::: {.column width="70%"}
+Doctor of Public Health candidate, board-certified medical entomologist, and health scientist at CDC's National Center for Environmental Health. My background is in mosquito control and surveillance. My dissertation research involves using AI to predict human cases of eastern equine encephalitis in Bristol County, Massachusetts based on mosquito surveillance, ecological, environmental, and demographic data.<br> I have lived in 10 states (including DC) and 2 other countries (Germany and Ghana). I currently live in the Lenox/Morningside area of Atlanta.<br> Outside of work and school, I like spending time with my pets and family.
+:::
+
+::: {.column width="30%"}
+![Kayaking at Stone Mountain](images/IMG_2009-01.jpeg){width="235"}
+:::
+:::
 
 ## **Education**
 
 ::: columns
 ::: {.column width="50%"}
-Under
+University of New Mexico<br> Tulane University<br> University of Georgia
 :::
 
 ::: {.column width="50%"}
-this is a tests
+BA -Geography/GIS<br> MSPH -Tropical Medicine<br> DrPH Candidate -Health Policy & Management
 :::
 :::
 
@@ -22,3 +31,15 @@ For details, see the exercise instructions.
 # Stats and programming
 
 this is the
+
+# **Embarrassing fact**
+
+::: columns
+::: {.column width="75%"}
+[A chicken once beat me at tic tac toe]{style="color: red;"}<br> When I was 6, I faced a chicken in tic tac toe at the Warrick County 4-H fair in southern Indiana. While a strategized, the chicken pecked randomly for corn. <i>Sometimes randomness (or a hungry chicken) triumphs over strategy.</i>
+:::
+
+::: {.column width="25%"}
+![](images/2.png){width="150"}
+:::
+:::
