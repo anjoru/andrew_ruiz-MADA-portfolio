@@ -10,8 +10,9 @@ This is **my website** and *data analysis portfolio.* It currently under develop
 
 -   Please use the `Menu Bar` above to look around.
     -   **The "About Me" section is complete**
-    
+
 ### Feel free to interact with me!
-**Email:** [andrew.ruiz@uga.edu](mailto:andrew.ruiz@uga.edu)
+
+**Email:** [andrew.ruiz\@uga.edu](mailto:andrew.ruiz@uga.edu)
 
 **LinkedIn:** [Connect with me here](https://www.linkedin.com/in/andrew-j-ruiz-168ab92/)

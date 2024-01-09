@@ -1,0 +1,107 @@
+FullGeoName,Type,Year,County,Population,Incidence,Legend
+"AL, Baldwin",Neuroinvasive disease cases,2003-2022,01003,194978,0.1,0.05 to 0.12
+"AL, Conecuh",Neuroinvasive disease cases,2003-2022,01035,12908,0.39,>0.33
+"AL, Escambia",Neuroinvasive disease cases,2003-2022,01053,37775,0.26,0.13 to 0.33
+"AL, Mobile",Neuroinvasive disease cases,2003-2022,01097,414025,0.01,0.01 to 0.04
+"AR, Sevier",Neuroinvasive disease cases,2003-2022,05133,17358,0.29,0.13 to 0.33
+"CT, Middlesex",Neuroinvasive disease cases,2003-2022,09007,165390,0.03,0.01 to 0.04
+"CT, New London",Neuroinvasive disease cases,2003-2022,09011,273093,0.05,0.05 to 0.12
+"CT, Windham",Neuroinvasive disease cases,2003-2022,09015,117551,0.04,0.01 to 0.04
+"FL, Bay",Neuroinvasive disease cases,2003-2022,12005,174704,0.03,0.01 to 0.04
+"FL, Bradford",Neuroinvasive disease cases,2003-2022,12007,26804,0.19,0.13 to 0.33
+"FL, Duval",Neuroinvasive disease cases,2003-2022,12031,886277,0.01,0.01 to 0.04
+"FL, Gadsden",Neuroinvasive disease cases,2003-2022,12039,46084,0.11,0.05 to 0.12
+"FL, Hillsborough",Neuroinvasive disease cases,2003-2022,12057,1304474,0.01,0.01 to 0.04
+"FL, Holmes",Neuroinvasive disease cases,2003-2022,12059,19604,0.26,0.13 to 0.33
+"FL, Leon",Neuroinvasive disease cases,2003-2022,12073,282006,0.05,0.05 to 0.12
+"FL, Levy",Neuroinvasive disease cases,2003-2022,12075,39449,0.13,0.13 to 0.33
+"FL, Okaloosa",Neuroinvasive disease cases,2003-2022,12091,192969,0.03,0.01 to 0.04
+"FL, Pasco",Neuroinvasive disease cases,2003-2022,12101,474501,0.01,0.01 to 0.04
+"FL, Polk",Neuroinvasive disease cases,2003-2022,12105,622808,0.01,0.01 to 0.04
+"FL, Suwannee",Neuroinvasive disease cases,2003-2022,12121,43578,0.11,0.05 to 0.12
+"FL, Taylor",Neuroinvasive disease cases,2003-2022,12123,22880,0.22,0.13 to 0.33
+"FL, Volusia",Neuroinvasive disease cases,2003-2022,12127,500702,0.01,0.01 to 0.04
+"FL, Wakulla",Neuroinvasive disease cases,2003-2022,12129,31009,0.16,0.13 to 0.33
+"GA, Camden",Neuroinvasive disease cases,2003-2022,13039,51478,0.1,0.05 to 0.12
+"GA, Chatham",Neuroinvasive disease cases,2003-2022,13051,277790,0.02,0.01 to 0.04
+"GA, Clinch",Neuroinvasive disease cases,2003-2022,13065,6756,0.74,>0.33
+"GA, Glynn",Neuroinvasive disease cases,2003-2022,13127,81533,0.12,0.05 to 0.12
+"GA, Houston",Neuroinvasive disease cases,2003-2022,13153,147352,0.03,0.01 to 0.04
+"GA, Liberty",Neuroinvasive disease cases,2003-2022,13179,62438,0.08,0.05 to 0.12
+"GA, Lowndes",Neuroinvasive disease cases,2003-2022,13185,112985,0.09,0.05 to 0.12
+"GA, Muscogee",Neuroinvasive disease cases,2003-2022,13215,203370,0.02,0.01 to 0.04
+"GA, Tattnall",Neuroinvasive disease cases,2003-2022,13267,25632,0.2,0.13 to 0.33
+"GA, Thomas",Neuroinvasive disease cases,2003-2022,13275,44783,0.11,0.05 to 0.12
+"GA, Whitfield",Neuroinvasive disease cases,2003-2022,13313,102691,0.05,0.05 to 0.12
+"IN, Elkhart",Neuroinvasive disease cases,2003-2022,18039,200225,0.02,0.01 to 0.04
+"IN, La Porte",Neuroinvasive disease cases,2003-2022,18091,111452,0.04,0.01 to 0.04
+"LA, Ascension Parish",Neuroinvasive disease cases,2003-2022,22005,114665,0.04,0.01 to 0.04
+"LA, Calcasieu Parish",Neuroinvasive disease cases,2003-2022,22019,195550,0.03,0.01 to 0.04
+"LA, East Baton Rouge Parish",Neuroinvasive disease cases,2003-2022,22033,444345,0.01,0.01 to 0.04
+"LA, St John The Baptist Parish",Neuroinvasive disease cases,2003-2022,22095,43565,0.11,0.05 to 0.12
+"LA, Tangipahoa Parish",Neuroinvasive disease cases,2003-2022,22105,125550,0.04,0.01 to 0.04
+"ME, York",Neuroinvasive disease cases,2003-2022,23031,199539,0.05,0.05 to 0.12
+"MD, Prince Georges",Neuroinvasive disease cases,2003-2022,24033,891020,0.01,0.01 to 0.04
+"MA, Bristol",Neuroinvasive disease cases,2003-2022,25005,552495,0.06,0.05 to 0.12
+"MA, Essex",Neuroinvasive disease cases,2003-2022,25009,764684,0.03,0.01 to 0.04
+"MA, Franklin",Neuroinvasive disease cases,2003-2022,25011,71399,0.07,0.05 to 0.12
+"MA, Hampden",Neuroinvasive disease cases,2003-2022,25013,467828,0.03,0.01 to 0.04
+"MA, Middlesex",Neuroinvasive disease cases,2003-2022,25017,1560625,0.01,0.01 to 0.04
+"MA, Norfolk",Neuroinvasive disease cases,2003-2022,25021,688518,0.03,0.01 to 0.04
+"MA, Plymouth",Neuroinvasive disease cases,2003-2022,25023,502895,0.14,0.13 to 0.33
+"MA, Worcester",Neuroinvasive disease cases,2003-2022,25027,810994,0.02,0.01 to 0.04
+"MI, Allegan",Neuroinvasive disease cases,2003-2022,26005,112020,0.04,0.01 to 0.04
+"MI, Barry",Neuroinvasive disease cases,2003-2022,26015,59094,0.25,0.13 to 0.33
+"MI, Berrien",Neuroinvasive disease cases,2003-2022,26021,156205,0.06,0.05 to 0.12
+"MI, Calhoun",Neuroinvasive disease cases,2003-2022,26025,134782,0.04,0.01 to 0.04
+"MI, Cass",Neuroinvasive disease cases,2003-2022,26027,51601,0.19,0.13 to 0.33
+"MI, Delta",Neuroinvasive disease cases,2003-2022,26041,36806,0.14,0.13 to 0.33
+"MI, Kalamazoo",Neuroinvasive disease cases,2003-2022,26077,257399,0.1,0.05 to 0.12
+"MI, Livingston",Neuroinvasive disease cases,2003-2022,26093,184238,0.03,0.01 to 0.04
+"MI, Marquette",Neuroinvasive disease cases,2003-2022,26103,67792,0.07,0.05 to 0.12
+"MI, Monroe",Neuroinvasive disease cases,2003-2022,26115,150193,0.03,0.01 to 0.04
+"MI, Montcalm",Neuroinvasive disease cases,2003-2022,26117,62801,0.08,0.05 to 0.12
+"MI, Van Buren",Neuroinvasive disease cases,2003-2022,26159,75335,0.13,0.13 to 0.33
+"MT, Yellowstone",Neuroinvasive disease cases,2003-2022,30111,153857,0.03,0.01 to 0.04
+"NH, Carroll",Neuroinvasive disease cases,2003-2022,33003,47548,0.11,0.05 to 0.12
+"NH, Hillsborough",Neuroinvasive disease cases,2003-2022,33011,405417,0.04,0.01 to 0.04
+"NH, Merrimack",Neuroinvasive disease cases,2003-2022,33013,147555,0.1,0.05 to 0.12
+"NH, Rockingham",Neuroinvasive disease cases,2003-2022,33015,299603,0.08,0.05 to 0.12
+"NJ, Atlantic",Neuroinvasive disease cases,2003-2022,34001,274360,0.04,0.01 to 0.04
+"NJ, Cumberland",Neuroinvasive disease cases,2003-2022,34011,155912,0.03,0.01 to 0.04
+"NJ, Middlesex",Neuroinvasive disease cases,2003-2022,34023,821811,0.01,0.01 to 0.04
+"NJ, Ocean",Neuroinvasive disease cases,2003-2022,34029,582166,0.01,0.01 to 0.04
+"NJ, Passaic",Neuroinvasive disease cases,2003-2022,34031,503815,0.01,0.01 to 0.04
+"NJ, Somerset",Neuroinvasive disease cases,2003-2022,34035,329052,0.02,0.01 to 0.04
+"NJ, Union",Neuroinvasive disease cases,2003-2022,34039,546051,0.01,0.01 to 0.04
+"NY, Onondaga",Neuroinvasive disease cases,2003-2022,36067,468302,0.05,0.05 to 0.12
+"NY, Oswego",Neuroinvasive disease cases,2003-2022,36075,121187,0.12,0.05 to 0.12
+"NC, Brunswick",Neuroinvasive disease cases,2003-2022,37019,114977,0.04,0.01 to 0.04
+"NC, Catawba",Neuroinvasive disease cases,2003-2022,37035,155024,0.03,0.01 to 0.04
+"NC, Cumberland",Neuroinvasive disease cases,2003-2022,37051,333253,0.02,0.01 to 0.04
+"NC, Hoke",Neuroinvasive disease cases,2003-2022,37093,51190,0.2,0.13 to 0.33
+"NC, Mecklenburg",Neuroinvasive disease cases,2003-2022,37119,991182,0.01,0.01 to 0.04
+"NC, New Hanover",Neuroinvasive disease cases,2003-2022,37129,213033,0.02,0.01 to 0.04
+"NC, Pender",Neuroinvasive disease cases,2003-2022,37141,54804,0.09,0.05 to 0.12
+"NC, Perquimans",Neuroinvasive disease cases,2003-2022,37143,13638,0.37,>0.33
+"NC, Pitt",Neuroinvasive disease cases,2003-2022,37147,174443,0.03,0.01 to 0.04
+"NC, Robeson",Neuroinvasive disease cases,2003-2022,37155,135135,0.04,0.01 to 0.04
+"NC, Scotland",Neuroinvasive disease cases,2003-2022,37165,35916,0.28,0.13 to 0.33
+"PA, Luzerne",Neuroinvasive disease cases,2003-2022,42079,319737,0.02,0.01 to 0.04
+"RI, Kent",Neuroinvasive disease cases,2003-2022,44003,164387,0.06,0.05 to 0.12
+"RI, Newport",Neuroinvasive disease cases,2003-2022,44005,83576,0.06,0.05 to 0.12
+"RI, Washington",Neuroinvasive disease cases,2003-2022,44009,126495,0.04,0.01 to 0.04
+"SC, Aiken",Neuroinvasive disease cases,2003-2022,45003,163789,0.06,0.05 to 0.12
+"SC, Bamberg",Neuroinvasive disease cases,2003-2022,45009,15389,0.32,0.13 to 0.33
+"SC, Lexington",Neuroinvasive disease cases,2003-2022,45063,273363,0.02,0.01 to 0.04
+"SC, Marlboro",Neuroinvasive disease cases,2003-2022,45069,28069,0.18,0.13 to 0.33
+"TN, Hamilton",Neuroinvasive disease cases,2003-2022,47065,349234,0.01,0.01 to 0.04
+"VT, Rutland",Neuroinvasive disease cases,2003-2022,50021,60512,0.17,0.13 to 0.33
+"VA, Gloucester",Neuroinvasive disease cases,2003-2022,51073,36780,0.14,0.13 to 0.33
+"VA, Portsmouth City",Neuroinvasive disease cases,2003-2022,51740,96123,0.05,0.05 to 0.12
+"WI, Chippewa",Neuroinvasive disease cases,2003-2022,55017,63102,0.08,0.05 to 0.12
+"WI, Dunn",Neuroinvasive disease cases,2003-2022,55033,44064,0.11,0.05 to 0.12
+"WI, Eau Claire",Neuroinvasive disease cases,2003-2022,55035,101775,0.05,0.05 to 0.12
+"WI, Marinette",Neuroinvasive disease cases,2003-2022,55075,41306,0.12,0.05 to 0.12
+"WI, Milwaukee",Neuroinvasive disease cases,2003-2022,55079,957557,0.01,0.01 to 0.04
+"WI, Oneida",Neuroinvasive disease cases,2003-2022,55085,35562,0.14,0.13 to 0.33
