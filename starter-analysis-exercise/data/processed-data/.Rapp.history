@@ -1,0 +1,15 @@
+load("/Users/andrewruiz/MADA_course/andrew_ruiz-MADA-portfolio/starter-analysis-exercise/data/processed-data/processeddata.rds")
+load("/Users/andrewruiz/MADA_course/andrew_ruiz-MADA-portfolio/starter-analysis-exercise/data/processed-data/processeddata2.rds")
+load("/Users/andrewruiz/MADA_course/andrew_ruiz-MADA-portfolio/starter-analysis-exercise/results/tables-files/resulttable1.rds")
+load("/Users/andrewruiz/MADA_course/andrew_ruiz-MADA-portfolio/starter-analysis-exercise/results/tables-files/summarytable.rds")
+> load("/Users/andrewruiz/MADA_course/andrew_ruiz-MADA-portfolio/starter-analysis-exercise/results/tables-files/summarytable.rds")#
+Error in load("/Users/andrewruiz/MADA_course/andrew_ruiz-MADA-portfolio/starter-analysis-exercise/results/tables-files/summarytable.rds") : #
+  bad restore file magic number (file may be corrupted) -- no data loaded#
+In addition: Warning messages:#
+1: In readChar(con, 5L, useBytes = TRUE) :#
+  truncating string with embedded nuls#
+2: file ‘summarytable.rds’ has magic number 'X'#
+  Use of save versions prior to 2 is deprecated
+summarytable <- readRDS("/Users/andrewruiz/MADA_course/andrew_ruiz-MADA-portfolio/starter-analysis-exercise/results/tables-files/summarytable.rds")
+print(summarytable)
+load("/Users/andrewruiz/MADA_course/andrew_ruiz-MADA-portfolio/starter-analysis-exercise/data/processed-data/processeddata2.rds")

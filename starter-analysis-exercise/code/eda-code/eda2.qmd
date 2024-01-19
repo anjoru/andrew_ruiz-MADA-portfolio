@@ -1,7 +1,8 @@
 ---
 title: "An example exploratory analysis script"
 author: "Andreas Handel"
-date: "10/28/2021"
+message: "with contributions from Arlyn Santiago"
+date: "2024-01-19"
 output: html_document
 ---
 
@@ -48,7 +49,7 @@ Showing a bit of code to produce and save a summary table.
 summary_df = skimr::skim(mydata)
 print(summary_df)
 # save to file
-summarytable_file = here("starter-analysis-exercise","results", "tables-files", "summarytable.rds")
+summarytable_file = here("starter-analysis-exercise","results", "tables-files", "summarytable2.rds")
 saveRDS(summary_df, file = summarytable_file)
 ```
 
@@ -94,17 +95,30 @@ figure_file = here("starter-analysis-exercise","results","figures","height-weigh
 ggsave(filename = figure_file, plot=p4) 
 ```
 
-#
-# Scatter plot of AlkyAge vs Weight stratified by Gender
+```{r}
+# Boxplot of Weight by Travel time to nearest health facility
+p5 <- mydata %>%
+    ggplot(aes(x=SR_health, y=Weight)) + 
+    geom_boxplot() +
+    theme(legend.position = "none")
+
+plot(p5)
+
+figure_file = here("starter-analysis-exercise","results","figures","Weight_by_SR_health.png")
+ggsave(filename = figure_file, plot=p5)
+```
+
+```{r}
+# Scatter plot of Travel time to nearest health facility vs Weight stratified by Gender
 p6 <- mydata %>%
-    ggplot(aes(x=Weight, y=AlkyAge, color=Gender)) +
+    ggplot(aes(x=Weight, y=HC_time, color=Gender)) +
     geom_point()  # Adds scatter plot points
 
 plot(p6)
 
-figure_file = here("starter-analysis-exercise","results","figures","AlkyAge_by_Weight_stratified.png")
+figure_file = here("starter-analysis-exercise","results","figures","SR-Health_by_Weight_stratified.png")
 ggsave(filename = figure_file, plot=p6)
-
+```
 
 
 # Notes
