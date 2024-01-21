@@ -1,0 +1,50 @@
+---
+title: "R Coding Exercise"
+---
+
+
+```{r}
+#load package
+library(dslabs)
+library(dplyr)
+```
+
+```{r}
+#help for the gapminder data
+help(gapminder)
+
+#examine data structure
+str(gapminder)
+
+#summary of data
+summary(gapminder)
+
+#examine class
+class(gapminder)
+
+```
+
+```{r}
+# Create object with African countries only
+africadata <- gapminder %>%
+  filter(continent == "Africa")
+
+# Create a new object with life expectancy and infant mortality from African data
+africa_mort_expect <- africadata %>%
+  select(infant_mortality, life_expectancy)
+
+# View structure and summary of the mortality and life expectancy data
+str(africa_mort_expect)
+summary(africa_mort_expect)
+
+# Create a new object with population and life expectancy from African data
+africa_pop_expect <- africadata %>%
+  select(population, life_expectancy)
+
+# View structure and summary of the population and life expectancy data
+str(africa_pop_expect)
+summary(africa_pop_expect)
+
+```
+
+
