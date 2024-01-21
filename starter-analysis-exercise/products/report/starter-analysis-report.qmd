@@ -28,7 +28,7 @@ library(knitr)
 
 # Summary/Abstract
 
-The time required to travel to healthcare facilities can affect how often people receive. Longer travel times may lead to adverse health outcomes, such as higher BMI. It may also change an individual's perception of their own health status [@kellyAreDifferencesTravel2016].
+The time required to travel to healthcare facilities can affect how often people receive. Longer travel times may mean patients see the doctor less often and may lead to adverse health outcomes, such as higher BMI. It may also change an individual's perception of their own health status [@kellyAreDifferencesTravel2016].
 
 {{< pagebreak >}}
 
