@@ -29,12 +29,12 @@ class(gapminder)
 # generate new objects containing values for African countries only
 
 ```{r}
-# Create object with African countries only
+# Create object called africadata with African countries only
 africadata <- gapminder %>%
   filter(continent == "Africa")
 africadata <- africadata %>% filter(continent == "Africa")
 
-# Create a new object with life expectancy and infant mortality from African data
+# Create a new object with life expectancy and infant mortality from africadata
 africa_mort_expect <- africadata %>%
   select(infant_mortality, life_expectancy)
 	View(africa_mort_expect)
@@ -54,7 +54,7 @@ summary(africa_pop_expect)
 
 ```
 
-# create plots
+# create plots using newly created objects
 
 ## When plotted, there are distinct "streaks" in the data. This is especially evident in the Life Expectancy vs log$_{10}$ Population, These streaks likely represent the trajectory of individual countries over time. In general, as levels of development improve, so do health outcomes like life expectancy.
 

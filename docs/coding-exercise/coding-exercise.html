@@ -317,12 +317,12 @@ Attaching package: 'plotly'</code></pre>
 <section id="generate-new-objects-containing-values-for-african-countries-only" class="level1">
 <h1>generate new objects containing values for African countries only</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create object with African countries only</span></span>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create object called africadata with African countries only</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>africadata <span class="ot">&lt;-</span> gapminder <span class="sc">%&gt;%</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(continent <span class="sc">==</span> <span class="st">"Africa"</span>)</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>africadata <span class="ot">&lt;-</span> africadata <span class="sc">%&gt;%</span> <span class="fu">filter</span>(continent <span class="sc">==</span> <span class="st">"Africa"</span>)</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new object with life expectancy and infant mortality from African data</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new object with life expectancy and infant mortality from africadata</span></span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>africa_mort_expect <span class="ot">&lt;-</span> africadata <span class="sc">%&gt;%</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(infant_mortality, life_expectancy)</span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">View</span>(africa_mort_expect)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -378,8 +378,8 @@ modules/R_de.so'' had status 1</code></pre>
 </div>
 </div>
 </section>
-<section id="create-plots" class="level1">
-<h1>create plots</h1>
+<section id="create-plots-using-newly-created-objects" class="level1">
+<h1>create plots using newly created objects</h1>
 <section id="when-plotted-there-are-distinct-streaks-in-the-data.-this-is-especially-evident-in-the-life-expectancy-vs-log_10-population-these-streaks-likely-represent-the-trajectory-of-individual-countries-over-time.-in-general-as-levels-of-development-improve-so-do-health-outcomes-like-life-expectancy." class="level2">
 <h2 class="anchored" data-anchor-id="when-plotted-there-are-distinct-streaks-in-the-data.-this-is-especially-evident-in-the-life-expectancy-vs-log_10-population-these-streaks-likely-represent-the-trajectory-of-individual-countries-over-time.-in-general-as-levels-of-development-improve-so-do-health-outcomes-like-life-expectancy.">When plotted, there are distinct “streaks” in the data. This is especially evident in the Life Expectancy vs log<span class="math inline">\(_{10}\)</span> Population, These streaks likely represent the trajectory of individual countries over time. In general, as levels of development improve, so do health outcomes like life expectancy.</h2>
 <section id="note-in-both-plots-there-is-an-outlier-showing-a-visible-decrease-in-life-expectancy.-without-countries-or-years-in-the-plots-it-is-difficult-to-pin-point-the-exact-cause-of-that-decrease-but-it-is-likely-due-to-a-single-tranformational-event.-in-this-case-i-would-attribute-that-to-the-civil-war-and-genocide-in-rwanda-in-the-early-1990s." class="level3">
