@@ -313,5 +313,26 @@
     "title": "R Coding Exercise",
     "section": "linear models",
     "text": "linear models\n\nlife_expectancy~population\n\nfit2 &lt;- lm(life_expectancy ~ population, data = africadata2000)\n\nsummary(fit2)\n\n\nCall:\nlm(formula = life_expectancy ~ population, data = africadata2000)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-18.429  -4.602  -2.568   3.800  18.802 \n\nCoefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 5.593e+01  1.468e+00  38.097   &lt;2e-16 ***\npopulation  2.756e-08  5.459e-08   0.505    0.616    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 8.524 on 49 degrees of freedom\nMultiple R-squared:  0.005176,  Adjusted R-squared:  -0.01513 \nF-statistic: 0.2549 on 1 and 49 DF,  p-value: 0.6159"
+  },
+  {
+    "objectID": "coding-exercise/coding-exercise.html#interpreting-the-results-for-the-linear-models",
+    "href": "coding-exercise/coding-exercise.html#interpreting-the-results-for-the-linear-models",
+    "title": "R Coding Exercise",
+    "section": "Interpreting the results for the linear models",
+    "text": "Interpreting the results for the linear models\n\nfit1 examines the relationship between life expectancy and infant mortality where life expectancy is the dependent variable\n\ngiven the low p-value, there is a statistically significant negative relationship between life expectancy and infant mortality"
+  },
+  {
+    "objectID": "coding-exercise/coding-exercise.html#fit1-examines-the-relationship-between-life-expectancy-and-infant-mortality-where-life-expectancy-is-the-dependent-variable",
+    "href": "coding-exercise/coding-exercise.html#fit1-examines-the-relationship-between-life-expectancy-and-infant-mortality-where-life-expectancy-is-the-dependent-variable",
+    "title": "R Coding Exercise",
+    "section": "fit1 examines the relationship between life expectancy and infant mortality, where life expectancy is the dependent variable",
+    "text": "fit1 examines the relationship between life expectancy and infant mortality, where life expectancy is the dependent variable\n\ngiven the low p-value, there is a statistically significant negative relationship between life expectancy and infant mortality"
+  },
+  {
+    "objectID": "coding-exercise/coding-exercise.html#fit2-examines-the-relationship-between-life-expectancy-and-population-where-life-expectancy-is-the-dependent-variable.",
+    "href": "coding-exercise/coding-exercise.html#fit2-examines-the-relationship-between-life-expectancy-and-population-where-life-expectancy-is-the-dependent-variable.",
+    "title": "R Coding Exercise",
+    "section": "fit2 examines the relationship between life expectancy and population, where life expectancy is the dependent variable.",
+    "text": "fit2 examines the relationship between life expectancy and population, where life expectancy is the dependent variable.\n\ngiven the high p-value the model does not indicate a statistically significant relationship between life expectancy and population"
   }
 ]

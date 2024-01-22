@@ -149,3 +149,9 @@ fit2 <- lm(life_expectancy ~ population, data = africadata2000)
 summary(fit2)
 
 ```
+# Interpreting the results for the linear models
+### fit1 examines the relationship between life expectancy and infant mortality, where life expectancy is the dependent variable
+#### given the low p-value, there is a statistically significant negative relationship between life expectancy and infant mortality
+
+### fit2 examines the relationship between life expectancy and population, where life expectancy is the dependent variable.
+#### given the high p-value the model does not indicate a statistically significant relationship between life expectancy and population
