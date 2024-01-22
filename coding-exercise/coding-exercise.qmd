@@ -2,4 +2,132 @@
 title: "R Coding Exercise"
 ---
 
+```{r}
+#load package
+library(dslabs)
+library(dplyr)
+library(ggplot2)
+```
+
+# review data
+```{r}
+#help for the gapminder data
+help(gapminder)
+
+#examine data structure
+str(gapminder)
+
+#summary of data
+summary(gapminder)
+
+#examine class
+class(gapminder)
+
+```
+
+# generate new objects
+
+```{r}
+# Create object with African countries only
+africadata <- gapminder %>%
+  filter(continent == "Africa")
+africadata <- africadata %>% filter(continent == "Africa")
+
+# Create a new object with life expectancy and infant mortality from African data
+africa_mort_expect <- africadata %>%
+  select(infant_mortality, life_expectancy)
+	View(africa_mort_expect)
+
+# View structure and summary of the mortality and life expectancy data
+str(africa_mort_expect)
+summary(africa_mort_expect)
+
+# Create a new object with population and life expectancy from African data
+africa_pop_expect <- africadata %>%
+  select(population, life_expectancy)
+View(africa_pop_expect)
+
+# View structure and summary of the population and life expectancy data
+str(africa_pop_expect)
+summary(africa_pop_expect)
+
+```
+
+# create plots
+
+## When plotted, there are distinct "streaks" in the data. This is especially evident in the Life Expectancy vs log$_{10}$ Population, These streaks likely represent the trajectory of individual countries over time. In general, as levels of development improve, so do health outcomes like life expectancy.
+
+### Note: in both plots there is an outlier showing a visible decrease in life expectancy. Without countries or years in the plots, it is difficult to pin point the exact cause of that decrease, but it is likely due to a single, tranformational event. In this case, I would attribute that to the civil war and genocide in Rwanda in the early 1990s.
+
+```{r}
+library(ggplot2)
+
+# Plot life expectancy as a function of infant mortality
+plot_le_vs_im <- ggplot(africa_mort_expect, aes(x = infant_mortality, y = life_expectancy)) +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Life Expectancy vs Infant Mortality",
+       x = "Infant Mortality",
+       y = "Life Expectancy")
+
+plot_le_vs_im
+
+#plot life expectancy vs population with population on a log scale
+plot_le_vs_pop_log <- ggplot(africa_pop_expect, aes(x = population, y = life_expectancy)) +
+    geom_point() +
+    theme_minimal() +
+    labs(title = "Life Expectancy vs Population",
+         x = "Population (Log Scale)",
+         y = "Life Expectancy") +
+    scale_x_log10()
+
+plot_le_vs_pop_log
+```
+
+# Identifying years without missing values for infant mortality
+
+```{r}
+#identify years with missing data using dplyr package
+africadata %>%
+  group_by(year) %>%
+  summarize(missing_infant_mortality = sum(is.na(infant_mortality))) %>%
+  filter(missing_infant_mortality > 0)
+```
+
+## creating object from africadata for the year 2000
+
+```{r}
+# filter data for year == 2000
+africadata2000 <- africadata %>%
+  filter(year == 2000)
+View(africadata2000)
+
+#examine the structure and summary of africadata2000
+str(africadata2000)
+summary(africadata2000)
+```
+
+## new plots using only data from 2000
+```{r}
+# plot infant mortality vs life expectancy for year=2000
+plot_le_vs_im_2000 <- ggplot(africadata2000, aes(x = infant_mortality, y = life_expectancy)) +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Life Expectancy vs Infant Mortality, year=2000",
+       x = "Infant Mortality",
+       y = "Life Expectancy")
+plot(plot_le_vs_im_2000)
+
+# plot life expectancy vs population (log10) for year=2000
+plot_le_vs_pop_log_2000 <- ggplot(africadata2000, aes(x = population, y = life_expectancy)) +
+    geom_point() +
+    theme_minimal() +
+    labs(title = "Life Expectancy vs Population year=2000",
+         x = "Population (Log Scale)",
+         y = "Life Expectancy") +
+    scale_x_log10()
+
+plot_le_vs_pop_log
+
+```
 Placeholder file for the future R coding exercise.

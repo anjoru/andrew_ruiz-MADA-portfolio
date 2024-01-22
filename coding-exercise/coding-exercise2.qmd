@@ -132,3 +132,10 @@ plot_le_vs_pop_log_2000 <- ggplot(africadata2000, aes(x = population, y = life_e
 plot_le_vs_pop_log
 
 ```
+## Create simple linear models for using africadata2000
+```{r}
+lm(africadata2000(life_expectancy~infant_mortality))
+
+
+
+```
