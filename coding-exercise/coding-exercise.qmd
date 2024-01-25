@@ -8,9 +8,11 @@ library(dslabs)
 library(dplyr)
 library(ggplot2)
 library(plotly)
+library(here)
 ```
 
 # review the gapminder dataset
+
 ```{r}
 #help for the gapminder data
 help(gapminder)
@@ -109,6 +111,7 @@ summary(africadata2000)
 ```
 
 ## new plots using only data from the year 2000 in the africadata file
+
 ```{r}
 # plot infant mortality vs life expectancy for year=2000
 plot_le_vs_im_2000 <- ggplot(africadata2000, aes(x = infant_mortality, y = life_expectancy)) +
@@ -133,7 +136,9 @@ plot_le_vs_pop_log
 ```
 
 ## linear models
-### life_expectancy~infant_mortality
+
+### life_expectancy\~infant_mortality
+
 ```{r}
 fit1 <- lm(life_expectancy ~ infant_mortality, data = africadata2000)
 
@@ -141,17 +146,110 @@ summary(fit1)
 
 
 ```
+
 ## linear models
-### life_expectancy~population
+
+### life_expectancy\~population
+
 ```{r}
 fit2 <- lm(life_expectancy ~ population, data = africadata2000)
 
 summary(fit2)
 
 ```
+
 # Interpreting the results for the linear models
+
 ### fit1 examines the relationship between life expectancy and infant mortality, where life expectancy is the dependent variable
+
 #### given the low p-value, there is a statistically significant negative relationship between life expectancy and infant mortality
 
 ### fit2 examines the relationship between life expectancy and population, where life expectancy is the dependent variable.
+
 #### given the high p-value the model does not indicate a statistically significant relationship between life expectancy and population
+
+# review the stars dataset
+
+```{r}
+#help for the stars data
+help(stars)
+
+#examine data structure
+str(stars)
+
+#summary of data
+summary(stars)
+
+#examine class
+class(stars)
+
+```
+
+# generate new objects only containing name, magnitude and temprature
+
+```{r}
+
+# Create a new object dropping type out
+starsdata <- stars %>%
+  select(star,magnitude,temp)
+	View(starsdata)
+
+# View structure and summary of the mortality and life expectancy data
+str(starsdata)
+summary(starsdata)
+
+# Create a new object showing stars' type
+starstype <- stars %>%
+  select(star,type)
+	View(starstype)
+```
+
+***Thought***: After dataset review, I found that there are 4 variables in this dataset and "type" might not be so helpful for me to do the following data analysis so I tried to generate a new object only including star name, magnitude and temperature. As for star type, later I was thinking that if I can make a summary table only for it.
+
+# summary tables and figures
+
+```{r}
+#summary tables
+summary_df = skimr::skim(starsdata)
+print(summary_df)
+
+summary_df = skimr::skim(starstype)
+print(summary_df)
+
+# save to file
+summarytable1_file = here("coding-exercise","results", "table-files", "summarytable_stars.rds")
+saveRDS(summary_df, file = summarytable_file)
+
+summarytable2_file = here("coding-exercise","results", "table-files", "summarytable_star_type.rds")
+saveRDS(summary_df, file = summarytable2_file)
+
+# scatter plot magnitude by temperature
+plot_stars <- ggplot(starsdata, aes(x = magnitude, y = temp)) +
+  geom_point() + 
+  theme_minimal() +
+  geom_smooth(method='lm')
+  scale_y_log10()
+  labs(title = "Magnitude by Temperature of stars data",
+       x = "Magnitude",
+       y = "Temprature")
+plot(plot_stars)
+
+# save to file
+starsplot_file = here("coding-exercise","results", "figure-files", "scatterplot_stars.rds")
+saveRDS(plot, file = starsplot_file)
+```
+
+# linear models
+
+```{r}
+stars_fit1 <- lm(log10(temp) ~ magnitude, data = starsdata)
+
+summary(stars_fit1)
+
+# save to file
+
+stars_fit1_file = here("coding-exercise","results", "linear-model", "stars_fit1.rds")
+saveRDS(stars_fit1, file = stars_fit1_file)
+```
+
+***Thought***: From the scatter plot I had a guess that there may be a negative correlation between temperature and magnitude of the stars. But at first when I use original numbers of temperature, the plot was more likely a curve so I added log10 scale on temperature and then it bacame a little bit more linear. After that I used lm function to fit temperature as a outcome and magnitude as a predictor. The result showed that magnitude had significant effect on temperature.
