@@ -10,7 +10,7 @@ library(ggplot2)
 library(plotly)
 ```
 
-# review the gapminder dataset
+# Review the gapminder dataset
 
 ```{r}
 #help for the gapminder data
@@ -27,7 +27,7 @@ class(gapminder)
 
 ```
 
-# generate new objects containing values for African countries only
+# Generate new objects containing values for African countries
 
 ```{r}
 # Create object called africadata with African countries only
