@@ -218,7 +218,7 @@ print(summary_df)
 
 # save to file
 summarytable1_file = here("coding-exercise","results", "table-files", "summarytable_stars.rds")
-saveRDS(summary_df, file = summarytable_file)
+saveRDS(summary_df, file = summarytable1_file)
 
 summarytable2_file = here("coding-exercise","results", "table-files", "summarytable_star_type.rds")
 saveRDS(summary_df, file = summarytable2_file)
@@ -227,8 +227,8 @@ saveRDS(summary_df, file = summarytable2_file)
 plot_stars <- ggplot(starsdata, aes(x = magnitude, y = temp)) +
   geom_point() + 
   theme_minimal() +
-  geom_smooth(method='lm')
-  scale_y_log10()
+  scale_y_log10("temperature log10 K") +
+  geom_smooth(method='lm') +
   labs(title = "Magnitude by Temperature of stars data",
        x = "Magnitude",
        y = "Temprature")
