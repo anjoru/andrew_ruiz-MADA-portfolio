@@ -10,8 +10,6 @@ website:
         file: aboutme.qmd
       - text: "Projects"
         menu:
-          - text: "Data Exercise"
-            file: data-exercise/data-exercise.qmd
           - text: "Starter Analysis Exercise"
             file: starter-analysis-exercise/products/report/starter-analysis-report.qmd
           - text: "R Coding Exercise"
@@ -20,7 +18,8 @@ website:
             file: presentation-exercise/presentation-exercise.qmd
           - text: "Tidy Tuesday Exercise"
             file: tidytuesday-exercise/tidytuesday-exercise.qmd
-       
+          - text: "Data Exercise"
+            file: data-exercise/data-exercise.qmd
     right:
       - icon: github 
         href: URL-TO-THIS-REPOSITORY-HERE        
