@@ -67,7 +67,7 @@
     "href": "coding-exercise/coding-exercise.html",
     "title": "R Coding Exercise",
     "section": "",
-    "text": "#load package\nlibrary(dslabs)\nlibrary(dplyr)\n\n\nAttaching package: 'dplyr'\n\n\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n\n\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n\nlibrary(ggplot2)\nlibrary(plotly)\n\n\nAttaching package: 'plotly'\n\n\nThe following object is masked from 'package:ggplot2':\n\n    last_plot\n\n\nThe following object is masked from 'package:stats':\n\n    filter\n\n\nThe following object is masked from 'package:graphics':\n\n    layout"
+    "text": "#load package\nsuppressPackageStartupMessages(library(dslabs))\nsuppressPackageStartupMessages(library(dplyr))\nsuppressPackageStartupMessages(library(ggplot2))\nsuppressPackageStartupMessages(library(plotly))"
   },
   {
     "objectID": "aboutme.html",

@@ -1,0 +1,6 @@
+---
+title: "Data Exercise"
+subtitle: "Analyzing text from public comments for REG 2023-02, Artificial Intelligence in Campaign Ads"
+---
+
+Placeholder file for the future Tidy Tuesday exercise.
