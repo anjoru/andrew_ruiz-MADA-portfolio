@@ -4,7 +4,6 @@ Format: html
 ---
 
 
-
 ```{r}
 #load package
 suppressPackageStartupMessages(library(dslabs))
