@@ -10,7 +10,7 @@ website:
         file: aboutme.qmd
       - text: "Projects"
         menu:
-          - text: "Starter Analysis Exercise"
+          - text: "Starter Analysis Exercise1"
             file: starter-analysis-exercise/products/report/starter-analysis-report.qmd
           - text: "R Coding Exercise"
             file: coding-exercise/coding-exercise.qmd
