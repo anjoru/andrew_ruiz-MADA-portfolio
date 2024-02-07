@@ -1,0 +1,174 @@
+---
+title: "cdcdata-exercise"
+author: "Andrew Ruiz"
+editor: visual
+---
+
+#Load libraries and read data
+
+```{r}
+rm(list = ls())
+
+library(here)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(forecast)
+
+# Read the CSV file using here()
+rabies2020 <- read_csv(here("cdcdata-exercise", "Rabies2020.csv"))
+
+# Now apply your renaming and cleaning
+names(rabies2020) <- gsub("[^[:alnum:] ]", "", names(rabies2020))
+names(rabies2020) <- gsub(" ", "_", names(rabies2020))
+
+rabies2020_cleaned <- rabies2020
+
+# Check the column names
+print(names(rabies2020_cleaned))
+
+```
+
+# Introduction to the data
+
+## Rabies data from the CDC
+
+### This dataset was obtained from the data.cdc.gov site [link to data](https://data.cdc.gov/NNDSS/NNDSS-TABLE-1CC-Rabies-Animal-to-Rabies-Human/6kf3-4udg/about_data). It contains the count of animal and human rabies cases in the US and territories for 2020 and 2019 by MMWR Week. Since there were no human rabies cases in 2020 or 2019, this will focus on animal cases only.
+
+### Unlike human cases, which rarely go undiagnosed, animal cases are more prone to surveillance bias. Comparing the counts from 2020 to 2019, may be an important indicator of the effects of limited public health lab testing in the first year of the pandemic when public health staff were diverted to support COVID operations and some labs were closed.
+#### Let's look at the first few rows
+```{r}
+head(rabies2020)
+print(names(rabies2020))
+```
+# Clean and process the data
+```{r}
+# the column names have special characters that I will remove
+#names(rabies2020) <- gsub("[^[:alnum:] ]", "", names(rabies2020))
+#names(rabies2020) <- gsub(" ", "_", names(rabies2020))
+#print(names(rabies2020))
+```
+
+```{r}
+#now select the variables we will need
+rabies2020_selected <- rabies2020_cleaned %>%
+  select(
+    Reporting_Area, 
+    MMWR_Week,      
+    Rabies_Animal_Current_week,  
+    Rabies_Animal_Cum_2019,      
+    Location_1,    
+    Location_2
+  ) %>%
+# Some of the count data has missing values.
+# these can be replaced with zeros
+# Replace NA values with 0
+ mutate(
+    Rabies_Animal_Current_week = replace_na(Rabies_Animal_Current_week, 0),
+    Rabies_Animal_Cum_2019 = replace_na(Rabies_Animal_Cum_2019, 0)
+ )
+print(names(rabies2020_selected))
+
+```
+
+
+## Now that the data is cleaner, let's focus on the South Atlantic region for the rest of the analysis.
+### The orginal dataset does not provide the incident case count by MMWR week for 2019. Instead it only has the cumulative cases by week. We will have to create a calculate field for this so that we can make some comparisons between the years. 
+```{r}
+# Focus on South Atlantic state for the rest of the analysis
+south_atlantic_data <- rabies2020_selected %>%
+  filter(Location_2 == "SOUTH ATLANTIC") %>%
+
+# Calculate incident cases for 2019
+  arrange(Reporting_Area, MMWR_Week) %>%
+  group_by(Reporting_Area) %>%
+  mutate(Incident_Cases_2019 = Rabies_Animal_Cum_2019 - lag(Rabies_Animal_Cum_2019, default = 0)) %>%
+  ungroup()
+str(south_atlantic_data)
+```
+
+# Visualizing the data
+## Let's create a line graph with the counts by MMWR week for both 2020 and 2019. 
+```{r}
+# Prepare data for graphing: Pivot to long format for both 2019 and 2020
+south_atlantic_long <- south_atlantic_data %>%
+  # Ensure MMWR_Week and Reporting_Area are retained for grouping in the long format
+  pivot_longer(cols = c(Incident_Cases_2019, Rabies_Animal_Current_week), 
+               names_to = "Year", 
+               values_to = "Cases") %>%
+  # Correct the Year column to reflect actual years
+  mutate(Year = recode(Year, 
+                       Incident_Cases_2019 = "2019", 
+                       Rabies_Animal_Current_week = "2020"))
+head(south_atlantic_long)
+
+# Graph the incident animal cases from 2019 and 2020 by MMWR week
+ggplot(south_atlantic_long, aes(x = MMWR_Week, y = Cases, color = Year, group = Year)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Rabies Cases by MMWR Week for 2019 and 2020 in South Atlantic",
+       x = "MMWR Week",
+       y = "Number of Cases",
+       color = "Year") +
+  scale_color_manual(values = c("2019" = "blue", "2020" = "red"))
+```
+```{r}
+# Lets compare the two years with a box plot
+ggplot(south_atlantic_long, aes(x = Year, y = Cases, color = Year)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Weekly Rabies Cases for 2019 and 2020",
+       x = "Year",
+       y = "Number of Cases")
+```
+
+
+### This analysis aims to understand the trends in animal rabies cases reported in the South Atlantic region during 2019, assess the model's fit, and forecast future cases into the next year. We employ time series analysis techniques, focusing on ARIMA modeling, to capture the underlying patterns in the weekly reported cases and predict future occurrences. The process encompasses data preparation, visualization, model selection and diagnostics, and forecasting, culminating in a comparison of forecasted cases against actual data from 2020.
+```{r}
+# Prepare the time series data
+time_series_data <- south_atlantic_data %>%
+  select(MMWR_Week, Incident_Cases_2019) %>%
+  mutate(MMWR_Week = as.Date(paste0("2020-", MMWR_Week, "-1"), format = "%Y-%U-%u"))
+
+# Convert to time series object
+ts_data <- ts(time_series_data$Incident_Cases_2019, frequency = 53)
+
+# Time Series Visualization
+plot(ts_data, main = "Time Series of Rabies Animal Cases by MMWR Week for 2019")
+
+# Modeling (Auto ARIMA)
+arima_model <- auto.arima(ts_data)
+
+# Diagnostic Checking
+checkresiduals(arima_model)
+
+# The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model 
+#to see if they are correlated with each other. The test statistic (Q*) 
+#was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096. 
+#This suggests that there is evidence of autocorrelation in the residuals, 
+#indicating that the ARIMA model may not fully capture the underlying patterns 
+#in the data.
+
+# Forecasting
+forecast_values <- forecast(arima_model, h = 52)
+
+# Plot Forecast
+#plot(forecast_values, main = "Forecast of Rabies Animal Cases for the Next 52 Weeks")
+
+# Plot Forecast and Actual 2020 Cases
+# Assuming you have the actual 2020 cases data stored in a variable called actual_2020_cases
+
+# Plot Forecast and Actual 2020 Cases
+plot(forecast_values, main = "Forecast vs Actual Rabies Animal Cases for 2020")
+lines(south_atlantic_data$Rabies_Animal_Current_week, col = "blue", lty = 2, lwd = 2)  # Add actual 2020 cases to the plot
+
+# Add legend
+legend("topright", legend = c("Forecast", "Actual 2020 Cases"), col = c("black", "blue"), lty = c(1, 2), lwd = c(1, 2))
+```
+
+#### The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model to see if they are correlated with each other. The test statistic (Q*) was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096. This suggests that there is evidence of autocorrelation in the residuals, indicating that the ARIMA model may not fully capture the underlying patterns in the data.
+
+# Part 2
+## Contributed by
