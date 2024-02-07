@@ -21,7 +21,7 @@ website:
           - text: "Data Exercise"
             file: data-exercise/data-exercise.qmd
           - text: "CDC Data Exercise"
-            file: cdcdata-exercise/cdcdata-exercise.qmd
+            file: cdcdata-exercise/cdcdata-exercsie.qmd
     right:
       - icon: github 
         href: URL-TO-THIS-REPOSITORY-HERE        
