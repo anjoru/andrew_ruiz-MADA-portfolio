@@ -37,12 +37,16 @@ print(names(rabies2020_cleaned))
 ### This dataset was obtained from the data.cdc.gov site [link to data](https://data.cdc.gov/NNDSS/NNDSS-TABLE-1CC-Rabies-Animal-to-Rabies-Human/6kf3-4udg/about_data). It contains the count of animal and human rabies cases in the US and territories for 2020 and 2019 by MMWR Week. Since there were no human rabies cases in 2020 or 2019, this will focus on animal cases only.
 
 ### Unlike human cases, which rarely go undiagnosed, animal cases are more prone to surveillance bias. Comparing the counts from 2020 to 2019, may be an important indicator of the effects of limited public health lab testing in the first year of the pandemic when public health staff were diverted to support COVID operations and some labs were closed.
+
 #### Let's look at the first few rows
+
 ```{r}
 head(rabies2020)
 print(names(rabies2020))
 ```
+
 # Clean and process the data
+
 ```{r}
 # the column names have special characters that I will remove
 #names(rabies2020) <- gsub("[^[:alnum:] ]", "", names(rabies2020))
@@ -72,9 +76,10 @@ print(names(rabies2020_selected))
 
 ```
 
-
 ## Now that the data is cleaner, let's focus on the South Atlantic region for the rest of the analysis.
-### The orginal dataset does not provide the incident case count by MMWR week for 2019. Instead it only has the cumulative cases by week. We will have to create a calculate field for this so that we can make some comparisons between the years. 
+
+### The original dataset does not provide the incident case count by MMWR week for 2019. Instead it only has the cumulative cases by week. We will have to create a calculate field for this so that we can make some comparisons between the years.
+
 ```{r}
 # Focus on South Atlantic state for the rest of the analysis
 south_atlantic_data <- rabies2020_selected %>%
@@ -89,7 +94,9 @@ str(south_atlantic_data)
 ```
 
 # Visualizing the data
-## Let's create a line graph with the counts by MMWR week for both 2020 and 2019. 
+
+## Let's create a line graph with the counts by MMWR week for both 2020 and 2019.
+
 ```{r}
 # Prepare data for graphing: Pivot to long format for both 2019 and 2020
 south_atlantic_long <- south_atlantic_data %>%
@@ -114,6 +121,7 @@ ggplot(south_atlantic_long, aes(x = MMWR_Week, y = Cases, color = Year, group = 
        color = "Year") +
   scale_color_manual(values = c("2019" = "blue", "2020" = "red"))
 ```
+
 ```{r}
 # Lets compare the two years with a box plot
 ggplot(south_atlantic_long, aes(x = Year, y = Cases, color = Year)) +
@@ -124,8 +132,8 @@ ggplot(south_atlantic_long, aes(x = Year, y = Cases, color = Year)) +
        y = "Number of Cases")
 ```
 
-
 ### This analysis aims to understand the trends in animal rabies cases reported in the South Atlantic region during 2019, assess the model's fit, and forecast future cases into the next year. We employ time series analysis techniques, focusing on ARIMA modeling, to capture the underlying patterns in the weekly reported cases and predict future occurrences. The process encompasses data preparation, visualization, model selection and diagnostics, and forecasting, culminating in a comparison of forecasted cases against actual data from 2020.
+
 ```{r}
 # Prepare the time series data
 time_series_data <- south_atlantic_data %>%
@@ -168,7 +176,138 @@ lines(south_atlantic_data$Rabies_Animal_Current_week, col = "blue", lty = 2, lwd
 legend("topright", legend = c("Forecast", "Actual 2020 Cases"), col = c("black", "blue"), lty = c(1, 2), lwd = c(1, 2))
 ```
 
-#### The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model to see if they are correlated with each other. The test statistic (Q*) was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096. This suggests that there is evidence of autocorrelation in the residuals, indicating that the ARIMA model may not fully capture the underlying patterns in the data.
+#### The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model to see if they are correlated with each other. The test statistic (Q\*) was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096. This suggests that there is evidence of autocorrelation in the residuals, indicating that the ARIMA model may not fully capture the underlying patterns in the data.
 
 # Part 2
-## Contributed by
+
+## Contributed by Xueyan Hu
+
+### First creating a synthetic dataset
+
+```{r}
+# Set seed for reproducibility
+set.seed(123)
+
+# Generate MMWR weeks from 1 to 53
+mmwr_weeks <- 1:53
+
+# Generate synthetic data for 2020 (weekly incident cases)
+covid_weekly_2020 <- sample(1:100, 53, replace = TRUE)
+
+# Generate synthetic data for 2021 (weekly incident cases)
+# Ensure that 2021 cases are overall higher than 2020
+covid_weekly_2021 <- covid_weekly_2020 + sample(50:150, 53, replace = TRUE) + 50
+
+# Create reporting area variable
+reporting_area <- rep("Hogwarts", 53 * 2)
+
+# Combine data for 2020 and 2021
+covid_data <- data.frame(
+  MMWR_Week = rep(mmwr_weeks, 2),
+  Covid_Cum_2020 = c(covid_weekly_2020, rep(NA, 53)),  # Placeholder for 2021 weekly counts
+  Covid_Current_Week_2021 = c(rep(NA, 53), covid_weekly_2021),  # 2021 weekly counts
+  Reporting_Area = reporting_area
+)
+
+# Replace NA values for 2021 with a lower limit
+covid_data$Covid_Cum_2020[54:106] <- cumsum(pmin(10000, pmax(0, covid_weekly_2021)))
+
+# Add variation to incident cases in 2021
+covid_data$Covid_Current_Week_2021[54:106] <- pmin(10000, pmax(0, covid_data$Covid_Cum_2020[53] + sample(100:500, 53, replace = TRUE)))
+
+# Remove the NA values from the weekly counts for 2021
+covid_data <- covid_data[complete.cases(covid_data), ]
+
+# Print the generated dataset
+print(covid_data)
+```
+
+### calculate weekly incident for 2020
+
+```{r}
+new_covid_data <- covid_data %>%
+  mutate(Incident_Cases_2020 = Covid_Cum_2020 - lag(Covid_Cum_2020, default = 0))
+str(new_covid_data)
+head(new_covid_data)
+```
+
+### line graph for incident case by MMWR Week
+
+```{r}
+# Prepare data for graphing: Pivot to long format for both 2020 and 2021
+covid_data_long <- new_covid_data %>%
+  pivot_longer(cols = c(Incident_Cases_2020, Covid_Current_Week_2021), 
+               names_to = "Year", 
+               values_to = "Cases") %>%
+  # Correct the Year column to reflect actual years
+  mutate(Year = recode(Year, 
+                       Incident_Cases_2020 = "2020", 
+                       Covid_Current_Week_2021 = "2021"))
+head(covid_data_long)
+# Graph the incident animal cases from 2020 and 2021 by MMWR week
+ggplot(covid_data_long, aes(x = MMWR_Week, y = Cases, color = Year, group = Year)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Covid Cases by MMWR Week for 2020 and 2021 in Hogwarts",
+       x = "MMWR Week",
+       y = "Number of Cases",
+       color = "Year") +
+  scale_color_manual(values = c("2020" = "blue", "2021" = "red"))
+```
+
+### boxplot for incident case by year
+
+```{r}
+# Lets compare the two years with a box plot
+ggplot(covid_data_long, aes(x = Year, y = Cases, color = Year)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Distribution of Weekly covid Cases for 2020 and 2021",
+       x = "Year",
+       y = "Number of Cases")
+```
+
+**???** I don't really know the model named ARIMA that Andrew use for doing forecasting in the last section of part 1 above. But I will copy and paste his code and run it to see what will happen here for the synthetic dataset.
+
+```{r}
+# Prepare the time series data
+time_series_covid_data <- new_covid_data %>%
+  mutate(MMWR_Week = as.Date(paste0("2021-", MMWR_Week, "-1"), format = "%Y-%U-%u")) %>%
+  select(MMWR_Week, Incident_Cases_2020)
+
+# Convert to time series object
+ts_covid_data <- ts(time_series_covid_data$Incident_Cases_2020, frequency = 53)
+
+# Time Series Visualization
+plot(ts_covid_data, main = "Time Series of Synthetic Covid Cases by MMWR Week for 2020")
+
+# Modeling (Auto ARIMA)
+covid_arima_model <- auto.arima(ts_covid_data)
+
+# Diagnostic Checking
+checkresiduals(covid_arima_model)
+
+# The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model 
+#to see if they are correlated with each other. The test statistic (Q*) 
+#was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096. 
+#This suggests that there is evidence of autocorrelation in the residuals, 
+#indicating that the ARIMA model may not fully capture the underlying patterns 
+#in the data.
+
+# Forecasting
+forecast_values_covid <- forecast(covid_arima_model, h = 52)
+
+# Plot Forecast
+#plot(forecast_values, main = "Forecast of Rabies Animal Cases for the Next 52 Weeks")
+
+# Plot Forecast and Actual 2020 Cases
+# Assuming you have the actual 2020 cases data stored in a variable called actual_2020_cases
+
+# Plot Forecast and Actual 2020 Cases
+plot(forecast_values_covid, main = "Forecast vs Synthetic Covid Cases for 2021")
+lines(new_covid_data$Covid_Current_Week_2021, col = "blue", lty = 2, lwd = 2)  # Add actual 2020 cases to the plot
+
+# Add legend
+legend("topright", legend = c("Forecast", "Syntheric 2020 Cases"), col = c("black", "blue"), lty = c(1, 2), lwd = c(1, 2))
+```
