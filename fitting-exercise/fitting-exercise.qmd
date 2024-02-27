@@ -1,0 +1,7 @@
+---
+title: "fitting-exercise"
+format: html
+editor: visual
+---
+
+library(
