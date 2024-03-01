@@ -77,9 +77,13 @@ unique(mav_occ_1$OCC)
 ```
 
 ### Filter and join the dataset
+
 #### One data frame where observations where TIME = 0 are excluded, then sum DV for each ID to create a new variable, Y
+
 #### One data frame that keeps only records where TIME == 0
-##### Rationale: Initial measurements (TIME == 0) often represent baseline or pre-treatment values. Excluding these when summing DV allows for the calculation of total change or exposure post-baseline, which can be critical for assessing the effect or impact of an intervention. 
+
+##### Rationale: Initial measurements (TIME == 0) often represent baseline or pre-treatment values. Excluding these when summing DV allows for the calculation of total change or exposure post-baseline, which can be critical for assessing the effect or impact of an intervention.
+
 ```{r}
 # exclude observations where TIME = 0
 # then sum DV for each ID to create new variable, Y
@@ -105,6 +109,7 @@ dim(mav_joined)
 ```
 
 ## Convert SEX, RACE, and DOSE to factor variables and keep the variables Y, DOSE, AGE, SEX, RACE, WT, HT
+
 ```{r}
 #This code transforms SEX, RACE, and DOSE into categorical variables for analysis and selects a specific set of variables, streamlining the dataset for focused statistical modeling or data exploration involving these key demographic and treatment attributes.
 library(dplyr)
@@ -117,8 +122,11 @@ dim(mav_clean)
 ```
 
 ## Create BMI variable and a categorical variable for age
+
 ### Convert them to factors
-#### BMI = weight in kilograms / (height in meters)^2
+
+#### BMI = weight in kilograms / (height in meters)\^2
+
 ```{r}
 #Calculate BMI and assign categories based on value
 mav_clean <- mav_clean %>%
@@ -144,9 +152,13 @@ mav_clean <- mav_clean %>%
 #examine structure
 str(mav_clean)
 ```
+
 ## Create tables
+
 #### Calculatec summary statistics (number of observations, mean, median, minimum, and maximum of variable Y) for different groups in the dataset mav_clean, based on SEX, BMI_Category, and Age_Group
+
 #### Display these values in sortable tables
+
 ```{r}
 # Compute summary statistics for each factor variable
 summary_sex <- mav_clean %>%
@@ -190,7 +202,9 @@ datatable(summary_sex, options = list(pageLength = 5), caption = 'Summary Statis
 datatable(summary_BMI, options = list(pageLength = 5), caption = 'Summary Statistics of Y by BMI')
 datatable(summary_age, options = list(pageLength = 5), caption = 'Summary Statistics of Y by Age')
 ```
+
 #### Computes summary statistics (count, mean, median, minimum, and maximum) for variable Y, grouped by Age_Group and BMI_Category from the mav_clean dataset, and then displays the results in an sortable table
+
 ```{r}
 # Compute summary statistics for Y, stratified by both SEX and RACE
 summary_stats_group <- mav_clean %>%
@@ -210,7 +224,9 @@ datatable(summary_stats_group, options = list(pageLength = 10),
           caption = 'Summary Statistics of Y by Age and BMI Status')
 
 ```
+
 #### This R code reorders the levels of the factor variable BMI_Category in the dataset mav_clean and then creates four different plots: a raincloud plot of Y by BMI_Category, a combines scatter and contour plot of Y by Weight, a raincloud plot of Y by DOSE, and a raincloud plot of Y by age category using the ggplot2 package in R
+
 ```{r}
 # Reorder the levels of BMI_Category
 mav_clean$BMI_Category <- factor(mav_clean$BMI_Category, 
@@ -248,8 +264,11 @@ ggplot(mav_clean, aes(x = Age_Group, y = Y)) +
   geom_point(position = position_jitter(width = 0.2), alpha = 0.5, size = 2) +  # Add jittered points for individual data
   labs(x = "Age_Group", y = "Y", title = "Raincloud Plot of Y by Age")  # Add labels and title
 ```
-#### Create a grid of scatterplots for each pair of variables in subset_data (Y, bmi) and (HT, bmi), along with histograms for each variable on the diagonal and correlation coefficients in the upper triangle. 
+
+#### Create a grid of scatterplots for each pair of variables in subset_data (Y, bmi) and (HT, bmi), along with histograms for each variable on the diagonal and correlation coefficients in the upper triangle.
+
 #### Weight and BMI are directly related. Using this as an example to show highly correlated pair
+
 ```{r}
 # Load the GGally library for pair plot visualization
 library(GGally)
@@ -273,13 +292,19 @@ pairs(subset_dataWTbmi)
 ggpairs(subset_dataWTbmi)
  	
 ```
-#### The BMI to Y shows a Corr. of  -.0153. This suggests that there is weak inverse relationship between the two variables.
-#### The weight to BMI shows a Corr. of 0.762. This suggests that there is a stronger postitive relationship and the two are closely related. 
+
+#### The BMI to Y shows a Corr. of -.0153. This suggests that there is weak inverse relationship between the two variables.
+
+#### The weight to BMI shows a Corr. of 0.762. This suggests that there is a stronger postitive relationship and the two are closely related.
 
 ## Model fitting
+
 ### Fit a linear model to the continuous outcome (Y) using the main predictor of interest, DOSE
+
 ### Fit a linear model to the continuous outcome (Y) using all predictors
+
 #### Preprocess data
+
 ```{r}
 # Preprocess your data: convert 'DOSE' and 'BMI_Category' to factors
 mav_clean <- mav_clean %>%
@@ -290,7 +315,9 @@ mav_clean <- mav_clean %>%
 ```
 
 #### The code defines a linear model specification using the 'lm' engine for regression analysis and prepares a 5-fold cross-validation with stratification by 'Y' to ensure balanced splits
+
 #### Utilizing a 5-fold cross-validation with stratification by 'Y' helps ensure balanced splits within each fold, which is crucial for maintaining the representativeness of each subset during model evaluation, especially in the presence of class imbalance or uneven distribution of the target variable 'Y'.
+
 ```{r}
 # Define the linear model specification using the 'lm' engine
 linear_spec <- linear_reg() %>% 
@@ -300,7 +327,9 @@ linear_spec <- linear_reg() %>%
 # Prepare a 5-fold cross-validation, stratifying by 'Y' to ensure balanced splits
 cv_folds <- vfold_cv(mav_clean, v = 5, strata = Y)
 ```
+
 #### The code creates a workflow for a linear regression model using 'DOSE' as the predictor variable, fits the model across cross-validation folds, and collects evaluation metrics including Root Mean Squared Error (RMSE) and R-squared
+
 ```{r}
 # Create a workflow for the model using only DOSE as the predictor
 workflow_dose <- workflow() %>%
@@ -314,7 +343,9 @@ results_dose <- fit_resamples(
   metrics = metric_set(rmse, rsq)
 )
 ```
+
 #### This code creates a workflow for a linear regression model including all predictors (DOSE, AGE, and BMI_Category), fits the model across cross-validation folds, and collects evaluation metrics such as Root Mean Squared Error (RMSE) and R-squared.
+
 ```{r}
 # Workflow for the model including all predictors (DOSE, AGE, BMI_Category)
 workflow_all <- workflow() %>%
@@ -328,7 +359,9 @@ results_all <- fit_resamples(
   metrics = metric_set(rmse, rsq)
 )
 ```
+
 #### This series of steps allows for the comparison of evaluation metrics between the model with only 'DOSE' as the predictor and the model with all predictors ('DOSE', 'AGE', and 'BMI_Category'). Additionally, it provides the range of values for the 'Y' variable in the dataset.
+
 ```{r}
 
 # Step 1: Collect metrics for the model with DOSE as the predictor
@@ -362,10 +395,13 @@ print(y_range)
 ### Comparative Proportion: The error is a moderate proportion of the range (5606.58 - 826.43 = 4780.15). Specifically, it's about 14% of the total range (666.90 / 4780.15 ≈ 0.14), suggesting that, on average, the model's predictions might deviate from the actual values by around 14% of the total variability in Y.
 
 ## Fit a logistic model to the categorical/binary outcome (SEX) using the main predictor of interest, which we’ll again assume here to be DOSE
+
 ## Fit a logistic model to SEX using all predictors.
+
 ## For both models, compute accuracy and ROC-AUC and print them
 
-### P(SEX = 1 | DOSE) = 1 / (1 + exp(-(intercept + coefficient * DOSE))
+### P(SEX = 1 \| DOSE) = 1 / (1 + exp(-(intercept + coefficient \* DOSE))
+
 ```{r}
 # Ensure SEX is a factor and DOSE is treated as a factor for logistic regression analysis
 mav_clean_prepared <- mav_clean %>%
@@ -414,7 +450,7 @@ print(metrics_sex_dose)
 
 #### Metric: ROC AUC evaluates the model's ability to discriminate between the classes at various threshold settings. The AUC (Area Under the Curve) ranges from 0 to 1, where 1 indicates perfect discrimination and 0.5 indicates no discrimination (equivalent to random guessing). Value: The mean ROC AUC across the 5 folds is approximately 0.553. Interpretation: This value is slightly above 0.5, indicating the model has a very limited ability to distinguish between the SEX categories beyond random chance. The ROC AUC being close to 0.5 suggests that, while the model is accurate in many of its predictions, this might be attributed to the distribution of classes in the dataset rather than the model's discriminative power.
 
-### P(SEX = 1 | DOSE, AGE, BMI_Category) = 1 / (1 + exp(-(intercept + coefficient_DOSE * DOSE + coefficient_AGE * AGE + coefficient_BMI_Category * BMI_Category)))
+### P(SEX = 1 \| DOSE, AGE, BMI_Category) = 1 / (1 + exp(-(intercept + coefficient_DOSE \* DOSE + coefficient_AGE \* AGE + coefficient_BMI_Category \* BMI_Category)))
 
 ```{r}
 # Preprocess the dataset: converting predictors to their appropriate formats
@@ -471,8 +507,11 @@ print(metrics_sex_all)
 #### Model Comparison: The increase in ROC AUC for the second model suggests that including additional predictors (BMI_Category and AGE alongside DOSE) contributes to a more nuanced understanding and prediction of SEX, beyond what is achievable with DOSE alone. This indicates the importance of considering multiple factors in predictive modeling, especially for complex outcomes.
 
 ## k-nearest neighbors (KNN) regression model
+
 ### The model is trained and evaluated to predict the outcome variable 'Y' based on the predictor variable 'DOSE'.
+
 ### This process involves splitting the dataset into training and testing sets, converting the 'DOSE' variable to a factor, specifying the KNN model, fitting the model on the training data, making predictions on the testing set, calculating evaluation metrics (Root Mean Squared Error and R-squared), and printing the evaluation metrics for model assessment and comparison.
+
 ```{r}
 library(kknn)
 
@@ -516,19 +555,22 @@ print(knn_metrics)
 
 ```
 
-
 ## Model comparison
+
 #### RMSE (Root Mean Squared Error):
+
 #### KNN model: 565.72
+
 #### "DOSE Predictor" model: 673.09
+
 ##### The RMSE of the KNN model (565.72) is lower than that of the "DOSE Predictor" model (673.09), indicating that, on average, the KNN model's predictions are closer to the true values compared to the "DOSE Predictor" model.
 
 ### R-squared (rsq):
+
 #### KNN model: 0.648
+
 #### "DOSE Predictor" model: 0.522
+
 ##### The R-squared value of the KNN model (0.648) is higher than that of the "DOSE Predictor" model (0.522), suggesting that the KNN model explains a higher proportion of the variance in the outcome variable compared to the "DOSE Predictor" model.
 
 ##### Overall, based on these metrics, the KNN model appears to perform better in terms of both accuracy (lower RMSE) and explanatory power (higher R-squared) compared to the "DOSE Predictor" model.
-
-
-
