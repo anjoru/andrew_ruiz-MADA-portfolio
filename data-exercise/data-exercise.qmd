@@ -12,6 +12,10 @@ Fifty pdfs were downloaded from the FEC site. Each pdf contained comments in res
 These fifty documents made up the corpus for the text analysis. The process is described below.
 
 ```{r}
+
+if (!require(syuzhet)) {
+  install.packages("syuzhet")
+}
 #load packages
 library(pdftools)
 library(tm)
