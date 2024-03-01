@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.542">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Andrew Ruiz">
+
+<title>Andrew’s Data Analysis Portfolio - fitting-exercise</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="../site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="../site_libs/datatables-binding-0.32/datatables.js"></script>
+<script src="../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="../site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="../site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="../site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Andrew’s Data Analysis Portfolio</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../aboutme.html"> 
+<span class="menu-text">About Me</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-projects" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-projects">    
+        <li>
+    <a class="dropdown-item" href="../starter-analysis-exercise/products/report/starter-analysis-report.html">
+ <span class="dropdown-text">Starter Analysis Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../coding-exercise/coding-exercise.html">
+ <span class="dropdown-text">R Coding Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../presentation-exercise/presentation-exercise.html">
+ <span class="dropdown-text">Presentation Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../tidytuesday-exercise/tidytuesday-exercise.html">
+ <span class="dropdown-text">Tidy Tuesday Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data-exercise/data-exercise.html">
+ <span class="dropdown-text">Data Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../cdcdata-exercise/cdcdata-exercsie.html">
+ <span class="dropdown-text">CDC Data Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../fitting-exercise/fitting-exercise.html">
+ <span class="dropdown-text">Fitting Exercise</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../URL-TO-THIS-REPOSITORY-HERE"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">fitting-exercise</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Andrew Ruiz </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>`</p>
+<div class="cell" name="load_libraries">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>({</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(skimr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(shiny)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(DT)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(here)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(rsconnect)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(yardstick)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(MASS)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="load-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="load-dataset">Load dataset</h2>
+<section id="dataset-found-at-httpsgithub.commetrumresearchgroupbayespbpk-tutorial.git" class="level3">
+<h3 class="anchored" data-anchor-id="dataset-found-at-httpsgithub.commetrumresearchgroupbayespbpk-tutorial.git">dataset found at https://github.com/metrumresearchgroup/BayesPBPK-tutorial.git</h3>
+<div class="cell" name="load data">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>file_path_mav <span class="ot">=</span> <span class="fu">here</span>(<span class="st">"fitting-exercise"</span>, <span class="st">"data"</span>, <span class="st">"Mavoglurant_A2121_nmpk.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mav <span class="ot">=</span> <span class="fu">read.csv</span>(file_path_mav)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="dv-is-the-outcome-variable" class="level2">
+<h2 class="anchored" data-anchor-id="dv-is-the-outcome-variable">DV is the outcome variable</h2>
+</section>
+<section id="plot-graph-dv-as-a-function-of-time-by-dose-and-id" class="level2">
+<h2 class="anchored" data-anchor-id="plot-graph-dv-as-a-function-of-time-by-dose-and-id">Plot graph DV as a function of Time by DOSE and ID</h2>
+<div class="cell" name="plot1a">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a ggplot object using the 'mav' data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mav, <span class="fu">aes</span>(<span class="at">x =</span> TIME, <span class="at">y =</span> DV, <span class="at">group =</span> ID, <span class="at">color =</span> <span class="fu">as.factor</span>(DOSE))) <span class="sc">+</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"DV as a function of Time by DOSE and ID"</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time"</span>, </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"DV"</span>, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Dose"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="showing-all-doses-on-one-graph-make-it-difficult-to-read" class="level2">
+<h2 class="anchored" data-anchor-id="showing-all-doses-on-one-graph-make-it-difficult-to-read">Showing all doses on one graph make it difficult to read</h2>
+</section>
+<section id="try-creating-1-plot-for-each-dose" class="level2">
+<h2 class="anchored" data-anchor-id="try-creating-1-plot-for-each-dose">Try creating 1 plot for each dose</h2>
+<div class="cell" name="plot1b">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mav, <span class="fu">aes</span>(<span class="at">x =</span> TIME, <span class="at">y =</span> DV, <span class="at">group =</span> ID, <span class="at">color =</span> <span class="fu">as.factor</span>(DOSE))) <span class="sc">+</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"DV as a function of Time by DOSE and ID"</span>, </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time"</span>, </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"DV"</span>, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Dose"</span>) <span class="sc">+</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>DOSE, <span class="at">scales =</span> <span class="st">"fixed"</span>)  <span class="co"># Adjusted scales to "fixed" so that they share the same y axis scale</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="keep-only-records-where-occ1" class="level2">
+<h2 class="anchored" data-anchor-id="keep-only-records-where-occ1">Keep only records where OCC=1</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mav_occ_1 <span class="ot">=</span> mav <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(OCC <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#check to make sure filter worked as expected</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(mav_occ_1<span class="sc">$</span>OCC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<section id="filter-and-join-the-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="filter-and-join-the-dataset">Filter and join the dataset</h3>
+<section id="one-data-frame-where-observations-where-time-0-are-excluded-then-sum-dv-for-each-id-to-create-a-new-variable-y" class="level4">
+<h4 class="anchored" data-anchor-id="one-data-frame-where-observations-where-time-0-are-excluded-then-sum-dv-for-each-id-to-create-a-new-variable-y">One data frame where observations where TIME = 0 are excluded, then sum DV for each ID to create a new variable, Y</h4>
+</section>
+<section id="one-data-frame-that-keeps-only-records-where-time-0" class="level4">
+<h4 class="anchored" data-anchor-id="one-data-frame-that-keeps-only-records-where-time-0">One data frame that keeps only records where TIME == 0</h4>
+<section id="rationale-initial-measurements-time-0-often-represent-baseline-or-pre-treatment-values.-excluding-these-when-summing-dv-allows-for-the-calculation-of-total-change-or-exposure-post-baseline-which-can-be-critical-for-assessing-the-effect-or-impact-of-an-intervention." class="level5">
+<h5 class="anchored" data-anchor-id="rationale-initial-measurements-time-0-often-represent-baseline-or-pre-treatment-values.-excluding-these-when-summing-dv-allows-for-the-calculation-of-total-change-or-exposure-post-baseline-which-can-be-critical-for-assessing-the-effect-or-impact-of-an-intervention.">Rationale: Initial measurements (TIME == 0) often represent baseline or pre-treatment values. Excluding these when summing DV allows for the calculation of total change or exposure post-baseline, which can be critical for assessing the effect or impact of an intervention.</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exclude observations where TIME = 0</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># then sum DV for each ID to create new variable, Y</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mav_dv_sum <span class="ot">=</span> mav_occ_1 <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(TIME <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ID) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Y =</span> <span class="fu">sum</span>(DV, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#check dimension</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mav_dv_sum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 120   2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only records where TIME == 0</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mav_time0 <span class="ot">=</span> mav_occ_1 <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(TIME <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(ID, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#join the two data frames</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>mav_joined <span class="ot">=</span> <span class="fu">left_join</span>(mav_dv_sum, mav_time0, <span class="at">by =</span> <span class="st">"ID"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Check the dimension to ensure it is 120x18</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mav_joined)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 120  18</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="convert-sex-race-and-dose-to-factor-variables-and-keep-the-variables-y-dose-age-sex-race-wt-ht" class="level2">
+<h2 class="anchored" data-anchor-id="convert-sex-race-and-dose-to-factor-variables-and-keep-the-variables-y-dose-age-sex-race-wt-ht">Convert SEX, RACE, and DOSE to factor variables and keep the variables Y, DOSE, AGE, SEX, RACE, WT, HT</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#This code transforms SEX, RACE, and DOSE into categorical variables for analysis and selects a specific set of variables, streamlining the dataset for focused statistical modeling or data exploration involving these key demographic and treatment attributes.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mav_clean <span class="ot">&lt;-</span> mav_joined <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SEX =</span> <span class="fu">as.factor</span>(SEX), <span class="at">RACE =</span> <span class="fu">as.factor</span>(RACE), <span class="at">DOSE =</span> <span class="fu">as.factor</span>(DOSE)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Y, DOSE, AGE, SEX, RACE, WT, HT)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking the dimensions</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mav_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 120   7</code></pre>
+</div>
+</div>
+</section>
+<section id="create-bmi-variable-and-a-categorical-variable-for-age" class="level2">
+<h2 class="anchored" data-anchor-id="create-bmi-variable-and-a-categorical-variable-for-age">Create BMI variable and a categorical variable for age</h2>
+<section id="convert-them-to-factors" class="level3">
+<h3 class="anchored" data-anchor-id="convert-them-to-factors">Convert them to factors</h3>
+<section id="bmi-weight-in-kilograms-height-in-meters2" class="level4">
+<h4 class="anchored" data-anchor-id="bmi-weight-in-kilograms-height-in-meters2">BMI = weight in kilograms / (height in meters)^2</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate BMI and assign categories based on value</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mav_clean <span class="ot">&lt;-</span> mav_clean <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">bmi =</span> WT <span class="sc">/</span> (HT<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">BMI_Category =</span> <span class="fu">case_when</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>      bmi <span class="sc">&lt;</span> <span class="fl">18.5</span> <span class="sc">~</span> <span class="st">"Underweight"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      bmi <span class="sc">&gt;=</span> <span class="fl">18.5</span> <span class="sc">&amp;</span> bmi <span class="sc">&lt;</span> <span class="dv">25</span> <span class="sc">~</span> <span class="st">"Normal"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>      bmi <span class="sc">&gt;=</span> <span class="dv">25</span> <span class="sc">&amp;</span> bmi <span class="sc">&lt;</span> <span class="dv">30</span> <span class="sc">~</span> <span class="st">"Overweight"</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>      bmi <span class="sc">&gt;=</span> <span class="dv">30</span> <span class="sc">~</span> <span class="st">"Obese"</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Unknown"</span>  <span class="co"># Handles any missing or NA values</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">BMI_Category =</span> <span class="fu">factor</span>(BMI_Category)) <span class="co">#convert to factor</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Create categorical age variable</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>mav_clean <span class="ot">&lt;-</span> mav_clean <span class="sc">%&gt;%</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Age_Group =</span> <span class="fu">cut</span>(AGE,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">18</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="cn">Inf</span>),</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;=18"</span>, <span class="st">"19-30"</span>, <span class="st">"31-40"</span>, <span class="st">"41-50"</span>, <span class="st">"51-60"</span>, <span class="st">"&gt;60"</span>),</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                         <span class="at">right =</span> <span class="cn">FALSE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Age_Group =</span> <span class="fu">factor</span>(Age_Group)) <span class="co">#convert to factor</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#examine structure</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(mav_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [120 × 10] (S3: tbl_df/tbl/data.frame)
+ $ Y           : num [1:120] 2691 2639 2150 1789 3126 ...
+ $ DOSE        : Factor w/ 3 levels "25","37.5","50": 1 1 1 1 1 1 1 1 1 1 ...
+ $ AGE         : int [1:120] 42 24 31 46 41 27 23 20 23 28 ...
+ $ SEX         : Factor w/ 2 levels "1","2": 1 1 1 2 2 1 1 1 1 1 ...
+ $ RACE        : Factor w/ 4 levels "1","2","7","88": 2 2 1 1 2 2 1 4 2 1 ...
+ $ WT          : num [1:120] 94.3 80.4 71.8 77.4 64.3 ...
+ $ HT          : num [1:120] 1.77 1.76 1.81 1.65 1.56 ...
+ $ bmi         : num [1:120] 30.1 26 21.9 28.4 26.4 ...
+ $ BMI_Category: Factor w/ 3 levels "Normal","Obese",..: 2 3 1 3 3 1 3 1 1 2 ...
+ $ Age_Group   : Factor w/ 4 levels "19-30","31-40",..: 3 1 2 3 3 1 1 1 1 1 ...</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="create-tables" class="level2">
+<h2 class="anchored" data-anchor-id="create-tables">Create tables</h2>
+<section id="calculatec-summary-statistics-number-of-observations-mean-median-minimum-and-maximum-of-variable-y-for-different-groups-in-the-dataset-mav_clean-based-on-sex-bmi_category-and-age_group" class="level4">
+<h4 class="anchored" data-anchor-id="calculatec-summary-statistics-number-of-observations-mean-median-minimum-and-maximum-of-variable-y-for-different-groups-in-the-dataset-mav_clean-based-on-sex-bmi_category-and-age_group">Calculatec summary statistics (number of observations, mean, median, minimum, and maximum of variable Y) for different groups in the dataset mav_clean, based on SEX, BMI_Category, and Age_Group</h4>
+</section>
+<section id="display-these-values-in-sortable-tables" class="level4">
+<h4 class="anchored" data-anchor-id="display-these-values-in-sortable-tables">Display these values in sortable tables</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute summary statistics for each factor variable</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>summary_sex <span class="ot">&lt;-</span> mav_clean <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(SEX) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> <span class="fu">n</span>(),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean_Y =</span> <span class="fu">mean</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median_Y =</span> <span class="fu">median</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min_Y =</span> <span class="fu">min</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max_Y =</span> <span class="fu">max</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">'drop'</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Mean_Y, Median_Y, Min_Y, Max_Y), round, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `across(c(Mean_Y, Median_Y, Min_Y, Max_Y), round, 2)`.
+Caused by warning:
+! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+Supply arguments directly to `.fns` through an anonymous function instead.
+
+  # Previously
+  across(a:b, mean, na.rm = TRUE)
+
+  # Now
+  across(a:b, \(x) mean(x, na.rm = TRUE))</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>summary_BMI <span class="ot">&lt;-</span> mav_clean <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(BMI_Category) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> <span class="fu">n</span>(),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean_Y =</span> <span class="fu">mean</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median_Y =</span> <span class="fu">median</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min_Y =</span> <span class="fu">min</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max_Y =</span> <span class="fu">max</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">'drop'</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Mean_Y, Median_Y, Min_Y, Max_Y), round, <span class="dv">2</span>))</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>summary_age <span class="ot">&lt;-</span> mav_clean <span class="sc">%&gt;%</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Age_Group) <span class="sc">%&gt;%</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> <span class="fu">n</span>(),</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean_Y =</span> <span class="fu">mean</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median_Y =</span> <span class="fu">median</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min_Y =</span> <span class="fu">min</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max_Y =</span> <span class="fu">max</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">'drop'</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Mean_Y, Median_Y, Min_Y, Max_Y), round, <span class="dv">2</span>))</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the tables</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(summary_sex, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>), <span class="at">caption =</span> <span class="st">'Summary Statistics of Y by SEX'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-d5c6db5cf4d536474cf9" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-d5c6db5cf4d536474cf9">{"x":{"filter":"none","vertical":false,"caption":"<caption>Summary Statistics of Y by SEX<\/caption>","data":[["1","2"],["1","2"],[104,16],[2477.64,2235.87],[2398.3,2060.24],[826.4299999999999,1044.07],[5606.58,4834.65]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>SEX<\/th>\n      <th>N<\/th>\n      <th>Mean_Y<\/th>\n      <th>Median_Y<\/th>\n      <th>Min_Y<\/th>\n      <th>Max_Y<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"SEX","targets":1},{"name":"N","targets":2},{"name":"Mean_Y","targets":3},{"name":"Median_Y","targets":4},{"name":"Min_Y","targets":5},{"name":"Max_Y","targets":6}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(summary_BMI, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>), <span class="at">caption =</span> <span class="st">'Summary Statistics of Y by BMI'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-aee637c196218f6e2cf6" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-aee637c196218f6e2cf6">{"x":{"filter":"none","vertical":false,"caption":"<caption>Summary Statistics of Y by BMI<\/caption>","data":[["1","2","3"],["Normal","Obese","Overweight"],[38,26,56],[2432.43,2135.39,2598.15],[2061.69,2060.53,2605.63],[1097.6,997.89,826.4299999999999],[4834.65,3905.93,5606.58]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>BMI_Category<\/th>\n      <th>N<\/th>\n      <th>Mean_Y<\/th>\n      <th>Median_Y<\/th>\n      <th>Min_Y<\/th>\n      <th>Max_Y<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"BMI_Category","targets":1},{"name":"N","targets":2},{"name":"Mean_Y","targets":3},{"name":"Median_Y","targets":4},{"name":"Min_Y","targets":5},{"name":"Max_Y","targets":6}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(summary_age, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">5</span>), <span class="at">caption =</span> <span class="st">'Summary Statistics of Y by Age'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-a5cac1d2a3a4f2367ca1" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-a5cac1d2a3a4f2367ca1">{"x":{"filter":"none","vertical":false,"caption":"<caption>Summary Statistics of Y by Age<\/caption>","data":[["1","2","3","4"],["19-30","31-40","41-50","51-60"],[52,34,33,1],[2488.2,2409.02,2435.01,1800.79],[2320.23,2269.35,2548.98,1800.79],[1097.6,826.4299999999999,997.89,1800.79],[5606.58,4493.01,4984.57,1800.79]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Age_Group<\/th>\n      <th>N<\/th>\n      <th>Mean_Y<\/th>\n      <th>Median_Y<\/th>\n      <th>Min_Y<\/th>\n      <th>Max_Y<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Age_Group","targets":1},{"name":"N","targets":2},{"name":"Mean_Y","targets":3},{"name":"Median_Y","targets":4},{"name":"Min_Y","targets":5},{"name":"Max_Y","targets":6}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="computes-summary-statistics-count-mean-median-minimum-and-maximum-for-variable-y-grouped-by-age_group-and-bmi_category-from-the-mav_clean-dataset-and-then-displays-the-results-in-an-sortable-table" class="level4">
+<h4 class="anchored" data-anchor-id="computes-summary-statistics-count-mean-median-minimum-and-maximum-for-variable-y-grouped-by-age_group-and-bmi_category-from-the-mav_clean-dataset-and-then-displays-the-results-in-an-sortable-table">Computes summary statistics (count, mean, median, minimum, and maximum) for variable Y, grouped by Age_Group and BMI_Category from the mav_clean dataset, and then displays the results in an sortable table</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute summary statistics for Y, stratified by both SEX and RACE</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>summary_stats_group <span class="ot">&lt;-</span> mav_clean <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Age_Group, BMI_Category) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> <span class="fu">n</span>(),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean_Y =</span> <span class="fu">mean</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median_Y =</span> <span class="fu">median</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min_Y =</span> <span class="fu">min</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max_Y =</span> <span class="fu">max</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">'drop'</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Mean_Y, Median_Y, Min_Y, Max_Y), round, <span class="dv">2</span>))</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the table with DT::datatable for interactivity</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(summary_stats_group, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">10</span>), </span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">caption =</span> <span class="st">'Summary Statistics of Y by Age and BMI Status'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-c6073e8ec143d90f1e60" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-c6073e8ec143d90f1e60">{"x":{"filter":"none","vertical":false,"caption":"<caption>Summary Statistics of Y by Age and BMI Status<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10"],["19-30","19-30","19-30","31-40","31-40","31-40","41-50","41-50","41-50","51-60"],["Normal","Obese","Overweight","Normal","Obese","Overweight","Normal","Obese","Overweight","Overweight"],[28,5,19,7,11,16,3,10,20,1],[2405.03,1990.91,2741.62,2327.54,2144.35,2626.62,2932.83,2197.77,2478.96,1800.79],[2027.49,2036.2,2815.26,2149.61,2084.87,2502.5,2748.86,2178.31,2510.29,1800.79],[1097.6,1392.78,1374.48,1344.35,1175.69,826.4299999999999,1214.97,997.89,1044.07,1800.79],[4451.84,2485,5606.58,3408.61,3777.2,4493.01,4834.65,3905.93,4984.57,1800.79]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Age_Group<\/th>\n      <th>BMI_Category<\/th>\n      <th>N<\/th>\n      <th>Mean_Y<\/th>\n      <th>Median_Y<\/th>\n      <th>Min_Y<\/th>\n      <th>Max_Y<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Age_Group","targets":1},{"name":"BMI_Category","targets":2},{"name":"N","targets":3},{"name":"Mean_Y","targets":4},{"name":"Median_Y","targets":5},{"name":"Min_Y","targets":6},{"name":"Max_Y","targets":7}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="this-r-code-reorders-the-levels-of-the-factor-variable-bmi_category-in-the-dataset-mav_clean-and-then-creates-four-different-plots-a-raincloud-plot-of-y-by-bmi_category-a-combines-scatter-and-contour-plot-of-y-by-weight-a-raincloud-plot-of-y-by-dose-and-a-raincloud-plot-of-y-by-age-category-using-the-ggplot2-package-in-r" class="level4">
+<h4 class="anchored" data-anchor-id="this-r-code-reorders-the-levels-of-the-factor-variable-bmi_category-in-the-dataset-mav_clean-and-then-creates-four-different-plots-a-raincloud-plot-of-y-by-bmi_category-a-combines-scatter-and-contour-plot-of-y-by-weight-a-raincloud-plot-of-y-by-dose-and-a-raincloud-plot-of-y-by-age-category-using-the-ggplot2-package-in-r">This R code reorders the levels of the factor variable BMI_Category in the dataset mav_clean and then creates four different plots: a raincloud plot of Y by BMI_Category, a combines scatter and contour plot of Y by Weight, a raincloud plot of Y by DOSE, and a raincloud plot of Y by age category using the ggplot2 package in R</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder the levels of BMI_Category</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>mav_clean<span class="sc">$</span>BMI_Category <span class="ot">&lt;-</span> <span class="fu">factor</span>(mav_clean<span class="sc">$</span>BMI_Category, </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Normal"</span>, <span class="st">"Overweight"</span>, <span class="st">"Obese"</span>))</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mav_clean, <span class="fu">aes</span>(<span class="at">x =</span> BMI_Category, <span class="at">y =</span> Y)) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Add violin plot with semi-transparent fill</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span>  <span class="co"># Add transparent boxplot without outliers</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>), <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span>  <span class="co"># Add jittered points for individual data</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"BMI"</span>, <span class="at">y =</span> <span class="st">"Y"</span>, <span class="at">title =</span> <span class="st">"Raincloud Plot of Y by BMI"</span>)  <span class="co"># Add labels and title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mav_clean, <span class="fu">aes</span>(<span class="at">x =</span> WT, <span class="at">y =</span> Y)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Weight (kg)"</span>, <span class="at">y =</span> <span class="st">"Y"</span>, <span class="at">title =</span> <span class="st">"Scatter Plot of Y by Weight"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Combined scatter and contour plot</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#a contour plot displays the density of points</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#in the form of contour lines, providing a two-dimensional representation of the data density.</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mav_clean, <span class="fu">aes</span>(<span class="at">x =</span> WT, <span class="at">y =</span> Y)) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_density_2d</span>(<span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">after_stat</span>(level)), <span class="at">geom =</span> <span class="st">"polygon"</span>) <span class="sc">+</span>  <span class="co"># Create contour polygons</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span>  <span class="co"># Add scatter plot</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span>  <span class="co"># Choose a color scale</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Weight (kg)"</span>, <span class="at">y =</span> <span class="st">"Y"</span>, <span class="at">title =</span> <span class="st">"Combined Scatter and Contour Plot of Y by Weight"</span>)  <span class="co"># Add labels and title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mav_clean, <span class="fu">aes</span>(<span class="at">x =</span> DOSE, <span class="at">y =</span> Y)) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Add violin plot with semi-transparent fill</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span>  <span class="co"># Add transparent boxplot without outliers</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>), <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span>  <span class="co"># Add jittered points for individual data</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"DOSE"</span>, <span class="at">y =</span> <span class="st">"Y"</span>, <span class="at">title =</span> <span class="st">"Raincloud Plot of Y by Dose"</span>)  <span class="co"># Add labels and title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mav_clean, <span class="fu">aes</span>(<span class="at">x =</span> Age_Group, <span class="at">y =</span> Y)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Add violin plot with semi-transparent fill</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span>  <span class="co"># Add transparent boxplot without outliers</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>), <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span>  <span class="co"># Add jittered points for individual data</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Age_Group"</span>, <span class="at">y =</span> <span class="st">"Y"</span>, <span class="at">title =</span> <span class="st">"Raincloud Plot of Y by Age"</span>)  <span class="co"># Add labels and title</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Groups with fewer than two data points have been dropped.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-11-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="create-a-grid-of-scatterplots-for-each-pair-of-variables-in-subset_data-y-bmi-and-ht-bmi-along-with-histograms-for-each-variable-on-the-diagonal-and-correlation-coefficients-in-the-upper-triangle." class="level4">
+<h4 class="anchored" data-anchor-id="create-a-grid-of-scatterplots-for-each-pair-of-variables-in-subset_data-y-bmi-and-ht-bmi-along-with-histograms-for-each-variable-on-the-diagonal-and-correlation-coefficients-in-the-upper-triangle.">Create a grid of scatterplots for each pair of variables in subset_data (Y, bmi) and (HT, bmi), along with histograms for each variable on the diagonal and correlation coefficients in the upper triangle.</h4>
+</section>
+<section id="weight-and-bmi-are-directly-related.-using-this-as-an-example-to-show-highly-correlated-pair" class="level4">
+<h4 class="anchored" data-anchor-id="weight-and-bmi-are-directly-related.-using-this-as-an-example-to-show-highly-correlated-pair">Weight and BMI are directly related. Using this as an example to show highly correlated pair</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the GGally library for pair plot visualization</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'GGally':
+  method from   
+  +.gg   ggplot2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the dataset to include only the variables Y and BMI</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>subset_Ybmi<span class="ot">&lt;-</span> mav_clean[, <span class="fu">c</span>(<span class="st">"Y"</span>, <span class="st">"bmi"</span>)]</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the pairs() function to create a matrix of scatterplots for Y and BMI</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(subset_Ybmi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the ggpairs() function to create a grid of scatterplots, histograms, and correlation coefficients for Y and BMI</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(subset_Ybmi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the dataset to include only the variables weight and BMI</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>subset_dataWTbmi <span class="ot">&lt;-</span> mav_clean[, <span class="fu">c</span>(<span class="st">"WT"</span>, <span class="st">"bmi"</span>)]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the pairs() function to create a matrix of scatterplots for weight and BMI</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(subset_dataWTbmi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the ggpairs() function to create a grid of scatterplots, histograms, and correlation coefficients for weight and BMI</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(subset_dataWTbmi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fitting-exercise_files/figure-html/unnamed-chunk-12-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-bmi-to-y-shows-a-corr.-of--.0153.-this-suggests-that-there-is-weak-inverse-relationship-between-the-two-variables." class="level4">
+<h4 class="anchored" data-anchor-id="the-bmi-to-y-shows-a-corr.-of--.0153.-this-suggests-that-there-is-weak-inverse-relationship-between-the-two-variables.">The BMI to Y shows a Corr. of -.0153. This suggests that there is weak inverse relationship between the two variables.</h4>
+</section>
+<section id="the-weight-to-bmi-shows-a-corr.-of-0.762.-this-suggests-that-there-is-a-stronger-postitive-relationship-and-the-two-are-closely-related." class="level4">
+<h4 class="anchored" data-anchor-id="the-weight-to-bmi-shows-a-corr.-of-0.762.-this-suggests-that-there-is-a-stronger-postitive-relationship-and-the-two-are-closely-related.">The weight to BMI shows a Corr. of 0.762. This suggests that there is a stronger postitive relationship and the two are closely related.</h4>
+</section>
+</section>
+<section id="model-fitting" class="level2">
+<h2 class="anchored" data-anchor-id="model-fitting">Model fitting</h2>
+<section id="fit-a-linear-model-to-the-continuous-outcome-y-using-the-main-predictor-of-interest-dose" class="level3">
+<h3 class="anchored" data-anchor-id="fit-a-linear-model-to-the-continuous-outcome-y-using-the-main-predictor-of-interest-dose">Fit a linear model to the continuous outcome (Y) using the main predictor of interest, DOSE</h3>
+</section>
+<section id="fit-a-linear-model-to-the-continuous-outcome-y-using-all-predictors" class="level3">
+<h3 class="anchored" data-anchor-id="fit-a-linear-model-to-the-continuous-outcome-y-using-all-predictors">Fit a linear model to the continuous outcome (Y) using all predictors</h3>
+<section id="preprocess-data" class="level4">
+<h4 class="anchored" data-anchor-id="preprocess-data">Preprocess data</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preprocess your data: convert 'DOSE' and 'BMI_Category' to factors</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>mav_clean <span class="ot">&lt;-</span> mav_clean <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">DOSE =</span> <span class="fu">as.factor</span>(DOSE),  <span class="co"># Convert DOSE to a factor</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">BMI_Category =</span> <span class="fu">factor</span>(BMI_Category, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Normal"</span>, <span class="st">"Overweight"</span>, <span class="st">"Obese"</span>))  <span class="co"># Ensure BMI_Category has ordered levels</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-code-defines-a-linear-model-specification-using-the-lm-engine-for-regression-analysis-and-prepares-a-5-fold-cross-validation-with-stratification-by-y-to-ensure-balanced-splits" class="level4">
+<h4 class="anchored" data-anchor-id="the-code-defines-a-linear-model-specification-using-the-lm-engine-for-regression-analysis-and-prepares-a-5-fold-cross-validation-with-stratification-by-y-to-ensure-balanced-splits">The code defines a linear model specification using the ‘lm’ engine for regression analysis and prepares a 5-fold cross-validation with stratification by ‘Y’ to ensure balanced splits</h4>
+</section>
+<section id="utilizing-a-5-fold-cross-validation-with-stratification-by-y-helps-ensure-balanced-splits-within-each-fold-which-is-crucial-for-maintaining-the-representativeness-of-each-subset-during-model-evaluation-especially-in-the-presence-of-class-imbalance-or-uneven-distribution-of-the-target-variable-y." class="level4">
+<h4 class="anchored" data-anchor-id="utilizing-a-5-fold-cross-validation-with-stratification-by-y-helps-ensure-balanced-splits-within-each-fold-which-is-crucial-for-maintaining-the-representativeness-of-each-subset-during-model-evaluation-especially-in-the-presence-of-class-imbalance-or-uneven-distribution-of-the-target-variable-y.">Utilizing a 5-fold cross-validation with stratification by ‘Y’ helps ensure balanced splits within each fold, which is crucial for maintaining the representativeness of each subset during model evaluation, especially in the presence of class imbalance or uneven distribution of the target variable ‘Y’.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the linear model specification using the 'lm' engine</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>linear_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare a 5-fold cross-validation, stratifying by 'Y' to ensure balanced splits</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>cv_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(mav_clean, <span class="at">v =</span> <span class="dv">5</span>, <span class="at">strata =</span> Y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-code-creates-a-workflow-for-a-linear-regression-model-using-dose-as-the-predictor-variable-fits-the-model-across-cross-validation-folds-and-collects-evaluation-metrics-including-root-mean-squared-error-rmse-and-r-squared" class="level4">
+<h4 class="anchored" data-anchor-id="the-code-creates-a-workflow-for-a-linear-regression-model-using-dose-as-the-predictor-variable-fits-the-model-across-cross-validation-folds-and-collects-evaluation-metrics-including-root-mean-squared-error-rmse-and-r-squared">The code creates a workflow for a linear regression model using ‘DOSE’ as the predictor variable, fits the model across cross-validation folds, and collects evaluation metrics including Root Mean Squared Error (RMSE) and R-squared</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a workflow for the model using only DOSE as the predictor</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>workflow_dose <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(Y <span class="sc">~</span> DOSE) <span class="sc">%&gt;%</span>  <span class="co"># Define the model formula with DOSE</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(linear_spec)  <span class="co"># Add the linear model specification</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the model across the cross-validation folds and collect evaluation metrics (RMSE and R-squared)</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>results_dose <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  workflow_dose,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  cv_folds,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse, rsq)</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="this-code-creates-a-workflow-for-a-linear-regression-model-including-all-predictors-dose-age-and-bmi_category-fits-the-model-across-cross-validation-folds-and-collects-evaluation-metrics-such-as-root-mean-squared-error-rmse-and-r-squared." class="level4">
+<h4 class="anchored" data-anchor-id="this-code-creates-a-workflow-for-a-linear-regression-model-including-all-predictors-dose-age-and-bmi_category-fits-the-model-across-cross-validation-folds-and-collects-evaluation-metrics-such-as-root-mean-squared-error-rmse-and-r-squared.">This code creates a workflow for a linear regression model including all predictors (DOSE, AGE, and BMI_Category), fits the model across cross-validation folds, and collects evaluation metrics such as Root Mean Squared Error (RMSE) and R-squared.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Workflow for the model including all predictors (DOSE, AGE, BMI_Category)</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>workflow_all <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(Y <span class="sc">~</span> DOSE <span class="sc">+</span> AGE <span class="sc">+</span> BMI_Category) <span class="sc">%&gt;%</span>  <span class="co"># Include all predictors in the formula</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(linear_spec)  <span class="co"># Add the same linear model specification</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit this comprehensive model across the cross-validation folds and collect metrics</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>results_all <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  workflow_all,</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  cv_folds,</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse, rsq)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="this-series-of-steps-allows-for-the-comparison-of-evaluation-metrics-between-the-model-with-only-dose-as-the-predictor-and-the-model-with-all-predictors-dose-age-and-bmi_category.-additionally-it-provides-the-range-of-values-for-the-y-variable-in-the-dataset." class="level4">
+<h4 class="anchored" data-anchor-id="this-series-of-steps-allows-for-the-comparison-of-evaluation-metrics-between-the-model-with-only-dose-as-the-predictor-and-the-model-with-all-predictors-dose-age-and-bmi_category.-additionally-it-provides-the-range-of-values-for-the-y-variable-in-the-dataset.">This series of steps allows for the comparison of evaluation metrics between the model with only ‘DOSE’ as the predictor and the model with all predictors (‘DOSE’, ‘AGE’, and ‘BMI_Category’). Additionally, it provides the range of values for the ‘Y’ variable in the dataset.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Collect metrics for the model with DOSE as the predictor</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>metrics_dose <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(results_dose)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Collect metrics for the model with all predictors</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>metrics_all <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(results_all)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Add a model identifier column to the metrics data frames AFTER collecting metrics</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>metrics_dose<span class="sc">$</span>model <span class="ot">&lt;-</span> <span class="st">"DOSE Predictor"</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>metrics_all<span class="sc">$</span>model <span class="ot">&lt;-</span> <span class="st">"All Predictors"</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Combine metrics into a single data frame for comparison</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>combined_metrics <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(metrics_dose, metrics_all)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Reorder the columns so that 'model' is the first column</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>reordered_metrics <span class="ot">&lt;-</span> combined_metrics <span class="sc">%&gt;%</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(model, .metric, .estimator, mean, n, std_err, .config)</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 6: Print the reordered metrics</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(reordered_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 7
+  model          .metric .estimator    mean     n std_err .config             
+  &lt;chr&gt;          &lt;chr&gt;   &lt;chr&gt;        &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 DOSE Predictor rmse    standard   664.        5 55.3    Preprocessor1_Model1
+2 DOSE Predictor rsq     standard     0.537     5  0.0514 Preprocessor1_Model1
+3 All Predictors rmse    standard   656.        5 55.0    Preprocessor1_Model1
+4 All Predictors rsq     standard     0.556     5  0.0539 Preprocessor1_Model1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 7: Print the range of 'Y' from the 'mav_clean' dataset</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'mav_clean' is your dataset and it contains the variable 'Y'</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>y_range <span class="ot">&lt;-</span> <span class="fu">range</span>(mav_clean<span class="sc">$</span>Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 8: Print the range</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(y_range)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  826.43 5606.58</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="comparative-proportion-the-error-is-a-moderate-proportion-of-the-range-5606.58---826.43-4780.15.-specifically-its-about-14-of-the-total-range-666.90-4780.15-0.14-suggesting-that-on-average-the-models-predictions-might-deviate-from-the-actual-values-by-around-14-of-the-total-variability-in-y." class="level3">
+<h3 class="anchored" data-anchor-id="comparative-proportion-the-error-is-a-moderate-proportion-of-the-range-5606.58---826.43-4780.15.-specifically-its-about-14-of-the-total-range-666.90-4780.15-0.14-suggesting-that-on-average-the-models-predictions-might-deviate-from-the-actual-values-by-around-14-of-the-total-variability-in-y.">Comparative Proportion: The error is a moderate proportion of the range (5606.58 - 826.43 = 4780.15). Specifically, it’s about 14% of the total range (666.90 / 4780.15 ≈ 0.14), suggesting that, on average, the model’s predictions might deviate from the actual values by around 14% of the total variability in Y.</h3>
+</section>
+</section>
+<section id="fit-a-logistic-model-to-the-categoricalbinary-outcome-sex-using-the-main-predictor-of-interest-which-well-again-assume-here-to-be-dose" class="level2">
+<h2 class="anchored" data-anchor-id="fit-a-logistic-model-to-the-categoricalbinary-outcome-sex-using-the-main-predictor-of-interest-which-well-again-assume-here-to-be-dose">Fit a logistic model to the categorical/binary outcome (SEX) using the main predictor of interest, which we’ll again assume here to be DOSE</h2>
+</section>
+<section id="fit-a-logistic-model-to-sex-using-all-predictors." class="level2">
+<h2 class="anchored" data-anchor-id="fit-a-logistic-model-to-sex-using-all-predictors.">Fit a logistic model to SEX using all predictors.</h2>
+</section>
+<section id="for-both-models-compute-accuracy-and-roc-auc-and-print-them" class="level2">
+<h2 class="anchored" data-anchor-id="for-both-models-compute-accuracy-and-roc-auc-and-print-them">For both models, compute accuracy and ROC-AUC and print them</h2>
+<section id="psex-1-dose-1-1-exp-intercept-coefficient-dose" class="level3">
+<h3 class="anchored" data-anchor-id="psex-1-dose-1-1-exp-intercept-coefficient-dose">P(SEX = 1 | DOSE) = 1 / (1 + exp(-(intercept + coefficient * DOSE))</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure SEX is a factor and DOSE is treated as a factor for logistic regression analysis</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>mav_clean_prepared <span class="ot">&lt;-</span> mav_clean <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">SEX =</span> <span class="fu">as.factor</span>(SEX),  <span class="co"># Convert SEX to a factor if it isn't already</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">DOSE =</span> <span class="fu">as.factor</span>(DOSE)  <span class="co"># Ensure DOSE is treated as a factor</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify a logistic regression model using glm (Generalized Linear Model) as the engine</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>logistic_spec_dose <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)  <span class="co"># Set mode to classification for the binary outcome</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare a 5-fold cross-validation object, stratifying by SEX to ensure balanced folds</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>cv_folds_sex <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(mav_clean_prepared, <span class="at">v =</span> <span class="dv">5</span>, <span class="at">strata =</span> SEX)</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a workflow combining the logistic model specification with the SEX ~ DOSE formula</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>workflow_sex_dose <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(SEX <span class="sc">~</span> DOSE) <span class="sc">%&gt;%</span>  <span class="co"># Predicting SEX based on DOSE</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(logistic_spec_dose)  <span class="co"># Add the logistic regression specification</span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the model across the cross-validation folds and calculate metrics</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>results_sex_dose_cv <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  workflow_sex_dose,</span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>  cv_folds_sex,</span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc, accuracy)  <span class="co"># Focus on ROC AUC and accuracy for evaluation</span></span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Collect and summarize the metrics from cross-validation</span></span>
+<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a>metrics_sex_dose <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(results_sex_dose_cv)</span>
+<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-31"><a href="#cb41-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the summarized metrics to assess model performance</span></span>
+<span id="cb41-32"><a href="#cb41-32" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(metrics_sex_dose)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric  .estimator  mean     n std_err .config             
+  &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 accuracy binary     0.867     5 0.00681 Preprocessor1_Model1
+2 roc_auc  binary     0.563     5 0.0548  Preprocessor1_Model1</code></pre>
+</div>
+</div>
+</section>
+<section id="accuracy" class="level3">
+<h3 class="anchored" data-anchor-id="accuracy">Accuracy</h3>
+<section id="metric-accuracy-measures-the-proportion-of-true-results-both-true-positives-and-true-negatives-among-the-total-number-of-cases-examined.-its-a-straightforward-indicator-of-how-often-the-model-predicts-the-correct-category." class="level4">
+<h4 class="anchored" data-anchor-id="metric-accuracy-measures-the-proportion-of-true-results-both-true-positives-and-true-negatives-among-the-total-number-of-cases-examined.-its-a-straightforward-indicator-of-how-often-the-model-predicts-the-correct-category.">Metric: Accuracy measures the proportion of true results (both true positives and true negatives) among the total number of cases examined. It’s a straightforward indicator of how often the model predicts the correct category.</h4>
+</section>
+<section id="value-the-mean-accuracy-across-the-5-cross-validation-folds-is-approximately-86.69." class="level4">
+<h4 class="anchored" data-anchor-id="value-the-mean-accuracy-across-the-5-cross-validation-folds-is-approximately-86.69.">Value: The mean accuracy across the 5 cross-validation folds is approximately 86.69%.</h4>
+</section>
+<section id="interpretation-this-suggests-that-on-average-the-model-correctly-predicts-the-sex-category-about-86.69-of-the-time-across-the-different-subsets-of-your-data.-a-high-accuracy-indicates-the-model-is-generally-effective-at-classifying-the-instances-according-to-sex." class="level4">
+<h4 class="anchored" data-anchor-id="interpretation-this-suggests-that-on-average-the-model-correctly-predicts-the-sex-category-about-86.69-of-the-time-across-the-different-subsets-of-your-data.-a-high-accuracy-indicates-the-model-is-generally-effective-at-classifying-the-instances-according-to-sex.">Interpretation: This suggests that, on average, the model correctly predicts the SEX category about 86.69% of the time across the different subsets of your data. A high accuracy indicates the model is generally effective at classifying the instances according to SEX.</h4>
+</section>
+</section>
+<section id="roc-auc-area-under-the-receiver-operating-characteristic-curve" class="level3">
+<h3 class="anchored" data-anchor-id="roc-auc-area-under-the-receiver-operating-characteristic-curve">ROC AUC (Area Under the Receiver Operating Characteristic Curve)</h3>
+<section id="metric-roc-auc-evaluates-the-models-ability-to-discriminate-between-the-classes-at-various-threshold-settings.-the-auc-area-under-the-curve-ranges-from-0-to-1-where-1-indicates-perfect-discrimination-and-0.5-indicates-no-discrimination-equivalent-to-random-guessing.-value-the-mean-roc-auc-across-the-5-folds-is-approximately-0.553.-interpretation-this-value-is-slightly-above-0.5-indicating-the-model-has-a-very-limited-ability-to-distinguish-between-the-sex-categories-beyond-random-chance.-the-roc-auc-being-close-to-0.5-suggests-that-while-the-model-is-accurate-in-many-of-its-predictions-this-might-be-attributed-to-the-distribution-of-classes-in-the-dataset-rather-than-the-models-discriminative-power." class="level4">
+<h4 class="anchored" data-anchor-id="metric-roc-auc-evaluates-the-models-ability-to-discriminate-between-the-classes-at-various-threshold-settings.-the-auc-area-under-the-curve-ranges-from-0-to-1-where-1-indicates-perfect-discrimination-and-0.5-indicates-no-discrimination-equivalent-to-random-guessing.-value-the-mean-roc-auc-across-the-5-folds-is-approximately-0.553.-interpretation-this-value-is-slightly-above-0.5-indicating-the-model-has-a-very-limited-ability-to-distinguish-between-the-sex-categories-beyond-random-chance.-the-roc-auc-being-close-to-0.5-suggests-that-while-the-model-is-accurate-in-many-of-its-predictions-this-might-be-attributed-to-the-distribution-of-classes-in-the-dataset-rather-than-the-models-discriminative-power.">Metric: ROC AUC evaluates the model’s ability to discriminate between the classes at various threshold settings. The AUC (Area Under the Curve) ranges from 0 to 1, where 1 indicates perfect discrimination and 0.5 indicates no discrimination (equivalent to random guessing). Value: The mean ROC AUC across the 5 folds is approximately 0.553. Interpretation: This value is slightly above 0.5, indicating the model has a very limited ability to distinguish between the SEX categories beyond random chance. The ROC AUC being close to 0.5 suggests that, while the model is accurate in many of its predictions, this might be attributed to the distribution of classes in the dataset rather than the model’s discriminative power.</h4>
+</section>
+</section>
+<section id="psex-1-dose-age-bmi_category-1-1-exp-intercept-coefficient_dose-dose-coefficient_age-age-coefficient_bmi_category-bmi_category" class="level3">
+<h3 class="anchored" data-anchor-id="psex-1-dose-age-bmi_category-1-1-exp-intercept-coefficient_dose-dose-coefficient_age-age-coefficient_bmi_category-bmi_category">P(SEX = 1 | DOSE, AGE, BMI_Category) = 1 / (1 + exp(-(intercept + coefficient_DOSE * DOSE + coefficient_AGE * AGE + coefficient_BMI_Category * BMI_Category)))</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preprocess the dataset: converting predictors to their appropriate formats</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>mav_clean_logistic_all <span class="ot">&lt;-</span> mav_clean <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">BMI_Category =</span> <span class="fu">as.factor</span>(BMI_Category),  <span class="co"># Ensure BMI_Category is a factor</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">DOSE =</span> <span class="fu">as.factor</span>(DOSE),  <span class="co"># Ensure DOSE is a factor</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">AGE =</span> <span class="fu">as.numeric</span>(AGE)  <span class="co"># Ensure AGE is numeric</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify a logistic regression model using glm as the computational engine</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>logistic_spec_all <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare a 5-fold cross-validation, ensuring a balanced representation of SEX across folds</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>cv_folds_sex_all <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(mav_clean_logistic_all, <span class="at">v =</span> <span class="dv">5</span>, <span class="at">strata =</span> SEX)</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a workflow that encapsulates the model specification and formula</span></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>workflow_sex_all <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(SEX <span class="sc">~</span> BMI_Category <span class="sc">+</span> AGE <span class="sc">+</span> DOSE) <span class="sc">%&gt;%</span>  <span class="co"># Use all predictors in the model formula</span></span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(logistic_spec_all)  <span class="co"># Add the logistic regression model specification</span></span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the model across the cross-validation folds and evaluate</span></span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>results_sex_all_cv <span class="ot">&lt;-</span> <span class="fu">fit_resamples</span>(</span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>  workflow_sex_all,</span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>  cv_folds_sex_all,</span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc, accuracy)  <span class="co"># Focus on ROC AUC and accuracy for evaluation</span></span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Collect metrics from the cross-validation results</span></span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>metrics_sex_all <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(results_sex_all_cv)</span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the summarized metrics to understand model performance</span></span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(metrics_sex_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric  .estimator  mean     n std_err .config             
+  &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 accuracy binary     0.834     5  0.0181 Preprocessor1_Model1
+2 roc_auc  binary     0.779     5  0.0577 Preprocessor1_Model1</code></pre>
+</div>
+</div>
+</section>
+<section id="first-model-dose-as-the-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="first-model-dose-as-the-predictor">First Model (DOSE as the Predictor)</h3>
+<section id="accuracy-the-mean-accuracy-is-approximately-86.69-indicating-a-high-overall-rate-of-correctly-predicting-sex." class="level4">
+<h4 class="anchored" data-anchor-id="accuracy-the-mean-accuracy-is-approximately-86.69-indicating-a-high-overall-rate-of-correctly-predicting-sex.">Accuracy: The mean accuracy is approximately 86.69%, indicating a high overall rate of correctly predicting SEX.</h4>
+</section>
+<section id="roc-auc-the-mean-roc-auc-is-approximately-0.553-suggesting-the-models-ability-to-discriminate-between-the-classes-is-only-slightly-better-than-random-guessing." class="level4">
+<h4 class="anchored" data-anchor-id="roc-auc-the-mean-roc-auc-is-approximately-0.553-suggesting-the-models-ability-to-discriminate-between-the-classes-is-only-slightly-better-than-random-guessing.">ROC AUC: The mean ROC AUC is approximately 0.553, suggesting the model’s ability to discriminate between the classes is only slightly better than random guessing.</h4>
+</section>
+</section>
+<section id="second-model-all-predictors-bmi_category-age-dose" class="level3">
+<h3 class="anchored" data-anchor-id="second-model-all-predictors-bmi_category-age-dose">Second Model (All Predictors: BMI_Category, AGE, DOSE)</h3>
+<section id="accuracy-the-mean-accuracy-slightly-decreases-to-approximately-84.26.-this-indicates-a-slight-reduction-in-the-overall-rate-of-correct-predictions-compared-to-the-first-model." class="level4">
+<h4 class="anchored" data-anchor-id="accuracy-the-mean-accuracy-slightly-decreases-to-approximately-84.26.-this-indicates-a-slight-reduction-in-the-overall-rate-of-correct-predictions-compared-to-the-first-model.">Accuracy: The mean accuracy slightly decreases to approximately 84.26%. This indicates a slight reduction in the overall rate of correct predictions compared to the first model.</h4>
+</section>
+<section id="roc-auc-the-mean-roc-auc-improves-to-approximately-0.627-indicating-enhanced-discriminative-ability-between-the-classes-compared-to-the-first-model." class="level4">
+<h4 class="anchored" data-anchor-id="roc-auc-the-mean-roc-auc-improves-to-approximately-0.627-indicating-enhanced-discriminative-ability-between-the-classes-compared-to-the-first-model.">ROC AUC: The mean ROC AUC improves to approximately 0.627, indicating enhanced discriminative ability between the classes compared to the first model.</h4>
+</section>
+</section>
+<section id="interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
+<section id="accuracy-vs.-roc-auc-while-the-first-model-achieves-higher-accuracy-its-roc-auc-value-is-lower-suggesting-its-not-as-effective-at-distinguishing-between-the-classes-across-different-thresholds.-the-second-model-despite-a-slight-drop-in-accuracy-shows-a-notable-improvement-in-roc-auc-indicating-better-performance-in-class-discrimination." class="level4">
+<h4 class="anchored" data-anchor-id="accuracy-vs.-roc-auc-while-the-first-model-achieves-higher-accuracy-its-roc-auc-value-is-lower-suggesting-its-not-as-effective-at-distinguishing-between-the-classes-across-different-thresholds.-the-second-model-despite-a-slight-drop-in-accuracy-shows-a-notable-improvement-in-roc-auc-indicating-better-performance-in-class-discrimination.">Accuracy vs.&nbsp;ROC AUC: While the first model achieves higher accuracy, its ROC AUC value is lower, suggesting it’s not as effective at distinguishing between the classes across different thresholds. The second model, despite a slight drop in accuracy, shows a notable improvement in ROC AUC, indicating better performance in class discrimination.</h4>
+</section>
+<section id="model-comparison-the-increase-in-roc-auc-for-the-second-model-suggests-that-including-additional-predictors-bmi_category-and-age-alongside-dose-contributes-to-a-more-nuanced-understanding-and-prediction-of-sex-beyond-what-is-achievable-with-dose-alone.-this-indicates-the-importance-of-considering-multiple-factors-in-predictive-modeling-especially-for-complex-outcomes." class="level4">
+<h4 class="anchored" data-anchor-id="model-comparison-the-increase-in-roc-auc-for-the-second-model-suggests-that-including-additional-predictors-bmi_category-and-age-alongside-dose-contributes-to-a-more-nuanced-understanding-and-prediction-of-sex-beyond-what-is-achievable-with-dose-alone.-this-indicates-the-importance-of-considering-multiple-factors-in-predictive-modeling-especially-for-complex-outcomes.">Model Comparison: The increase in ROC AUC for the second model suggests that including additional predictors (BMI_Category and AGE alongside DOSE) contributes to a more nuanced understanding and prediction of SEX, beyond what is achievable with DOSE alone. This indicates the importance of considering multiple factors in predictive modeling, especially for complex outcomes.</h4>
+</section>
+</section>
+</section>
+<section id="k-nearest-neighbors-knn-regression-model" class="level2">
+<h2 class="anchored" data-anchor-id="k-nearest-neighbors-knn-regression-model">k-nearest neighbors (KNN) regression model</h2>
+<section id="the-model-is-trained-and-evaluated-to-predict-the-outcome-variable-y-based-on-the-predictor-variable-dose." class="level3">
+<h3 class="anchored" data-anchor-id="the-model-is-trained-and-evaluated-to-predict-the-outcome-variable-y-based-on-the-predictor-variable-dose.">The model is trained and evaluated to predict the outcome variable ‘Y’ based on the predictor variable ‘DOSE’.</h3>
+</section>
+<section id="this-process-involves-splitting-the-dataset-into-training-and-testing-sets-converting-the-dose-variable-to-a-factor-specifying-the-knn-model-fitting-the-model-on-the-training-data-making-predictions-on-the-testing-set-calculating-evaluation-metrics-root-mean-squared-error-and-r-squared-and-printing-the-evaluation-metrics-for-model-assessment-and-comparison." class="level3">
+<h3 class="anchored" data-anchor-id="this-process-involves-splitting-the-dataset-into-training-and-testing-sets-converting-the-dose-variable-to-a-factor-specifying-the-knn-model-fitting-the-model-on-the-training-data-making-predictions-on-the-testing-set-calculating-evaluation-metrics-root-mean-squared-error-and-r-squared-and-printing-the-evaluation-metrics-for-model-assessment-and-comparison.">This process involves splitting the dataset into training and testing sets, converting the ‘DOSE’ variable to a factor, specifying the KNN model, fitting the model on the training data, making predictions on the testing set, calculating evaluation metrics (Root Mean Squared Error and R-squared), and printing the evaluation metrics for model assessment and comparison.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kknn)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Splitting the data</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  <span class="co"># Ensure reproducibility</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>mav_data_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(mav_clean, <span class="at">prop =</span> <span class="fl">0.75</span>)  <span class="co"># 75% training, 25% testing</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>mav_train <span class="ot">&lt;-</span> <span class="fu">training</span>(mav_data_split)  <span class="co"># Training data</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>mav_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(mav_data_split)  <span class="co"># Testing data</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>mav_train <span class="ot">&lt;-</span> mav_train <span class="sc">%&gt;%</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DOSE =</span> <span class="fu">as.factor</span>(DOSE))</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>mav_test <span class="ot">&lt;-</span> mav_test <span class="sc">%&gt;%</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DOSE =</span> <span class="fu">as.factor</span>(DOSE))</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="co"># KNN model specification</span></span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>knn_spec <span class="ot">&lt;-</span> <span class="fu">nearest_neighbor</span>(<span class="at">neighbors =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"kknn"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the workflow</span></span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>knn_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(Y <span class="sc">~</span> DOSE) <span class="sc">%&gt;%</span></span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(knn_spec)</span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting the model on training data</span></span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a>knn_fit <span class="ot">&lt;-</span> knn_workflow <span class="sc">%&gt;%</span></span>
+<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> mav_train)</span>
+<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Making predictions on the testing set</span></span>
+<span id="cb45-30"><a href="#cb45-30" aria-hidden="true" tabindex="-1"></a>knn_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(knn_fit, <span class="at">new_data =</span> mav_test) <span class="sc">%&gt;%</span></span>
+<span id="cb45-31"><a href="#cb45-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(mav_test)</span>
+<span id="cb45-32"><a href="#cb45-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-33"><a href="#cb45-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate RMSE and R-squared</span></span>
+<span id="cb45-34"><a href="#cb45-34" aria-hidden="true" tabindex="-1"></a>knn_metrics <span class="ot">&lt;-</span> knn_predictions <span class="sc">%&gt;%</span></span>
+<span id="cb45-35"><a href="#cb45-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> Y, <span class="at">estimate =</span> .pred) <span class="sc">%&gt;%</span></span>
+<span id="cb45-36"><a href="#cb45-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"rmse"</span>, <span class="st">"rsq"</span>))</span>
+<span id="cb45-37"><a href="#cb45-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-38"><a href="#cb45-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the evaluation metrics</span></span>
+<span id="cb45-39"><a href="#cb45-39" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(knn_metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard     566.   
+2 rsq     standard       0.648</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="model-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="model-comparison">Model comparison</h2>
+<section id="rmse-root-mean-squared-error" class="level4">
+<h4 class="anchored" data-anchor-id="rmse-root-mean-squared-error">RMSE (Root Mean Squared Error):</h4>
+</section>
+<section id="knn-model-565.72" class="level4">
+<h4 class="anchored" data-anchor-id="knn-model-565.72">KNN model: 565.72</h4>
+</section>
+<section id="dose-predictor-model-673.09" class="level4">
+<h4 class="anchored" data-anchor-id="dose-predictor-model-673.09">“DOSE Predictor” model: 673.09</h4>
+<section id="the-rmse-of-the-knn-model-565.72-is-lower-than-that-of-the-dose-predictor-model-673.09-indicating-that-on-average-the-knn-models-predictions-are-closer-to-the-true-values-compared-to-the-dose-predictor-model." class="level5">
+<h5 class="anchored" data-anchor-id="the-rmse-of-the-knn-model-565.72-is-lower-than-that-of-the-dose-predictor-model-673.09-indicating-that-on-average-the-knn-models-predictions-are-closer-to-the-true-values-compared-to-the-dose-predictor-model.">The RMSE of the KNN model (565.72) is lower than that of the “DOSE Predictor” model (673.09), indicating that, on average, the KNN model’s predictions are closer to the true values compared to the “DOSE Predictor” model.</h5>
+</section>
+</section>
+<section id="r-squared-rsq" class="level3">
+<h3 class="anchored" data-anchor-id="r-squared-rsq">R-squared (rsq):</h3>
+<section id="knn-model-0.648" class="level4">
+<h4 class="anchored" data-anchor-id="knn-model-0.648">KNN model: 0.648</h4>
+</section>
+<section id="dose-predictor-model-0.522" class="level4">
+<h4 class="anchored" data-anchor-id="dose-predictor-model-0.522">“DOSE Predictor” model: 0.522</h4>
+<section id="the-r-squared-value-of-the-knn-model-0.648-is-higher-than-that-of-the-dose-predictor-model-0.522-suggesting-that-the-knn-model-explains-a-higher-proportion-of-the-variance-in-the-outcome-variable-compared-to-the-dose-predictor-model." class="level5">
+<h5 class="anchored" data-anchor-id="the-r-squared-value-of-the-knn-model-0.648-is-higher-than-that-of-the-dose-predictor-model-0.522-suggesting-that-the-knn-model-explains-a-higher-proportion-of-the-variance-in-the-outcome-variable-compared-to-the-dose-predictor-model.">The R-squared value of the KNN model (0.648) is higher than that of the “DOSE Predictor” model (0.522), suggesting that the KNN model explains a higher proportion of the variance in the outcome variable compared to the “DOSE Predictor” model.</h5>
+</section>
+<section id="overall-based-on-these-metrics-the-knn-model-appears-to-perform-better-in-terms-of-both-accuracy-lower-rmse-and-explanatory-power-higher-r-squared-compared-to-the-dose-predictor-model." class="level5">
+<h5 class="anchored" data-anchor-id="overall-based-on-these-metrics-the-knn-model-appears-to-perform-better-in-terms-of-both-accuracy-lower-rmse-and-explanatory-power-higher-r-squared-compared-to-the-dose-predictor-model.">Overall, based on these metrics, the KNN model appears to perform better in terms of both accuracy (lower RMSE) and explanatory power (higher R-squared) compared to the “DOSE Predictor” model.</h5>
+
+
+</section>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
