@@ -17,8 +17,10 @@ suppressMessages({
   library(here)
   library(rsconnect)
   library(tidymodels)
+  library(tidyverse)
   library(yardstick)
   library(MASS)
+  library(broom)
 })
 
 ```
@@ -574,3 +576,322 @@ print(knn_metrics)
 ##### The R-squared value of the KNN model (0.648) is higher than that of the "DOSE Predictor" model (0.522), suggesting that the KNN model explains a higher proportion of the variance in the outcome variable compared to the "DOSE Predictor" model.
 
 ##### Overall, based on these metrics, the KNN model appears to perform better in terms of both accuracy (lower RMSE) and explanatory power (higher R-squared) compared to the "DOSE Predictor" model.
+
+::: {#new-section .warning}
+# Exercise 10
+
+## Improving Models
+:::
+
+## Data prep
+
+### First we will set a random seed.
+
+#### We will specify a value for a seed at the start, and then re-set the seed to this value before every operation that involves random numbers.
+
+```{r}
+rngseed2 = 1234
+```
+
+#### To pick up where we left off, let's re-examine the dataset.
+
+```{r}
+str(mav_clean)
+```
+
+### In the previous exercise, I added 3 new variable. For this exercise, I will remove them along with RACE so that only Y, DOSE, AGE, SEX, WT, HT remain.
+
+### The dataframe dimension should be 120X6
+
+```{r}
+# Rename dataframe and remove 'RACE', 'bmi', 'BMI_Category', 'Age_Group' columns using dplyr
+mav_ex10 <- mav_clean %>%
+  dplyr::select(-RACE, -bmi, -BMI_Category, -Age_Group)
+head(mav_ex10)
+dim(mav_ex10)
+```
+
+### Randomly split dataset into training (75%) and test (25%) frames using the seed defined above.
+
+```{r}
+set.seed(rngseed2)
+
+# Split the data into a 75% training set and a 25% test set
+data_split_mav <- initial_split(mav_ex10, prop = 0.75)
+
+# Extract the training and test sets
+mav10_train_75pct <- training(data_split_mav)
+mav10_test_25pct<- testing(data_split_mav)
+```
+
+## Model Fitting
+
+#### Use the tidymodels framework to fit two linear models to our continuous outcome of interest, (here, Y). The first model should only use DOSE as predictor, the second model should use all predictors. For both models, the metric to optimize should be RMSE
+
+### Model specification
+
+```{r}
+# Define linear regression models for fitting: one with DOSE only, another with all predictors
+# dose
+model_spec_dose <- linear_reg() %>% 
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# all predictors
+model_spec_all <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+```
+
+## Creating and Preparing a Recipe
+
+#### The process involves defining a data preprocessing recipe tailored to the training dataset and incorporating this unprepared recipe into model-specific workflows. Once the workflows are fitted to the training data, the recipe is automatically prepared and applied, seamlessly integrating data preprocessing with model training.
+
+```{r}
+# Define two recipes: one for the DOSE-only model and another for the All-predictors model
+
+# Define the recipe for the DOSE-only model without immediately preparing it
+mav_recipe_dose <- recipe(Y ~ DOSE, data = mav10_train_75pct) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+# Define the recipe for the All-predictors model without immediately preparing it
+mav_recipe_all <- recipe(Y ~ ., data = mav10_train_75pct) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+# Now, you can add these unprepared recipes to the workflows
+workflow_dose <- workflow() %>%
+  add_model(model_spec_dose) %>%
+  add_recipe(mav_recipe_dose)
+
+workflow_all <- workflow() %>%
+  add_model(model_spec_all) %>%
+  add_recipe(mav_recipe_all)
+
+# Fit the workflows to the training data
+fit_dose <- fit(workflow_dose, data = mav10_train_75pct)
+fit_all <- fit(workflow_all, data = mav10_train_75pct)
+```
+
+Making Predictions and Calculating RMSE \#### This code segment generates predictions using two different models (fit_dose and fit_all) on a testing dataset (mav10_train_75pct), then computes the Root Mean Squared Error (RMSE) for each model's predictions compared to the true values (Y).
+
+```{r}
+# Make predictions on the testing set and calculate RMSE for each model
+preds_dose <- predict(fit_dose, new_data = mav10_train_75pct) %>%
+  bind_cols(mav10_train_75pct)
+preds_all <- predict(fit_all, new_data = mav10_train_75pct) %>%
+  bind_cols(mav10_train_75pct)
+rmse_dose <- rmse(preds_dose, truth = Y, estimate = .pred)
+rmse_all <- rmse(preds_all, truth = Y, estimate = .pred)
+```
+
+## Calculating RMSE and Model Comparison
+
+#### This code block manually computes the Root Mean Squared Error (RMSE) for three different models: the 'DOSE' model, the 'All Predictors' model, and a Null model. It then prints the RMSE values to compare the performance of each model.
+
+```{r}
+# Manually calculate the mean of 'Y' from the training set for the null model
+mean_y <- mean(mav10_train_75pct$Y, na.rm = TRUE)
+null_predictions <- rep(mean_y, nrow(mav10_train_75pct))
+null_rmse <- sqrt(mean((mav10_train_75pct$Y - null_predictions)^2))
+
+# Print RMSE values to compare model performances
+cat("RMSE for DOSE model:", rmse_dose$.estimate, "\n")
+cat("RMSE for All Predictors model:", rmse_all$.estimate, "\n")
+cat("RMSE for Null model (manual):", null_rmse, "\n")
+```
+
+#Model performance assessment 2 \## Cross validation (CV) \### Set seed
+
+```{r}
+#use the same seed as the previous section 1234
+set.seed(rngseed2)  # Ensuring reproducibility
+```
+
+```{r}
+# Set the seed for reproducibility
+set.seed(rngseed2)
+
+# Define the 10-fold cross-validation folds
+cv_folds10 <- vfold_cv(mav10_train_75pct, v = 10)
+
+# Define the model specifications (assuming these are your models)
+model_spec_dose <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+model_spec_all <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# Define workflows
+workflow_dose <- workflow() %>%
+  add_model(model_spec_dose) %>%
+  add_formula(Y ~ DOSE)
+
+workflow_all <- workflow() %>%
+  add_model(model_spec_all) %>%
+  add_formula(Y ~ .)
+
+# Perform cross-validation for the DOSE-only model
+cv_results_dose <- fit_resamples(
+  workflow_dose,
+  cv_folds10,
+  metrics = metric_set(rmse)
+)
+
+# Perform cross-validation for the All-predictor model
+cv_results_all <- fit_resamples(
+  workflow_all,
+  cv_folds10,
+  metrics = metric_set(rmse)
+)
+
+# Assuming cv_results_dose and cv_results_all contain the cross-validation results
+
+# Extract and average RMSE for the DOSE-only model
+cv_summary_dose <- cv_results_dose %>% 
+  collect_metrics() %>% 
+  filter(.metric == "rmse") %>% 
+  summarize(mean_rmse_cv = mean(mean, na.rm = TRUE)) %>%
+  pull(mean_rmse_cv)
+
+# Extract and average RMSE for the All-predictors model
+cv_summary_all <- cv_results_all %>% 
+  collect_metrics() %>% 
+  filter(.metric == "rmse") %>% 
+  summarize(mean_rmse_cv = mean(mean, na.rm = TRUE)) %>%
+  pull(mean_rmse_cv)
+
+# Assuming cv_results_dose and cv_results_all contain the cross-validation results
+
+# Extract and average RMSE for the DOSE-only model
+cv_summary_dose <- cv_results_dose %>% 
+  collect_metrics() %>% 
+  filter(.metric == "rmse") %>% 
+  summarize(mean_rmse_cv = mean(mean, na.rm = TRUE)) %>%
+  pull(mean_rmse_cv)
+
+# Extract and average RMSE for the All-predictors model
+cv_summary_all <- cv_results_all %>% 
+  collect_metrics() %>% 
+  filter(.metric == "rmse") %>% 
+  summarize(mean_rmse_cv = mean(mean, na.rm = TRUE)) %>%
+  pull(mean_rmse_cv)
+
+library(dplyr)
+
+# Summarize RMSE for DOSE-only model
+summary_dose <- cv_results_dose %>% collect_metrics()
+
+# Summarize RMSE for All-predictor model
+summary_all <- cv_results_all %>% collect_metrics()
+
+# Combine summaries into a single table
+combined_summary <- bind_rows(
+  data.frame(Model = "DOSE-only", summary_dose),
+  data.frame(Model = "All-predictor", summary_all)
+)
+
+# Print the combined summary
+print(combined_summary)
+
+```
+
+## Interpreting the results
+
+### Dose only model
+
+#### For the DOSE-only model, the RMSE obtained through cross-validation is slightly lower than the initial RMSE. This indicates that the model is quite stable and generalizes well to unseen data. The slight improvement in RMSE suggests that the initial evaluation might have slightly overestimated the model's error, and the model actually performs a bit better on average across different subsets of the data.
+
+## All predictor model
+
+#### In contrast, for the All-predictors model, the CV RMSE is higher than the initial RMSE. This could indicate that the model, when evaluated on the training set, might have been slightly overfitting to that specific data. When the model is assessed through cross-validation, which involves training and evaluating the model on multiple subsets of the data, the average error increases. This suggests that the model's predictions are not as consistent across different subsets of data, highlighting a potential overfitting issue where the model learns specific patterns in the training set that don't generalize as well to unseen data.
+
+## Null model
+
+#### The Null Model, serving as a baseline, simply predicts the mean outcome for all observations without using any predictors. There's no variation in its predictions, so cross-validation does not apply. The RMSE here serves to underscore the baseline level of error when no predictive modeling is attempted.
+
+```{r}
+# Set the seed for reproducibility
+set.seed(4444)  # Assuming rngseed3 is the new seed value
+
+# Split the data into a 75% training set and a 25% test set
+data_split_mav_new <- initial_split(mav_ex10, prop = 0.75)
+
+# Extract the training and test sets
+mav10_train_75pct_new <- training(data_split_mav)
+mav10_test_25pct_new <- testing(data_split_mav)
+
+# Define the 10-fold cross-validation folds
+cv_folds10_new <- vfold_cv(mav10_train_75pct_new, v = 10)  # Assuming mav10_train_75pct_new is the new dataframe
+
+# Define the model specifications (assuming these are your models)
+model_spec_dose_new <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+model_spec_all_new <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# Define workflows
+workflow_dose_new <- workflow() %>%
+  add_model(model_spec_dose_new) %>%
+  add_formula(Y ~ DOSE)
+
+workflow_all_new <- workflow() %>%
+  add_model(model_spec_all_new) %>%
+  add_formula(Y ~ .)
+
+# Perform cross-validation for the DOSE-only model
+cv_results_dose_new <- fit_resamples(
+  workflow_dose_new,
+  cv_folds10_new,
+  metrics = metric_set(rmse)
+)
+
+# Perform cross-validation for the All-predictor model
+cv_results_all_new <- fit_resamples(
+  workflow_all_new,
+  cv_folds10_new,
+  metrics = metric_set(rmse)
+)
+
+# Extract and average RMSE for the DOSE-only model
+cv_summary_dose_new <- cv_results_dose_new %>% 
+  collect_metrics() %>% 
+  filter(.metric == "rmse") %>% 
+  summarize(mean_rmse_cv = mean(mean, na.rm = TRUE)) %>%
+  pull(mean_rmse_cv)
+
+# Extract and average RMSE for the All-predictors model
+cv_summary_all_new <- cv_results_all_new %>% 
+  collect_metrics() %>% 
+  filter(.metric == "rmse") %>% 
+  summarize(mean_rmse_cv = mean(mean, na.rm = TRUE)) %>%
+  pull(mean_rmse_cv)
+
+# Summarize RMSE for DOSE-only model
+summary_dose_new <- cv_results_dose_new %>% collect_metrics()
+
+# Summarize RMSE for All-predictor model
+summary_all_new <- cv_results_all_new %>% collect_metrics()
+
+# Combine summaries into a single table
+combined_summary_new <- bind_rows(
+  data.frame(Model = "DOSE-only", summary_dose_new),
+  data.frame(Model = "All-predictor", summary_all_new)
+)
+
+# Print the combined summary
+print(combined_summary_new)
+
+# Print RMSE values to compare model performances
+cat("RMSE for DOSE model:", rmse_dose$.estimate, "\n")
+cat("RMSE for All Predictors model:", rmse_all$.estimate, "\n")
+cat("RMSE for Null model (manual):", null_rmse, "\n")
+```
+
+### When a different random seed was used, the RMSE directions changed. For Dose-Only the mean RMSE went up to 712. This suggests that using the randomizationm from this seed, subsets are not as consistent than in the seed1234.
+
+### On the other hand, the RMSE for the all predictors CV model improved slightly. This suggests that model based on this randomization is stabler and generalizes well to unseen data.
