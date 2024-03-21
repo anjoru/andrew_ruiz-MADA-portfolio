@@ -580,6 +580,24 @@ print(knn_metrics)
 ::: {#new-section .warning}
 # Exercise 10
 
+## *installing and loading libraries*
+
+```{r}
+# List of required libraries
+required_libraries <- c("ggplot2", "dplyr", "skimr", "shiny", "DT", "here", "rsconnect", 
+                        "tidymodels", "tidyverse", "yardstick", "MASS", "broom")
+
+# Install any missing libraries
+new_libraries <- required_libraries[!required_libraries %in% installed.packages()[,"Package"]]
+if(length(new_libraries)) install.packages(new_libraries)
+
+# Load libraries silently
+suppressMessages({
+  lapply(required_libraries, library, character.only = TRUE)
+})
+
+```
+
 ## Improving Models
 :::
 
@@ -675,6 +693,7 @@ fit_all <- fit(workflow_all, data = mav10_train_75pct)
 Making Predictions and Calculating RMSE \#### This code segment generates predictions using two different models (fit_dose and fit_all) on a testing dataset (mav10_train_75pct), then computes the Root Mean Squared Error (RMSE) for each model's predictions compared to the true values (Y).
 
 ```{r}
+
 # Make predictions on the testing set and calculate RMSE for each model
 preds_dose <- predict(fit_dose, new_data = mav10_train_75pct) %>%
   bind_cols(mav10_train_75pct)
@@ -714,7 +733,7 @@ set.seed(rngseed2)
 # Define the 10-fold cross-validation folds
 cv_folds10 <- vfold_cv(mav10_train_75pct, v = 10)
 
-# Define the model specifications (assuming these are your models)
+# Define the model specifications 
 model_spec_dose <- linear_reg() %>%
   set_engine("lm") %>%
   set_mode("regression")
@@ -812,8 +831,9 @@ print(combined_summary)
 #### The Null Model, serving as a baseline, simply predicts the mean outcome for all observations without using any predictors. There's no variation in its predictions, so cross-validation does not apply. The RMSE here serves to underscore the baseline level of error when no predictive modeling is attempted.
 
 ```{r}
-# Set the seed for reproducibility
-set.seed(4444)  # Assuming rngseed3 is the new seed value
+# Set new seed for reproducibility
+set.seed(4444)  
+
 
 # Split the data into a 75% training set and a 25% test set
 data_split_mav_new <- initial_split(mav_ex10, prop = 0.75)
@@ -825,7 +845,7 @@ mav10_test_25pct_new <- testing(data_split_mav)
 # Define the 10-fold cross-validation folds
 cv_folds10_new <- vfold_cv(mav10_train_75pct_new, v = 10)  # Assuming mav10_train_75pct_new is the new dataframe
 
-# Define the model specifications (assuming these are your models)
+# Define the model specifications 
 model_spec_dose_new <- linear_reg() %>%
   set_engine("lm") %>%
   set_mode("regression")
