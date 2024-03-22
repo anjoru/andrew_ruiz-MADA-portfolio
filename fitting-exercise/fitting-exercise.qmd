@@ -915,3 +915,107 @@ cat("RMSE for Null model (manual):", null_rmse, "\n")
 ### When a different random seed was used, the RMSE directions changed. For Dose-Only the mean RMSE went up to 712. This suggests that using the randomizationm from this seed, subsets are not as consistent than in the seed1234.
 
 ### On the other hand, the RMSE for the all predictors CV model improved slightly. This suggests that model based on this randomization is stabler and generalizes well to unseen data.
+
+
+## This section was added by Arlyn Santiago
+# First I am going to plot the predicted values from all three models against the observed values of the training data. 
+
+```{r}
+# Extract the observed Y values from the training data
+observed_values <- mav10_train_75pct$Y
+
+# Prepare a dataframe for the DOSE model predictions
+preds_dose_df <- data.frame(Observed = observed_values, Predicted = preds_dose$.pred, Model="Dose Model") 
+
+# Prepare a dataframe for the All Predictors model predictions
+preds_all_df <- data.frame(Observed = observed_values, Predicted = preds_all$.pred, Model="Full Model")
+
+# Prepare a dataframe for the Null model predictions
+null_preds_df <- tibble(
+  Y = observed_values,
+  Predicted = mean_y, # mean_y calculated earlier for the null model
+  Model = "NULL"
+)
+
+# Combine all predictions into a single data frame
+all_preds_df <- bind_rows(preds_dose_df, preds_all_df, null_preds_df)
+
+# Now, plot using ggplot2 ()
+ggplot(all_preds_df, aes(x = Y, y = Predicted, color = Model)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "black") +
+  scale_color_manual(values = c("DOSE" = "purple", "ALL" = "orange", "NULL" = "blue")) +
+  scale_x_continuous(limits = c(0, 5000)) +
+  scale_y_continuous(limits = c(0, 5000)) +
+  labs(x = "Observed Values", y = "Predicted Values", title = "Observed vs. Predicted Values by Model") +
+  theme_minimal()
+```
+# The predictions from Null model is a horizontal line, signifying that there is a single value which is the mean of the outcome variable. I decided to plot the predicted values against the residuals for the comprehensive model to further understand any relationship or patterns that can be found.
+
+# I computed the residuals and then generated the plot.
+```{r}
+all_residuals <- all_preds_df %>% 
+  filter(Model == "Full Model") %>% 
+  mutate(Residuals = Predicted - observed_values)
+
+# Plotting Predicted vs Residuals for Full Model
+
+ggplot(all_residuals, aes(x = Predicted, y = Residuals)) +
+  geom_point() +
+  geom_abline(yintercept = 0, linetype = "solid", color = "red") +
+  labs(x = "Predicted Values", y = "Residuals", title = "Predicted vs Residuals for Full Model")+
+  scale_x_continuous(limits = c(-3000, 3000)) +
+  scale_y_continuous(limits = c(-3000, 3000)) +
+  theme_minimal()
+```
+# The model is not capturing some of the data. However, there are residuals grouped horizontally around 0. 
+
+## Using the Bootstrap Method to test for Model Uncertainty
+```{r}
+# Setting the same seed used in the beginning of this exercise
+set.seed(rngseed2)
+
+# Creating 100 bootstrap sammples from training data
+bootstrap_training <- bootstraps(mav10_train_75pct, times = 100) 
+
+# Creating a function to fit the model to each bootstrap sample
+bootstrap_pred <- bootstrap_training$splits %>% 
+  map(.f = ~{
+  bootstrap_all_var <- analysis(.x)
+    fit_model <- fit(model_spec_all_new, data = bootstrap_all_var)
+
+# Now to make predictions on the original training data 
+predict(fit_model, new_data = mav10_train_75pct)$.pred 
+
+}) # took hours to realize that this entire thing is a function wow...
+
+#Converting the list of prediction vectors into a matrix
+bootstrap_predictions_matrix <- do.call(rbind, bootstrap_pred)
+
+# Calculating mean predictions for each sample
+mean_predicitions <- rowMeans(bootstrap_predictions_matrix)
+
+# Calculating median and CI from webpage example
+median_CI89 <- bootstrap_predictions_matrix %>% 
+  apply(1, quantile, c(0.055, 0.5, 0.945)) %>% 
+  t()
+
+# Creating dataframe from bootstrap_predictions_matrix
+median_CI89_df <- as.data.frame(median_CI89)
+names(median_CI89_df) <- c("LowerBound", "Median", "UpperBound")
+
+# Adding observed values and original predictions to mav10_train_75pct
+median_CI89_df <- mutate(median_CI89_df, Observed = mav10_train_75pct)
+
+ggplot(median_CI89_df, aes(x = Observed)) +
+  geom_point(aes(y = preds_all_df$.pred, color = "Original Pred")) +
+  geom_point(aes(y= Median, color = "Median Predictions")) +
+  geom_errorbar(aes(ymin = LowerBound, ymax = UpperBound, y = Median, color = "Confidence Intervals")) +
+  geom_abline(yintercept = 0, slope = 1, linetype = "solid", color = "gold") +
+  labs(x = "Observed Values", y = "Predictions", title = "Predicted vs Observed Values")+
+  scale_x_continuous(limits = c(-3000, 3000)) +
+  scale_y_continuous(limits = c(-3000, 3000)) +
+  theme_minimal()
+
+```
+
