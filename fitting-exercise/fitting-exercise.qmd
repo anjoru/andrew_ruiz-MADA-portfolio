@@ -1159,31 +1159,21 @@ ggplot(plot_data, aes(x = Observed, y = Predicted, color = DataSet)) +
   theme(aspect.ratio = 1, legend.position = "bottom", legend.direction = "horizontal") # Square aspect ratio and horizontal legend at the bottom
 
 ```
-### **Does the full model perform better than the null model?**
 
+### **Does the full model perform better than the null model?**
 ##### It appears that the Full Model does show improvement over the Null Model, as its points are more aligned with the dashed diagonal line, indicating a positive relationship between observed and predicted values. However, while the Full Model seems to be the best among the three, it does show some degree of scatter, and there are areas, particularly for higher observed values, where the model may be underpredicting.
 
 ### **Does model 1 with only dose in the model improve results over the null model? Do the results make sense? Would you consider this model “usable” for any real purpose?**
-
 ##### The dose model seems to improve over the Null Model in that it at least captures some variability in the data that the Null Model, which simply predicts a constant value, does not.
-
 ##### The results show that the model predictions cluster into three distinct horizontal bands, which makes sense if the dose is a categorical variable with three levels. This implies that the model predicts different average values for each dose level but does not account for any other variation within those levels.
-
 ##### The Dose Model has a significantly lower RMSE compared to the Null Model, indicating it provides a better fit to the data. This suggests that the dose variable alone has a substantial effect on the outcome and the model is able to capture a meaningful portion of the variance in the data.
-
 ##### The Dose Model is more accurate than just guessing the average (Null Model), so it might be usable in scenarios where the predictions do not need to be highly precise, or if dose is the only available information.
-
 ##### The Dose Model can be considered usable with the understanding that there is a trade-off between simplicity and accuracy. It may be sufficient for certain applications, especially when other predictors are not available or if the decision-making process can tolerate a higher level of error. However, where accuracy is more critical, the Full Model is the superior choice.
 
 ### **Does model 2 with all predictors further improve results? Do the results make sense? Would you consider this model “usable” for any real purpose?**
-
 ##### The RMSE on the test set is 518.22 and improvement over the CV RSME. This suggests that the model is not overfitting to the training data.
-
 ##### The results make sense. The predictors are logical and likely carry meaningful information about the target variable.
-
 ##### Considering the model’s performance and the fact that it uses standard biometric predictors, the model appears usable for real-world applications.
-
 ##### Before using the model in practice, it would be essential to validate its performance on a larger and more diverse external dataset and to ensure its decisions are interpretable and actionable in a clinical context.
-
 ##### In summary, the information suggests that Model 2 with all predictors does improve results over the simpler Dose-only model and over the null model. The lower RMSE in both cross-validation and testing indicates the model has learned to generalize well. Yes, provided the model passes further validation and ethical review, it could be considered usable for real-world applications where the outcome variable is of interest.
 
