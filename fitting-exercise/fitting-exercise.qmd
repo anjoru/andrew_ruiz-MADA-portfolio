@@ -21,8 +21,8 @@ suppressMessages({
   library(yardstick)
   library(MASS)
   library(broom)
+  library(purrr)
 })
-
 ```
 
 ## Load dataset
@@ -208,6 +208,7 @@ datatable(summary_age, options = list(pageLength = 5), caption = 'Summary Statis
 #### Computes summary statistics (count, mean, median, minimum, and maximum) for variable Y, grouped by Age_Group and BMI_Category from the mav_clean dataset, and then displays the results in an sortable table
 
 ```{r}
+
 # Compute summary statistics for Y, stratified by both SEX and RACE
 summary_stats_group <- mav_clean %>%
   group_by(Age_Group, BMI_Category) %>%
@@ -580,24 +581,6 @@ print(knn_metrics)
 ::: {#new-section .warning}
 # Exercise 10
 
-## *installing and loading libraries*
-
-```{r}
-# List of required libraries
-required_libraries <- c("ggplot2", "dplyr", "skimr", "shiny", "DT", "here", "rsconnect", 
-                        "tidymodels", "tidyverse", "yardstick", "MASS", "broom")
-
-# Install any missing libraries
-new_libraries <- required_libraries[!required_libraries %in% installed.packages()[,"Package"]]
-if(length(new_libraries)) install.packages(new_libraries)
-
-# Load libraries silently
-suppressMessages({
-  lapply(required_libraries, library, character.only = TRUE)
-})
-
-```
-
 ## Improving Models
 :::
 
@@ -719,7 +702,9 @@ cat("RMSE for All Predictors model:", rmse_all$.estimate, "\n")
 cat("RMSE for Null model (manual):", null_rmse, "\n")
 ```
 
-#Model performance assessment 2 \## Cross validation (CV) \### Set seed
+#Model performance assessment 2 
+## Cross validation (CV) 
+### Set seed
 
 ```{r}
 #use the same seed as the previous section 1234
@@ -765,7 +750,7 @@ cv_results_all <- fit_resamples(
   metrics = metric_set(rmse)
 )
 
-# Assuming cv_results_dose and cv_results_all contain the cross-validation results
+# cv_results_dose and cv_results_all contain the cross-validation results
 
 # Extract and average RMSE for the DOSE-only model
 cv_summary_dose <- cv_results_dose %>% 
@@ -916,106 +901,274 @@ cat("RMSE for Null model (manual):", null_rmse, "\n")
 
 ### On the other hand, the RMSE for the all predictors CV model improved slightly. This suggests that model based on this randomization is stabler and generalizes well to unseen data.
 
+# This section was added by **Arlyn Santiago**
 
-## This section was added by Arlyn Santiago
-# First I am going to plot the predicted values from all three models against the observed values of the training data. 
+#### First I am going to plot the predicted values from all three models against the observed values of the training data.
 
 ```{r}
+# Assuming mav10_train_75pct is your training data and 'Y' is the outcome variable
+# Assuming preds_dose$.pred, preds_all$.pred are your predictions from the dose and full model respectively
+# Assuming mean_y is the mean of the observed outcomes used for the null model predictions
+
 # Extract the observed Y values from the training data
 observed_values <- mav10_train_75pct$Y
 
 # Prepare a dataframe for the DOSE model predictions
-preds_dose_df <- data.frame(Observed = observed_values, Predicted = preds_dose$.pred, Model="Dose Model") 
+preds_dose_df <- data.frame(Observed = observed_values, Predicted = preds_dose$.pred, Model = "Dose Model") 
 
 # Prepare a dataframe for the All Predictors model predictions
-preds_all_df <- data.frame(Observed = observed_values, Predicted = preds_all$.pred, Model="Full Model")
+preds_all_df <- data.frame(Observed = observed_values, Predicted = preds_all$.pred, Model = "Full Model")
 
 # Prepare a dataframe for the Null model predictions
-null_preds_df <- tibble(
-  Y = observed_values,
-  Predicted = mean_y, # mean_y calculated earlier for the null model
-  Model = "NULL"
-)
+null_preds_df <- data.frame(Observed = observed_values, Predicted = rep(mean_y, length(observed_values)), Model = "Null Model")
 
 # Combine all predictions into a single data frame
 all_preds_df <- bind_rows(preds_dose_df, preds_all_df, null_preds_df)
 
-# Now, plot using ggplot2 ()
-ggplot(all_preds_df, aes(x = Y, y = Predicted, color = Model)) +
+# Now, plot using ggplot2
+ggplot(all_preds_df, aes(x = Observed, y = Predicted, color = Model)) +
   geom_point() +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "black") +
-  scale_color_manual(values = c("DOSE" = "purple", "ALL" = "orange", "NULL" = "blue")) +
+  scale_color_manual(values = c("Dose Model" = "orchid", "Full Model" = "darkorange3", "Null Model" = "blue")) +
   scale_x_continuous(limits = c(0, 5000)) +
   scale_y_continuous(limits = c(0, 5000)) +
   labs(x = "Observed Values", y = "Predicted Values", title = "Observed vs. Predicted Values by Model") +
   theme_minimal()
+
 ```
 # The predictions from Null model is a horizontal line, signifying that there is a single value which is the mean of the outcome variable. I decided to plot the predicted values against the residuals for the comprehensive model to further understand any relationship or patterns that can be found.
 
 # I computed the residuals and then generated the plot.
+
 ```{r}
-all_residuals <- all_preds_df %>% 
-  filter(Model == "Full Model") %>% 
-  mutate(Residuals = Predicted - observed_values)
+# Recalculate residuals using the correct column name
+preds_all_df$residuals <- preds_all_df$Observed - preds_all_df$Predicted
 
-# Plotting Predicted vs Residuals for Full Model
+# Find the maximum absolute residual to set the y-axis limits symmetrically
+max_abs_residual <- max(abs(preds_all_df$residuals), na.rm = TRUE)
 
-ggplot(all_residuals, aes(x = Predicted, y = Residuals)) +
-  geom_point() +
-  geom_abline(yintercept = 0, linetype = "solid", color = "red") +
-  labs(x = "Predicted Values", y = "Residuals", title = "Predicted vs Residuals for Full Model")+
-  scale_x_continuous(limits = c(-3000, 3000)) +
-  scale_y_continuous(limits = c(-3000, 3000)) +
+# Plot predicted vs residuals for the full model using the correct column names
+ggplot(preds_all_df, aes(x = Predicted, y = residuals)) +
+  geom_point(color = "tomato") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "navy") +
+  scale_y_continuous(limits = c(-max_abs_residual, max_abs_residual)) +
+  labs(x = "Predicted Values", y = "Residuals", title = "Predicted vs. Residuals for the Full Model") +
   theme_minimal()
+
 ```
-# The model is not capturing some of the data. However, there are residuals grouped horizontally around 0. 
+
+
+
+
+# The model is not capturing some of the data. However, there are residuals grouped horizontally around 0.
 
 ## Using the Bootstrap Method to test for Model Uncertainty
+
 ```{r}
-# Setting the same seed used in the beginning of this exercise
-set.seed(rngseed2)
+library(tidymodels)
+library(purrr) # For the map function
 
-# Creating 100 bootstrap sammples from training data
-bootstrap_training <- bootstraps(mav10_train_75pct, times = 100) 
+# Set the random seed for reproducibility
+set.seed(rngseed2) # Make sure rngseed2 is defined
 
-# Creating a function to fit the model to each bootstrap sample
-bootstrap_pred <- bootstrap_training$splits %>% 
+# Create 100 bootstrap samples of the training data
+boot_samples <- bootstraps(mav10_train_75pct, times = 100)
+
+# Use the 'workflow_all' to fit the model to each of the bootstrap samples 
+# and make predictions on the original training data
+predictions_list <- boot_samples$splits %>%
   map(.f = ~{
-  bootstrap_all_var <- analysis(.x)
-    fit_model <- fit(model_spec_all_new, data = bootstrap_all_var)
+    # Extract the analysis (training) set from the current bootstrap sample
+    boot_data <- analysis(.x)
+    
+    # Fit the workflow to the bootstrap sample. Assuming 'workflow_all' includes your model and preprocessing steps
+    fitted_workflow <- fit(workflow_all, data = boot_data)
+    
+    # Make predictions on the original training data using the fitted workflow
+    predict(fitted_workflow, new_data = mav10_train_75pct)$.pred
+  })
+# Check the length of the predictions list
+# it should be 100
+length(predictions_list)
+```
+```{r}
+# Step 1: Convert the list of prediction vectors into a matrix with bootstrap samples as columns
+bootstrap_predictions_matrix <- do.call(cbind, predictions_list)
 
-# Now to make predictions on the original training data 
-predict(fit_model, new_data = mav10_train_75pct)$.pred 
+# Ensure that the matrix is correctly oriented (observations as rows, bootstrap samples as columns)
+# This should already be the case based on the description
 
-}) # took hours to realize that this entire thing is a function wow...
+# Step 2: Compute the median and 89% confidence intervals for each observation across bootstrap samples
+model2_median_and_CI89 <- apply(bootstrap_predictions_matrix, 1, quantile, probs = c(0.055, 0.5, 0.945)) %>% t()
 
-#Converting the list of prediction vectors into a matrix
-bootstrap_predictions_matrix <- do.call(rbind, bootstrap_pred)
+# model2_median_and_CI89 now contains the median and confidence intervals for each observation
 
-# Calculating mean predictions for each sample
-mean_predicitions <- rowMeans(bootstrap_predictions_matrix)
+# Convert the results into a dataframe for easier handling and potentially merging with your original data
+CI_df <- as.data.frame(model2_median_and_CI89)
+names(CI_df) <- c("Lower CI (5.5%)", "Median", "Upper CI (94.5%)")
 
-# Calculating median and CI from webpage example
-median_CI89 <- bootstrap_predictions_matrix %>% 
-  apply(1, quantile, c(0.055, 0.5, 0.945)) %>% 
-  t()
+# View the first few rows to verify
+head(CI_df)
 
-# Creating dataframe from bootstrap_predictions_matrix
-median_CI89_df <- as.data.frame(median_CI89)
-names(median_CI89_df) <- c("LowerBound", "Median", "UpperBound")
+# At this point, CI_df  will contain the median prediction and confidence intervals for each observation in your original dataset.
+```
+```{r}
+original_predictions <- preds_all_df$Predicted
+observed_values <- preds_all_df$Observed
 
-# Adding observed values and original predictions to mav10_train_75pct
-median_CI89_df <- mutate(median_CI89_df, Observed = mav10_train_75pct)
+# Adjust column names if they differ in your preds_all_df dataset
+# Create the bootstrap_stats_df from the quantiles obtained previously
+bootstrap_stats_df <- data.frame(
+  Lower_Bound = model2_median_and_CI89[, "5.5%"],
+  Median = model2_median_and_CI89[, "50%"],
+  Upper_Bound = model2_median_and_CI89[, "94.5%"]
+)
 
-ggplot(median_CI89_df, aes(x = Observed)) +
-  geom_point(aes(y = preds_all_df$.pred, color = "Original Pred")) +
-  geom_point(aes(y= Median, color = "Median Predictions")) +
-  geom_errorbar(aes(ymin = LowerBound, ymax = UpperBound, y = Median, color = "Confidence Intervals")) +
-  geom_abline(yintercept = 0, slope = 1, linetype = "solid", color = "gold") +
-  labs(x = "Observed Values", y = "Predictions", title = "Predicted vs Observed Values")+
-  scale_x_continuous(limits = c(-3000, 3000)) +
-  scale_y_continuous(limits = c(-3000, 3000)) +
-  theme_minimal()
+# Ensure all data frames have the same number of rows
+stopifnot(nrow(bootstrap_stats_df) == length(original_predictions))
+stopifnot(length(original_predictions) == length(observed_values))
+
+# Create plot_data with all predictions
+plot_data <- data.frame(
+  Observed = observed_values,
+  Original_Predictions = original_predictions
+)
+
+# Combine the original predictions with the bootstrap statistics
+plot_data <- cbind(plot_data, bootstrap_stats_df)
+
+# Now pivot the plot_data to long format for ggplot2
+plot_data_long <- pivot_longer(
+  plot_data,
+  cols = c("Original_Predictions", "Lower_Bound", "Median", "Upper_Bound"),
+  names_to = "Prediction_Type",
+  values_to = "Predicted_Values"
+)
+
+# Define the order for the predictions explicitly
+prediction_levels <- c("Lower_Bound", "Median", "Upper_Bound", "Original_Predictions")
+
+# Set the levels for the 'Prediction_Type' factor based on the desired order
+plot_data_long$Prediction_Type <- factor(plot_data_long$Prediction_Type, levels = prediction_levels)
+
+# Define intuitive colors for predictions
+colors <- c("Lower_Bound" = "darkolivegreen3", "Median" = "lightblue", "Upper_Bound" = "coral3", "Original_Predictions" = "black")
+
+# Plot with ggplot2
+ggplot(plot_data_long, aes(x = Observed, y = Predicted_Values, color = Prediction_Type)) +
+  geom_point(size = 1.2) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "black") +
+  scale_color_manual(values = colors) +
+  labs(x = "Observed Values", y = "Predicted Values", color = "Prediction Type") +
+  theme_minimal() +
+  scale_x_continuous(limits = c(0, 5000), expand = expansion(mult = c(0, 0.05))) +
+  scale_y_continuous(limits = c(0, 5000), expand = expansion(mult = c(0, 0.05))) +
+  coord_fixed(ratio = 1)
+```
+
+```{r}
+# Ensure plot_data contains 'Observed', 'Original_Predictions', 'Median', 'Lower_Bound', and 'Upper_Bound'
+
+# Calculate summary statistics for observed values
+observed_summary <- summary(plot_data$Observed)
+
+# Calculate summary statistics for original model predictions
+original_pred_summary <- summary(plot_data$Original_Predictions)
+
+# Calculate summary statistics for bootstrap median predictions
+bootstrap_median_summary <- summary(plot_data$Median)
+
+# Create a data frame with summary statistics directly from summary objects
+summary_table <- tibble(
+  Statistic = c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max."),
+  Observed = as.numeric(observed_summary),
+  Original_Predictions = as.numeric(original_pred_summary),
+  Bootstrap_Median = as.numeric(bootstrap_median_summary)
+)
+
+# Display the summary table
+print(summary_table)
+```
+# **PART 3**
+## Back to **Andrew Ruiz**
+#### Use the fit of model 2 using the training data you computed previously, and now use this fitted model to make predictions for the test data. This gives us an indication how our model generalizes to data that wasn’t used to construct/fit/train the model.
+```{r}
+# Make predictions on the test dataset
+test_predictions <- predict(fit_all, new_data = mav10_test_25pct)
+
+# Assuming a regression task, extract the predicted values
+# If your task is classification, adjust to use `.pred_class` or appropriate column
+test_predicted_values <- test_predictions$.pred
+
+# Optionally, compare these predicted values with the actual outcomes in your test dataset
+# This step requires your test dataset to include the actual outcome variable, let's say it's named 'Y'
+
+# Assuming the actual outcomes are in mav10_test_25pct under 'Y'
+actual_outcomes <- mav10_test_25pct$Y
+
+# Calculate performance metrics, e.g., RMSE for regression tasks
+rmse_value <- sqrt(mean((actual_outcomes - test_predicted_values)^2))
+
+# Assuming calculation of RMSE for training data is similar to test data
+train_rmse <- sqrt(mean((mav10_train_75pct$Y - predict(fit_all, mav10_train_75pct)$.pred)^2))
+
+# Create a summary table of performance metrics
+performance_summary <- tibble(
+  Dataset = c("Training", "Test"),
+  RMSE = c(train_rmse, rmse_value)
+)
+
+# Display the table
+print(performance_summary)
 
 ```
+#### Make a plot that shows predicted versus observed for both the training data (which you did above) and in the same plot, also show predicted versus observed for the test data (using, e.g. different symbols or colors).
+```{r}
+
+# Step 1: Prepare the data
+
+# For training data predictions 
+train_predicted_values <- predict(fit_all, new_data = mav10_train_75pct)$.pred
+train_data_plot <- mav10_train_75pct %>%
+  mutate(Predicted = train_predicted_values, DataSet = "Training")
+
+# For test data predictions
+test_data_plot <- mav10_test_25pct %>%
+  mutate(Predicted = test_predicted_values, DataSet = "Test")
+
+# Combine training and test data for plotting
+plot_data <- bind_rows(train_data_plot, test_data_plot)
+
+# Ensure your outcome variable name is correctly specified instead of 'Y'
+plot_data$Observed <- plot_data$Y
+
+# Step 2: Plot using ggplot2
+ggplot(plot_data, aes(x = Observed, y = Predicted, color = DataSet)) +
+  geom_point(aes(shape = DataSet), size = 2) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "grey") +
+  scale_color_manual(values = c("Training" = "blue", "Test" = "red")) +
+  labs(x = "Observed Values", y = "Predicted Values", title = "Predicted vs Observed Values") +
+  theme_minimal() +
+  scale_shape_manual(values = c("Training" = 16, "Test" = 17)) + # Different shapes for training and test
+  xlim(0, 5000) + # Setting x-axis limits
+  ylim(0, 5000) +   # Setting y-axis limits
+  theme(aspect.ratio = 1, legend.position = "bottom", legend.direction = "horizontal") # Square aspect ratio and horizontal legend at the bottom
+
+```
+### **Does the full model perform better than the null model?**
+##### It appears that the Full Model does show improvement over the Null Model, as its points are more aligned with the dashed diagonal line, indicating a positive relationship between observed and predicted values. However, while the Full Model seems to be the best among the three, it does show some degree of scatter, and there are areas, particularly for higher observed values, where the model may be underpredicting.
+
+### **Does model 1 with only dose in the model improve results over the null model? Do the results make sense? Would you consider this model “usable” for any real purpose?**
+#### The dose model seems to improve over the Null Model in that it at least captures some variability in the data that the Null Model, which simply predicts a constant value, does not.
+#### The results show that the model predictions cluster into three distinct horizontal bands, which makes sense if the dose is a categorical variable with three levels. This implies that the model predicts different average values for each dose level but does not account for any other variation within those levels.
+#### The Dose Model has a significantly lower RMSE compared to the Null Model, indicating it provides a better fit to the data. This suggests that the dose variable alone has a substantial effect on the outcome and the model is able to capture a meaningful portion of the variance in the data.
+#### The Dose Model is more accurate than just guessing the average (Null Model), so it might be usable in scenarios where the predictions do not need to be highly precise, or if dose is the only available information.
+#### The Dose Model can be considered usable with the understanding that there is a trade-off between simplicity and accuracy. It may be sufficient for certain applications, especially when other predictors are not available or if the decision-making process can tolerate a higher level of error. However, where accuracy is more critical, the Full Model is the superior choice.
+
+### Does model 2 with all predictors further improve results? Do the results make sense? Would you consider this model “usable” for any real purpose?
+#### The RMSE on the test set is 518.22 and improvement over the CV RSME. This suggests that the model is not overfitting to the training data.
+#### The results make sense. The predictors are logical and likely carry meaningful information about the target variable. 
+#### Considering the model’s performance and the fact that it uses standard biometric predictors, the model appears usable for real-world applications.
+#### Before using the model in practice, it would be essential to validate its performance on a larger and more diverse external dataset and to ensure its decisions are interpretable and actionable in a clinical context. 
+#### In summary, the information suggests that Model 2 with all predictors does improve results over the simpler Dose-only model and over the null model. The lower RMSE in both cross-validation and testing indicates the model has learned to generalize well. Yes, provided the model passes further validation and ethical review, it could be considered usable for real-world applications where the outcome variable is of interest.
 
