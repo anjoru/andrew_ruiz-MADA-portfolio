@@ -1,0 +1,431 @@
+---
+title: "ml-models-exercise"
+author: "Andrew Ruiz"
+editor: source
+---
+
+# Module 11: Machine Learning Models Exercise
+
+## Load libraries
+
+```{r}
+library(here)
+library(tidymodels)
+library(ggplot2)
+library(GGally)
+library(ggcorrplot)
+library(glmnet)
+library(ranger)
+library(dplyr)
+library(glmnet)
+library(workflows)
+library(yardstick)
+```
+
+## Set the seed for reproducibility
+
+```{r}
+#Set the random seed to 1234
+ex11_seed = 1234
+set.seed(ex11_seed)
+```
+
+## Load rds from the fitting exercise
+
+```{r}
+# Construct the path to the RDS file using here()
+file_path_mav <- here("ml-models-exercise", "mav_clean_ex11.rds")
+
+# Load the mav_clean dataframe from the specified RDS file
+mav_ex11 <- readRDS(file_path_mav)
+
+# examine the dataset
+head(mav_ex11)
+dim(mav_ex11)
+```
+
+## Examine the RACE variable
+
+```{r}
+# Count occurrences of each category in the RACE variable
+race_counts <- table(mav_ex11$RACE)
+
+# Calculate percentages
+race_percentages <- (race_counts / sum(race_counts)) * 100
+
+# Combine counts and percentages into a data frame for better readability
+race_summary <- data.frame(
+  Race = names(race_counts),
+  Counts = as.integer(race_counts), # Ensure counts are in integer format
+  Percentages = race_percentages
+)
+# Print the summary data frame
+print(race_summary)
+```
+
+## Recode the RACE variable
+
+##### According to Table 1 of Wendling, T. et al.
+
+Model-Based Evaluation of the Impact of Formulation and Food Intake on the Complex Oral Absorption of Mavoglurant in Healthy Subjects. Pharm Res 32, 1764–1778 (2015). https://doi.org/10.1007/s11095-014-1574-1 race break down was: Caucasian (61.7), Black (30), Native American (1.7) and Other (6.7)
+
+##### So, for Race
+
+1=Caucasian 2=Black 7=Native American 88=Other
+
+### However, for this exercise, we will just recode to 3 variables.
+
+```{r}
+# Recode RACE
+mav_ex11 <- mav_ex11 %>%
+  mutate(RACE = as.character(RACE)) %>% # Convert to character to handle NA properly
+  mutate(RACE = recode(RACE, '7' = '3', '88' = '3')) %>%
+  mutate(RACE = factor(RACE, levels = c('1', '2', '3'), 
+                       labels = c("Caucasian", "Black", "Other")))
+
+# Now, print the levels of RACE after recoding:
+print(levels(mav_ex11$RACE))
+
+```
+
+## make a pairwise correlation plot for the continuous variables.
+
+#####If we were to find any very strong correlations, we might want to remove those.
+
+```{r}
+# Selecting only continuous variables
+continuous_vars <- mav_ex11[, c("AGE", "WT", "HT")]
+
+# Computing the correlation matrix
+cor_matrix <- cor(continuous_vars, use = "complete.obs")
+
+# Visualizing the correlation matrix
+ggcorrplot(cor_matrix, method = "circle", hc.order = TRUE, type = "lower",
+           lab = TRUE, lab_size = 3, colors = c("gold", "snow", "tomato"))
+print(cor_matrix)
+```
+
+## While the correlation between HT and WT is not strong, we will combine the two into BMI calculating new variable, BMI, from HT(m) and WT(kg).
+
+##### BMI = WT(kg) / HT(m)\^2
+
+```{r}
+# Calculate BMI
+mav_ex11$BMI <- mav_ex11$WT / (mav_ex11$HT^2)
+
+str(mav_ex11)
+
+
+mav_ex11 <- mav_ex11 %>%
+  mutate(
+    DOSE = as.factor(DOSE),
+    RACE = as.factor(RACE),
+    SEX = as.factor(SEX)
+  )
+```
+
+## Create linear model with all predictors.
+
+```{r}
+# Define a linear regression model
+linear_model_spec <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# Prepare the recipe for the linear model, specifying categorical variables
+linear_model_recipe <- recipe(Y ~ ., data = mav_ex11) %>%
+  step_dummy(all_nominal(), -all_outcomes()) # Convert categorical variables to dummy variables
+
+# Combine the model and recipe into a workflow, then fit it to the data
+linear_model_workflow <- workflow() %>%
+  add_model(linear_model_spec) %>%
+  add_recipe(linear_model_recipe) %>%
+  fit(data = mav_ex11)
+```
+
+## LASSO Regression Model Specification with glmnet engine
+
+```{r}
+# Then define the recipe for LASSO
+lasso_model_recipe <- recipe(Y ~ ., data = mav_ex11) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+lasso_model_spec <- linear_reg(penalty = 0.1, mixture = 1) %>%
+  set_engine("glmnet") %>%
+  set_mode("regression")
+
+# Recipe for LASSO, converting categorical variables to dummy variables
+lasso_model_recipe <- recipe(Y ~ ., data = mav_ex11) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+  
+
+# Workflow for LASSO, combining model and recipe, then fitting to data
+lasso_model_workflow <- workflow() %>%
+  add_model(lasso_model_spec) %>%
+  add_recipe(lasso_model_recipe) %>%
+  fit(data = mav_ex11)
+```
+
+## Random Forest Model Specification with ranger engine
+
+```{r}
+# Random Forest Model Specification with ranger engine
+rf_model_spec <- rand_forest() %>%
+  set_engine("ranger", seed = ex11_seed) %>%
+  set_mode("regression")
+
+# Recipe for Random Forest, ensuring categorical variables are treated correctly
+# No need for step_dummy() as random forest can handle categorical variables directly
+rf_model_recipe <- recipe(Y ~ ., data = mav_ex11)
+
+# Workflow for Random Forest, combining model and recipe, then fitting to data
+rf_model_workflow <- workflow() %>%
+  add_model(rf_model_spec) %>%
+  add_recipe(rf_model_recipe) %>%
+  fit(data = mav_ex11)
+```
+
+# Linear Model Predictions
+
+```{r}
+# Predictions
+lm_predictions_ex11 <- predict(linear_model_workflow, new_data = mav_ex11) %>%
+  bind_cols(mav_ex11)
+
+# Calculate RMSE
+lm_rmse_ex11 <- rmse(lm_predictions_ex11, truth = Y, estimate = .pred)
+
+# Observed vs Predicted Plot
+ggplot(lm_predictions_ex11, aes(x = Y, y = .pred)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
+  labs(x = "Observed", y = "Predicted", title = "Linear Model: Observed vs Predicted")
+```
+
+# Lasso Model Predictions
+
+```{r}
+# Predictions
+lasso_predictions_ex11 <- predict(lasso_model_workflow, new_data = mav_ex11) %>%
+  bind_cols(mav_ex11)
+
+# Calculate RMSE
+lasso_rmse_ex11 <- rmse(lasso_predictions_ex11, truth = Y, estimate = .pred)
+
+# Observed vs Predicted Plot
+ggplot(lasso_predictions_ex11, aes(x = Y, y = .pred)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
+  labs(x = "Observed", y = "Predicted", title = "LASSO Model: Observed vs Predicted")
+```
+
+# Random Forest Model Predictions
+
+```{r}
+# Predictions
+rf_predictions_ex11 <- predict(rf_model_workflow, new_data = mav_ex11) %>%
+  bind_cols(mav_ex11)
+
+# Calculate RMSE
+rf_rmse_ex11 <- rmse(rf_predictions_ex11, truth = Y, estimate = .pred)
+
+# Observed vs Predicted Plot
+ggplot(rf_predictions_ex11, aes(x = Y, y = .pred)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
+  labs(x = "Observed", y = "Predicted", title = "Random Forest Model: Observed vs Predicted")
+
+```
+
+## Examine the RSME values from the models
+
+```{r}
+#RMSE
+# Create a dataframe to hold the RMSE values
+rmse_summary_ex11 <- tibble(
+  Model = c("Linear", "LASSO", "Random Forest"),
+  RMSE = c(lm_rmse_ex11$.estimate, lasso_rmse_ex11$.estimate, rf_rmse_ex11$.estimate)
+)
+
+# Print the summary table
+print(rmse_summary_ex11)
+```
+
+## Tuning the LASSO model wihtout CV
+
+##### *this is not a good idea*
+
+```{r}
+# Define the range of penalty values
+penalty_grid <- 10^seq(-5, 2, length.out = 50)
+
+# Update the LASSO model spec to use tune() for the penalty
+lasso_model_spec_tuned <- linear_reg(penalty = tune(), mixture = 1) %>%
+  set_engine("glmnet") %>%
+  set_mode("regression")
+
+# Use the same recipe as before
+lasso_model_recipe <- recipe(Y ~ ., data = mav_ex11) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+# Define the tuning workflow
+lasso_tuning_workflow <- workflow() %>%
+  add_model(lasso_model_spec_tuned) %>%
+  add_recipe(lasso_model_recipe)
+
+# Create a tibble with penalty values for tuning
+penalty_tibble <- tibble(penalty = penalty_grid)
+
+# Use apparent resampling for tuning (not recommended in practice)
+lasso_resamples <- apparent(mav_ex11)
+
+# Tune the model
+lasso_tuned_results <- tune_grid(
+  lasso_tuning_workflow,
+  resamples = lasso_resamples,
+  grid = penalty_tibble
+)
+
+# Evaluate the tuned model
+best_lasso <- select_best(lasso_tuned_results, "rmse")
+
+# Print the best penalty value
+print(best_lasso)
+
+# Visualize tuning diagnostics for LASSO
+lasso_tuned_results %>% autoplot()
+```
+
+#### As the penalty parameter increases, LASSO regression can drive more coefficients to zero, effectively removing them from the model. If the penalty is too large, it may remove too many features, leading the model towards a null model, which is a model with no predictors.
+
+#### The unpenalized linear model is fully optimized to fit the training data without any restraint, possibly capturing noise and overfitting. When LASSO introduces a penalty for complexity, it trades off some of the training data fit to achieve a model that should generalize better. However, since we are only evaluating on the same data used to tune the penalty, we don't see the benefit of this trade-off. In fact, due to this evaluation approach, we may see an increase in RMSE as we overly simplify the model, potentially leading to underfitting when the penalty is too high
+
+## Now for Randome Forest model
+
+```{r}
+# Define the Random Forest model with specific tuning indications
+rf_model_spec <- rand_forest(trees = 300, mtry = tune(), min_n = tune()) %>%
+  set_engine("ranger", seed = 123) %>%
+  set_mode("regression")
+
+# Define the recipe
+rf_recipe <- recipe(Y ~ ., data = mav_ex11)
+
+# Define the tuning grid
+tuning_grid <- grid_regular(
+  mtry(range = c(1, 7)),
+  min_n(range = c(1, 21)),
+  levels = 7
+)
+
+# Define resampling method - using the full dataset through apparent resampling
+resamples <- apparent(data = mav_ex11)
+
+# Combine the model and recipe into a workflow
+rf_workflow <- workflow() %>%
+  add_model(rf_model_spec) %>%
+  add_recipe(rf_recipe)
+
+# Tune the model using the workflow
+rf_tuned_results <- tune_grid(
+  rf_workflow,
+  resamples = resamples,
+  grid = tuning_grid
+)
+
+# Visualize the tuning results
+autoplot(rf_tuned_results)
+```
+
+## Now we will try it all with CV
+
+### LASSO
+
+```{r}
+# Set the seed for reproducibility
+set.seed(ex11_seed)
+
+# Define the range of penalty values for the grid
+penalty_grid <- 10^seq(-5, 2, length.out = 50)
+
+# Update the LASSO model spec to use tune() for the penalty
+lasso_model_spec_tuned <- linear_reg(penalty = tune(), mixture = 1) %>%
+  set_engine("glmnet") %>%
+  set_mode("regression")
+
+# Define the recipe, including dummy variables as needed
+lasso_model_recipe <- recipe(Y ~ ., data = mav_ex11) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+# Define a workflow that includes the model spec and the recipe
+lasso_tuning_workflow <- workflow() %>%
+  add_model(lasso_model_spec_tuned) %>%
+  add_recipe(lasso_model_recipe)
+
+# Create the cross-validation resamples
+cv_resamples <- vfold_cv(mav_ex11, v = 5, repeats = 5)
+
+# Tune the model with cross-validation
+lasso_tuned_cv_results <- tune_grid(
+  lasso_tuning_workflow,
+  resamples = cv_resamples,
+  grid = penalty_tibble
+)
+
+# Visualize tuning diagnostics
+autoplot(lasso_tuned_cv_results)
+```
+
+## Random Forest
+
+```{r}
+rf_model_spec <- rand_forest(trees = 300, mtry = tune(), min_n = tune()) %>%
+  set_engine("ranger", seed = ex11_seed) %>%
+  set_mode("regression")
+
+# Define the recipe
+rf_recipe <- recipe(Y ~ ., data = mav_ex11)
+
+# Define the tuning grid
+tuning_grid <- grid_regular(
+  mtry(range = c(1, 7)),
+  min_n(range = c(1, 21)),
+  levels = 7
+)
+
+# Define resampling method - using the full dataset through apparent resampling
+rf_cv_resamples <- vfold_cv(data = mav_ex11)
+
+# Combine the model and recipe into a workflow
+rf_workflow <- workflow() %>%
+  add_model(rf_model_spec) %>%
+  add_recipe(rf_recipe)
+
+# Tune the model using the workflow
+rf_cvtuned_results <- tune_grid(
+  rf_workflow,
+  resamples = resamples,
+  grid = tuning_grid
+)
+
+# Set the seed for reproducibility
+set.seed(ex11_seed)
+
+# Create 5-fold CV resamples, repeated 5 times
+rf_cv_resamples <- vfold_cv(data = mav_ex11, v = 5, repeats = 5)
+
+# Tune the model using the workflow with the corrected resamples variable
+rf_cvtuned_results <- tune_grid(
+  rf_workflow,
+  resamples = rf_cv_resamples,
+  grid = tuning_grid
+)
+
+# Visualize the tuning results
+autoplot(rf_cvtuned_results)
+```
+
+##### Without external validation data, it's hard to fully assess which model generalizes better. Lower training error (like RMSE or MSE) doesn't always guarantee better performance on unseen data. Models like RF can sometimes be more robust to overfitting compared to linear models, depending on the data and how the tuning is done.
+
+### Conclusion:
+##### Based on the given tuning results, the LASSO model appears to offer better predictive accuracy with a lower RMSE compared to the RF model's MSE/RMSE. However, the final decision on which model to use should also consider factors such as model interpretability, computational cost, and how well you expect the model to generalize to new, unseen data. 
