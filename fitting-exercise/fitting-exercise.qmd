@@ -159,8 +159,8 @@ mav_clean <- mav_clean %>%
                          right = FALSE)) %>%
 	mutate(Age_Group = factor(Age_Group)) #convert to factor
 
-# Assuming mav_clean is already created and modified as per your specifications
-saveRDS(mav_clean, file = "/path")
+# saving RDS for later use
+#saveRDS(mav_clean, file = "/path")
 
 #examine structure
 str(mav_clean)

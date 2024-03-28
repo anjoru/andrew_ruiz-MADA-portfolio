@@ -381,21 +381,21 @@ autoplot(rf_cvtuned_results)
 
 
 # Collect tuning results
-results <- collect_metrics(rf_cvtuned_results)
+results_rf <- collect_metrics(rf_cvtuned_results)
 
 # Arrange results in ascending order of RMSE
-results <- results %>% 
+results_rf <- results_rf %>% 
   filter(.metric == "rmse") %>% 
   arrange(mean)
 
 # Create a table of results for the top performing models
-top_results <- results %>%
+top_results_rf <- results_rf %>%
   head(10) %>%
   select(mtry, min_n, mean, std_err) %>%
   rename(MSE = mean, Std_Error = std_err)
 
 # Print the table
-print(top_results)
+print(top_results_rf)
 
 
 ## if using RSME as the metric, then the RF model with
