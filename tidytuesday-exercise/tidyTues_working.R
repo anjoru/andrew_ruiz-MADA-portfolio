@@ -43,6 +43,33 @@ ea_part_2024 <- tuesdata$eclipse_partial_2024
 
 wd = here::here("tidytuesday-exercise", "data")
 
+library(sf)
+library(tigris)
+###THIS WILL GET ALL THE FIPS CODE FOR COUNTY##
+# Assuming 'ea_2023' is your data frame with 'lat' and 'lon' columns
+pts_sf <- st_as_sf(ea_2023, coords = c("lon", "lat"), crs = 4326)
+
+# Reproject your points to EPSG:4269 to match the CRS of shapefiles from tigris
+pts_sf <- st_transform(pts_sf, 4269)
+
+# Load states and counties shapefiles
+states <- states(cb = TRUE)
+counties <- counties(cb = TRUE)
+
+# Now, perform the spatial joins
+# First join with counties to get the county FIPS code
+pts_sf <- st_join(pts_sf, counties)
+
+# Then join with states to get the state FIPS code
+pts_sf <- st_join(pts_sf, states)
+
+# If you want to check the results or convert back to a data frame:
+ea_2023_with_fips <- as.data.frame(pts_sf)
+
+# This data frame now includes columns for county and state FIPS codes, along with other attributes from the shapefiles.
+
+
+
 # Specify the URL for the JSON data
 json_url <- "https://svs.gsfc.nasa.gov/vis/a000000/a005000/a005073/cities-eclipse-2023.json"
 
