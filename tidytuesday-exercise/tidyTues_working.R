@@ -514,7 +514,7 @@ get_population_by_fips <- function(fips_code) {
 }
 
 
-
+# Apply the population fetching function to the first 5 rows
 ea_2023_with_fips <- ea_2023_with_fips %>%
   rowwise() %>%
   mutate(population = get_population_by_fips(FIPS)) %>%
