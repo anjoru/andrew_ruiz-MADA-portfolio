@@ -1,5 +1,1090 @@
 ---
 title: "Tidy Tuesday Exercise"
+author: "Andrew J Ruiz"
+editor: source
 ---
 
-Placeholder file for the future Tidy Tuesday exercise.
+## Exercise 13
+##### For this assignment we will be working with the eclipse data from the TidyTuesday project. The goal is to mimic the complete analysis workflow.
+##### There are a total of 4 files -2 for the 2023 annular eclipse and 2 for the 2024 total eclipse. 
+##### For this assignment, I will be working with the 2024 and 2023 files that contain the cities in the path of annularity or totality. These files contain the state, latitude and longitude of the cities, the time of the eclipse, and the duration of the eclipse.
+##### For a more meaningful analysis, I will augment this data with some other publicly available data, including census data. 
+#### The outcome is population density  The predictors are duration of the totality/annularity in minutes, latitude, the difference between the distance to the closest city and the distance to the second closest city in the path of totality/annularity, and the area of the city in square miles.
+
+# Load the necessary libraries
+```{r}
+library(devtools)
+library(tidyverse)
+library(tidytuesdayR)
+library(tidymodels)
+library(jsonlite)
+library(janitor)
+library(here)
+library(fs)
+library(sf)
+library(ggplot2)
+library(dplyr)
+library(ggspatial)
+library(rnaturalearth)
+library(ggmap)
+library(httr)
+library(tidycensus)
+library(patchwork)
+library(tidycensus)
+library(tigris)
+library(censusapi)
+library(rsample)
+library(doParallel)
+library(foreach)
+```
+
+
+# Load the data
+```{r}
+# tuesdata <- tidytuesdayR::tt_load(2024, week = 15)
+# 
+# ea_2023_raw <- tuesdata$eclipse_annular_2023
+# et_2024_raw <- tuesdata$eclipse_total_2024
+# ea_part_2023 <- tuesdata$eclipse_partial_2023
+# ea_part_2024 <- tuesdata$eclipse_partial_2024
+
+
+
+# clarify working directory
+wd = here::here("tidytuesday-exercise", "data")
+
+# write_csv(ea_2023_raw, file.path(wd, "ea_2023_raw.csv"))
+# write_csv(et_2024_raw, file.path(wd, "et_2024_raw.csv"))
+# write_csv(ea_part_2023, file.path(wd, "ea_part_2023.csv"))
+# write_csv(ea_part_2024, file.path(wd, "ea_part_2024.csv"))
+
+# Load the data
+ea_2023_raw <- read_csv(file.path(wd, "ea_2023_raw.csv"))
+et_2024_raw <- read_csv(file.path(wd, "et_2024_raw.csv"))
+```
+
+# Process the data
+```{r}
+# Find duplicate rows based on 'state' and 'name' columns
+duplicates23 <- ea_2023_raw[duplicated(ea_2023_raw[c("state", "name")]) | duplicated(ea_2023_raw[c("state", "name")], fromLast = TRUE), ]
+
+# Print the rows where 'state' and 'name' are duplicated
+head(duplicates23)
+
+# Find duplicate rows based on 'state' and 'name' columns and filter to keep only the first occurrence
+ea_2023 <- ea_2023_raw[!duplicated(ea_2023_raw[c("state", "name")]), ]
+
+# Print the resulting dataframe that has unique 'state' and 'name' pairs
+print(ea_2023)
+
+# Now find the duplicates for the 2024 file
+# Find duplicate rows based on 'state' and 'name' columns
+duplicates24 <- et_2024_raw[duplicated(et_2024_raw[c("state", "name")]) | duplicated(et_2024_raw[c("state", "name")], fromLast = TRUE), ]
+
+# Print the rows where 'state' and 'name' are duplicated
+head(duplicates24)
+
+# Find duplicate rows based on 'state' and 'name' columns and filter to keep only the first occurrence
+et_2024 <- et_2024_raw[!duplicated(et_2024_raw[c("state", "name")]), ]
+
+```
+
+# Further processing to prepare for visualization
+```{r}
+# use the 2023 annular eclipse data to visualize the duration of the eclipse at different locations.
+# First, convert the 'eclipse_3' and 'eclipse_4' columns to hms format and create new column for duration of annularity
+ea_2023 <- ea_2023 %>%
+  mutate(start_time = hms(eclipse_3),
+         end_time = hms(eclipse_4),
+         # Calculate duration in minutes
+         duration_minutes = as.numeric(end_time - start_time, units = "mins"))
+
+# use the 2024 total eclipse data to visualize the duration of the eclipse at different locations.
+# First, convert the 'eclipse_3' and 'eclipse_4' columns to hms format and create new column for 
+#duration of totality
+et_2024 <- et_2024 %>%
+  mutate(
+    start_time = hms(eclipse_3),
+    end_time = hms(eclipse_4),
+    duration_minutes = as.numeric(end_time - start_time, units = "mins")
+  )
+# combine the 2023 annular and 2024 total eclipse data for visualization.
+ea_2023 <- ea_2023 %>% mutate(year = 2023)
+et_2024 <- et_2024 %>% mutate(year = 2024)
+
+combined_eclipse_data <- bind_rows(ea_2023, et_2024)
+
+# Find duplicate rows based on 'state' and 'name' columns
+duplicatesall <- combined_eclipse_data[duplicated(combined_eclipse_data[c("state", "name")]) | duplicated(combined_eclipse_data[c("state", "name")], fromLast = TRUE), ]
+
+# Print the rows where 'state' and 'name' are duplicated
+print(duplicatesall)
+
+# Because both paths cross parts of TX, there will be duplicates here and we will leave them. 
+```
+### Get shapefiles associated with the 2023 and 2024 eclipse paths
+### these are listed in the article that goes with the data release
+```{r}
+download_process_rename_zip <- function(year) {
+  base_data_path <- here("tidytuesday-exercise", "data")
+  subfolder_name <- sprintf("eclipse_shapefiles_%s", year)
+  subfolder_path <- file.path(base_data_path, subfolder_name)
+  
+  dir.create(subfolder_path, showWarnings = FALSE)
+  
+  shapefile_zip_url <- sprintf("https://svs.gsfc.nasa.gov/vis/a000000/a005000/a005073/%seclipse_shapefiles.zip", year)
+  dest_shapefile_zip <- file.path(subfolder_path, sprintf("%seclipse_shapefiles.zip", year))
+  
+  # Download and unzip quietly
+  suppressMessages(download.file(shapefile_zip_url, destfile = dest_shapefile_zip, quiet = TRUE))
+  suppressWarnings(unzip(dest_shapefile_zip, exdir = subfolder_path))
+  unlink(dest_shapefile_zip)  # Delete the zip file after extraction
+  
+  # List all files in the directory
+  files <- list.files(path = subfolder_path, full.names = TRUE)
+  
+  # Specify patterns of files to keep
+  patterns_to_keep <- c("ppath", "upath_lo")
+  
+  # Filter files based on patterns to keep
+  files_to_keep <- Filter(function(file) {
+    any(sapply(patterns_to_keep, function(pattern) grepl(pattern, basename(file))))
+  }, files)
+  
+  # Rename and keep only the filtered files, suppress output
+  invisible(lapply(files_to_keep, function(file_path) {
+    file_ext <- tools::file_ext(file_path)
+    base_name <- tools::file_path_sans_ext(basename(file_path))
+    new_base_name <- sprintf("%s_%s", base_name, substr(year, 3, 4))
+    new_file_path <- file.path(dirname(file_path), sprintf("%s.%s", new_base_name, file_ext))
+    
+    file.rename(file_path, new_file_path)
+  }))
+  
+  # Define files to delete as those not in files_to_keep
+  files_to_delete <- setdiff(files, files_to_keep)
+
+  # Remove files not matching the keep criteria
+  invisible(sapply(files_to_delete, unlink))
+}
+
+# Run the function for the years 2023 and 2024
+download_process_rename_zip("2023")
+download_process_rename_zip("2024")
+```
+
+### Before mapping we will plot the point in a scatter plot to see the distribution of the eclipse paths
+```{r}
+
+# Plot the 2023 points on a plane with a color gradient based on the duration
+ggplot(ea_2023, aes(x = lon, y = lat)) +
+  geom_point(aes(color = duration_minutes), alpha = 0.6) +
+  scale_color_gradient(low = "yellow", high = "red", name = "Duration of Annularity (minutes)") +
+  labs(x = "Longitude", y = "Latitude", title = "Annular Eclipse Duration") +
+  theme_minimal() +
+  coord_fixed(1.3)  # Ensuring the aspect ratio is fixed for map accuracy
+
+# Plot the 2024 points on a map with a color gradient based on the duration
+ggplot(et_2024, aes(x = lon, y = lat)) +
+  geom_point(aes(color = duration_minutes), alpha = 0.6) +
+  scale_color_gradient(low = "skyblue", high = "navy", name = "Duration of Totality (minutes)") +
+  labs(x = "Longitude", y = "Latitude", title = "Total Eclipse Duration") +
+  theme_minimal() +
+  coord_fixed(1.3)  # Ensuring the aspect ratio is fixed for map accuracy
+```
+### Now we will map the eclipse paths
+```{r}
+# Load a world map for the background of the map
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Load US states
+states <- ne_states(country = "united states of america", returnclass = "sf")
+
+# Define the continental US bounding box for plotting focus to the continental US
+us_bbox <- c(-125, 24, -66, 50) # Continental US approx. bounding box
+```
+
+## Path of the 2023 annular eclipse
+```{r}
+# Plot the annular eclipse duration over the continental US
+ggplot() +
+  geom_sf(data = world) + # Plot the world map
+  geom_sf(data = states, color = "grey70", fill = NA) + # Add US states with borders
+  geom_point(data = ea_2023, aes(x = lon, y = lat, color = duration_minutes), size = .4, alpha = 0.6) +
+  scale_color_gradient(low = "yellow", high = "grey30", name = "Duration of Annularity (minutes)") +
+  labs(x = "Longitude", y = "Latitude", title = "2023 Annular Eclipse Duration over the Continental US") +
+  theme_minimal() +
+  coord_sf(xlim = c(us_bbox[1], us_bbox[3]), ylim = c(us_bbox[2], us_bbox[4]), expand = FALSE) # Focus on the continental US
+```
+
+## Path of the 2024 total eclipse
+```{r}
+# Plotting the total eclipse duration over the continental US
+ggplot() +
+  geom_sf(data = world) + # Plot the world map
+  geom_sf(data = states, color = "grey70", fill = NA) + # Add US states with borders
+  geom_point(data = et_2024, aes(x = lon, y = lat, color = duration_minutes), size = .4, alpha = 0.6) +
+  scale_color_gradient(low = "yellow", high = "grey30", name = "Duration of Totality (minutes)") +
+  labs(x = "Longitude", y = "Latitude", title = "2024 Annular Eclipse Duration over the Continental US") +
+  theme_minimal() +
+  coord_sf(xlim = c(us_bbox[1], us_bbox[3]), ylim = c(us_bbox[2], us_bbox[4]), expand = FALSE) # Focus on the continental US
+```
+
+### Now we will plot both paths on one map
+### and add other map elements
+```{r}
+# Add the shapfile showing the boundary of the annularity/totality path
+# Read the shapefiles
+path_2023 <- st_read(here("tidytuesday-exercise", "data", "eclipse_shapefiles_2023", "upath_lo_23.shp"))
+path_2024 <- st_read(here("tidytuesday-exercise", "data", "eclipse_shapefiles_2024", "upath_lo_24.shp"))
+
+# Define the continental US bounding box for plotting focus
+us_bbox <- c(-125, 24, -66, 50) # Continental US approx. bounding box
+
+# Add labels for the year
+label_coords <- data.frame(
+  year = c("2023", "2024"),
+  lon = c(-114, -86.7),  # Example longitude coordinates for the labels
+  lat = c(36.1, 36.1)       # Example latitude coordinates for the labels
+)
+
+# Plot both paths on one map
+ggplot() +
+  geom_sf(data = world, color = "grey88") +
+  geom_sf(data = states, color = "grey70", fill = NA) +
+  # geom_sf(data = path_2023, color = "black", fill= NA, size = 0.8, alpha = 0.5) +
+  # geom_sf(data = path_2024, color = "black", fill=NA, size = 0.8, alpha = 0.5) +
+  geom_point(data = combined_eclipse_data, aes(x = lon, y = lat, color = duration_minutes, shape = as.factor(year)), size = .9, alpha = 1) +
+  scale_color_gradientn(colors = c("yellow", "gray30"), name = "Duration (minutes)") +
+  geom_sf(data = path_2023, color = "black", fill= NA, size = 0.8, alpha = 0.5) +
+  geom_sf(data = path_2024, color = "black", fill=NA, size = 0.8, alpha = 0.5) +
+    geom_text(data = label_coords, aes(x = lon, y = lat, label = year), size = 5, color = "black") +  # Add year labels
+  labs(x = "Longitude", y = "Latitude", title = "Eclipse Duration over the Continental US") +
+  theme_minimal() +
+  coord_sf(xlim = c(us_bbox[1], us_bbox[3]), ylim = c(us_bbox[2], us_bbox[4]), expand = FALSE)
+
+```
+### In order to add more predictors to the model, we will need to augment the eclipse data with other data sources.
+#### To do this we will get city FIPS codes. FIPS codes are unique identifiers for geographic areas in the US and can be used to link to other data sources.
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+
+unique_states23 <- unique(ea_2023$state)
+
+# Print the unique states
+print(unique_states23)
+
+# Define the list of states for which we want to retrieve places data for 2023
+# this will help to prevent duplicates
+states_list23 <- c("AZ", "NM", "CA", "CO", "NV", "OR", "TX", "UT")
+
+# Initialize an empty dataframe to collect places data for all states for the year 2023
+all_places_df_2023 <- data.frame(name = character(), fips_city = character(), state = character(), stringsAsFactors = FALSE)
+
+# Loop through states and retrieve places data for 2023
+for (state_code in states_list23) {
+  places_data_2023 <- places(state = state_code, class = "sf") %>%
+    as.data.frame() %>%
+    select(NAME, GEOID)
+  
+  # Add a state column for each state's places data
+  places_data_2023$state <- state_code
+  
+  # Rename columns for consistency and ensure FIPS column is named 'fips_city'
+  colnames(places_data_2023) <- c("name", "fips_city", "state")
+  
+  # Combine this state's places data with the accumulating dataframe
+  all_places_df_2023 <- rbind(all_places_df_2023, places_data_2023)
+}
+
+# Ensure uniqueness within all_places_df_2023
+all_places_df_2023 <- all_places_df_2023 %>%
+  distinct(name, state, .keep_all = TRUE)
+
+# Prepare ea_2023_with_fips_df for joining by ensuring name case matches
+ea_2023_with_fips_df_prepared <- ea_2023 %>%
+  mutate(name = toupper(name), state = toupper(state))
+
+all_places_df_2023_prepared <- all_places_df_2023 %>%
+  mutate(name = toupper(name), state = toupper(state))
+
+# Merge FIPS codes into your main dataframe based on city names and state for 2023
+ea_2023_city_fips <- left_join(ea_2023_with_fips_df_prepared, all_places_df_2023_prepared, by = c("name", "state"))
+
+# Verify the merge
+head(ea_2023_city_fips)
+```
+
+### Now we will get the FIPS codes for the 2024 eclipse data
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+# Get unique values in the 'state' column
+unique_states24 <- unique(et_2024$state)
+
+# Print the unique states
+print(unique_states24)
+
+
+states_list24 <- c("AR", "IL", "IN", "KY", "ME", "MI", "MO", "NH", "NY", "OH", "OK", "PA", "TX", "VT")
+
+# Initialize an empty dataframe to collect places data for all states for the year 2024
+all_places_df_2024 <- data.frame(name = character(), fips_city = character(), state = character(), stringsAsFactors = FALSE)
+
+# Loop through states and retrieve places data for 2024
+for (state_code in states_list24) {
+  places_data_2024 <- places(state = state_code, class = "sf") %>%
+    as.data.frame() %>%
+    select(NAME, GEOID)
+  
+  # Add a state column for each state's places data
+  places_data_2024$state <- state_code
+  
+  # Rename columns for consistency and ensure FIPS column is named 'fips_city'
+  colnames(places_data_2024) <- c("name", "fips_city", "state")
+  
+  # Combine this state's places data with the accumulating dataframe
+  all_places_df_2024 <- rbind(all_places_df_2024, places_data_2024)
+}
+
+# Ensure uniqueness within all_places_df_2023
+all_places_df_2024 <- all_places_df_2024 %>%
+  distinct(name, state, .keep_all = TRUE)
+
+# Prepare et_2024_with_fips_df for joining by ensuring name case matches
+et_2024_with_fips_df_prepared <- et_2024 %>%
+  mutate(name = toupper(name), state = toupper(state))
+
+all_places_df_2024_prepared <- all_places_df_2024 %>%
+  mutate(name = toupper(name), state = toupper(state))
+
+# Merge FIPS codes into your main dataframe based on city names and state for 2024
+et_2024_city_fips <- left_join(et_2024_with_fips_df_prepared, all_places_df_2024_prepared, by = c("name", "state"))
+
+# Verify the merge
+head(et_2024_city_fips)
+```
+
+### We will use a US Cities dataset to get population data for each city. 
+```{r}
+# Read the cities data
+cities_data <- read_csv(here("tidytuesday-exercise", "data", "cities.csv"))
+# Join based on the city fips code for 2023
+ea_city_pop <- left_join(ea_2023_city_fips, cities_data, by = c("fips_city" = "PLACE_FIPS"))
+
+# Confirm the join
+head(ea_city_pop)
+
+# Repeat for the 2024 data
+et_city_pop <- left_join(et_2024_city_fips, cities_data, by = c("fips_city" = "PLACE_FIPS"))
+
+# Confirm the join
+head(et_city_pop)
+```
+
+## Distance to the nearest city
+### The distance to the nearest city can give one an idea of how remote the location is. We will calculate the distance to the nearest city for each city in the eclipse path.
+### We will also calculate the distance to the second nearest city.
+```{r}
+# Initial Setup: Preparing city population data for spatial analysis.
+# This step involves converting city location data (latitude and longitude) into a spatial format (sf object) 
+# for geographical operations, specifically to calculate distances between cities.
+
+# Convert the 2023 city population data into a spatial dataframe for geographic operations
+ea_city_pop_sf <- st_as_sf(ea_city_pop, coords = c("lon", "lat"), crs = 4326, agr = "constant")
+
+# Compute the pairwise distance matrix between cities in meters. This matrix represents the distance 
+# between every pair of cities in the dataset.
+distance_matrix <- st_distance(ea_city_pop_sf)
+
+# To avoid calculating a city's distance to itself, diagonal elements of the matrix are set to NA.
+diag(distance_matrix) <- NA
+
+# Determine the indices of the closest and second closest city for each city in the dataset.
+closest_indices <- apply(distance_matrix, 1, function(x) order(x, na.last = NA)[1])
+second_closest_indices <- apply(distance_matrix, 1, function(x) order(x, na.last = NA)[2])
+
+# Update the dataset with the names and distances to the closest and second closest cities, 
+# converting distances from meters to kilometers for readability.
+ea_city_pop$closest_city <- ea_city_pop$name[closest_indices]
+ea_city_pop$closest_distance <- as.numeric(distance_matrix[cbind(1:nrow(distance_matrix), closest_indices)]) / 1000
+ea_city_pop$second_closest_city <- ea_city_pop$name[second_closest_indices]
+ea_city_pop$second_closest_distance <- as.numeric(distance_matrix[cbind(1:nrow(distance_matrix), second_closest_indices)]) / 1000
+
+# Print structure of the updated dataframe to verify the changes
+str(ea_city_pop)
+
+# Replicate the process for 2024 city population data
+# Similar steps are followed to convert the 2024 city population data into a spatial dataframe,
+# calculate distances, and update the dataset with information about the closest cities.
+
+et_city_pop_sf <- st_as_sf(et_city_pop, coords = c("lon", "lat"), crs = 4326, agr = "constant")
+distance_matrix24 <- st_distance(et_city_pop_sf)
+diag(distance_matrix24) <- NA
+
+closest_indices24 <- apply(distance_matrix24, 1, function(x) order(x, na.last = NA)[1])
+second_closest_indices24 <- apply(distance_matrix24, 1, function(x) order(x, na.last = NA)[2])
+
+et_city_pop$closest_city <- et_city_pop$name[closest_indices24]
+et_city_pop$closest_distance <- as.numeric(distance_matrix24[cbind(1:nrow(et_city_pop), closest_indices24)]) / 1000
+et_city_pop$second_closest_city <- et_city_pop$name[second_closest_indices24]
+et_city_pop$second_closest_distance <- as.numeric(distance_matrix24[cbind(1:nrow(et_city_pop), second_closest_indices24)]) / 1000
+
+# Print structure of the updated 2024 dataframe to verify the changes
+head(et_city_pop)
+
+```
+```{r}
+# Prepare the 2023 event data by selecting relevant columns
+ea_final <- ea_city_pop %>%
+  select(
+    year, state, name, lat, lon, duration_minutes, POPULATI_1, SQMI, POP20_SQMI, fips_city,
+    closest_city, closest_distance, second_closest_city, second_closest_distance
+  )
+
+# Prepare the 2024 event data similarly
+et_final <- et_city_pop %>%
+  select(
+    year, state, name, lat, lon, duration_minutes, POPULATI_1, SQMI, POP20_SQMI, fips_city,
+    closest_city, closest_distance, second_closest_city, second_closest_distance
+  )
+
+# Save the cleaned and processed dataframes for future analysis
+write_csv(ea_final, here("tidytuesday-exercise", "data", "ea_final.csv"))
+write_csv(et_final, here("tidytuesday-exercise", "data", "et_final.csv"))
+```
+### Merge the 2023 and 2024 data
+#### Before merging the data, we will check for missing values
+```{r}
+# Merge the two dataframes
+eclipse_merged_1st <- bind_rows(ea_final, et_final)
+
+# Check for missing values in each column
+missing_values <- colSums(is.na(eclipse_merged_1st))
+
+# Display the count of missing values in each column
+print(missing_values)
+
+# I will remove the rows with missing values
+eclipse_merged <- eclipse_merged_1st %>%
+  drop_na()
+
+# now we will save the merged data
+write_csv(eclipse_merged, here("tidytuesday-exercise", "data", "eclipse_merged.csv"))
+head(eclipse_merged)
+
+```
+### Exploration
+#### Now that we have the merged dataframe, we can explore the data further.
+##### We will start with scatter plots to visualize the relationship between the predictors and the outcome variable.
+```{r}
+# scatter plot 
+ggplot(eclipse_merged, aes(x = POP20_SQMI, y = POPULATI_1)) +
+  geom_point(alpha = 0.6, color = "blue") +  # Adjust point transparency and color
+  scale_x_continuous(labels = scales::comma) +  # Format the x-axis labels
+  scale_y_continuous(labels = scales::comma) +  # Format the y-axis labels
+  labs(
+    x = "Population density (people per square mile)",
+    y = "Population",
+    title = "population density vs Population",
+  ) +
+  theme_minimal() +  # Use a minimal theme
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels for better readability
+    plot.caption = element_text(size = 8)
+  )
+
+ggplot(eclipse_merged, aes(x = POP20_SQMI, y = closest_distance)) +
+  geom_point(alpha = 0.6, color = "blue") +  # Adjust point transparency and color
+  scale_x_continuous(labels = scales::comma) +  # Format the x-axis labels
+  scale_y_continuous(labels = scales::comma) +  # Format the y-axis labels
+  labs(
+    x = "Population density (people per square mile)",
+    y = "distance to closest city",
+   ) +
+  theme_minimal() +  # Use a minimal theme
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels for better readability
+    plot.caption = element_text(size = 8)
+  )
+
+ggplot(eclipse_merged, aes(x = POP20_SQMI, y = lat)) +
+  geom_point(alpha = 0.6, color = "blue") +  # Adjust point transparency and color
+  scale_x_continuous(labels = scales::comma) +  # Format the x-axis labels
+  scale_y_continuous(labels = scales::comma) +  # Format the y-axis labels
+  labs(
+    x = "Population density (people per square mile)",
+    y = "Latitude",
+   ) +
+  theme_minimal() +  # Use a minimal theme
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels for better readability
+    plot.caption = element_text(size = 8)
+  )
+```
+###  Now we will create a correlation matrix to see how the variables are correlated
+```{r}
+# Now we will create a correlation matrix to see how the variables are correlated
+continuous_vars_df <- eclipse_merged %>%
+  select(closest_distance, second_closest_distance, POPULATI_1, POP20_SQMI, SQMI, lat, duration_minutes)
+
+# Compute the correlation matrix
+correlation_matrix <- cor(continuous_vars_df, use = "complete.obs")
+
+# Print the correlation matrix
+print(correlation_matrix)
+```
+### Create new varible from distance to closest city and distance to second closest city
+```{r}
+# the distances are highlt correlated, so we will create a new varibale that is the difference between the 2 distances
+eclipse_merged$distance_diff <- eclipse_merged$second_closest_distance - eclipse_merged$closest_distance
+head(eclipse_merged)
+
+# Save the merged dataframe as CSV
+write_csv(eclipse_merged, here("tidytuesday-exercise", "data", "eclipse_merged.csv"))
+
+# Let's look at the correlation matrix again with the new variable
+continuous_vars_df <- eclipse_merged %>%
+  select(closest_distance, second_closest_distance, distance_diff, POPULATI_1, POP20_SQMI, SQMI, lat, duration_minutes)
+# Compute the correlation matrix
+correlation_matrix <- cor(continuous_vars_df, use = "complete.obs")
+
+# Print the correlation matrix
+print(correlation_matrix)
+
+# Compute the correlation matrix
+correlation_matrix <- cor(continuous_vars_df, use = "complete.obs")
+
+# Convert the correlation matrix to a data frame for plotting
+correlation_df <- as.data.frame(correlation_matrix)
+correlation_df$vars <- rownames(correlation_df)  # Add variable names as a column
+
+# Reshape the data for plotting
+correlation_df_long <- tidyr::pivot_longer(correlation_df, -vars, names_to = "variable", values_to = "correlation")
+
+# Plot the heatmap
+ggplot(correlation_df_long, aes(x = variable, y = vars, fill = correlation)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "navy", high = "red", mid = "white", midpoint = 0, na.value = "gray") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "right") +
+  labs(title = "Correlation Matrix Heatmap",
+       x = NULL, y = NULL)
+```
+# Modeling
+### We will now build a linear regression model to predict the duration of the eclipse based on the predictors.
+```{r}
+# First set the randon seed for reproducibility
+rndseed = 4321
+
+# Now we will split the data into training and testing sets
+set.seed(rndseed)
+
+# Splitting the dataset into training and testing sets
+data_split <- initial_split(eclipse_merged, prop = 0.75)
+train_data <- training(data_split)
+test_data <- testing(data_split)
+
+# Data Cleaning
+# Removing any records with missing values in the 'POP20_SQMI' column to ensure the model has complete data.
+train_data_clean <- train_data %>% 
+  filter(!is.na(POP20_SQMI))
+```
+
+### Define recipes and workflows
+```{r}
+# Linear Regression Model Specification for both models
+lm_spec <- linear_reg() %>%
+  set_engine("lm")
+
+# Define recipes for both models
+recipe_1 <- recipe(POP20_SQMI ~ distance_diff, data = train_data_clean)
+recipe_2 <- recipe(POP20_SQMI ~ distance_diff + lat + duration_minutes + SQMI, data = train_data_clean)
+
+# Create workflows for both models
+workflow_1 <- workflow() %>% add_recipe(recipe_1) %>% add_model(lm_spec)
+workflow_2 <- workflow() %>% add_recipe(recipe_2) %>% add_model(lm_spec)
+
+# Fit both models on Training Data
+fit_1 <- fit(workflow_1, data = train_data_clean)
+fit_2 <- fit(workflow_2, data = train_data_clean)
+
+# Predict and compute RMSE for both models
+predictions_1 <- predict(fit_1, new_data = train_data_clean) %>% bind_cols(train_data_clean %>% select(POP20_SQMI))
+predictions_2 <- predict(fit_2, new_data = train_data_clean) %>% bind_cols(train_data_clean %>% select(POP20_SQMI))
+
+rmse_results_1 <- rmse(predictions_1, truth = POP20_SQMI, estimate = .pred)
+rmse_results_2 <- rmse(predictions_2, truth = POP20_SQMI, estimate = .pred)
+
+# Display the RMSE results side by side
+results_df <- tibble(
+  Model = c("Model 1", "Model 2"),
+  RMSE = c(rmse_results_1$.estimate, rmse_results_2$.estimate)
+)
+
+print(results_df)
+
+```
+### Model 2 is an improvement over model 1
+
+### Compare these models to a null model
+
+####This script calculates and compares the Root Mean Square Error (RMSE) for three different predictive models applied to our dataset:
+#### 1. The 'distance_difference' model, which uses the distance difference between cities as the sole predictor.
+#### 2. The 'All Predictors' model, which utilizes a comprehensive set of variables including distance difference, latitude, duration of event, area (SQMI), etc., as predictors.
+#### 3. The Null model, a baseline model that predicts using the mean value of the outcome variable (here, POP20_SQMI) for all observations. This model serves as a simple benchmark.
+```{r}
+# First, compute the mean value of the outcome variable POP20_SQMI from the training dataset to use for the Null model predictions.
+mean_POP20_SQMI <- mean(train_data_clean$POP20_SQMI, na.rm = TRUE)
+
+# Generate Null model predictions by replicating the mean value for each observation in the training data.
+null_predictions <- rep(mean_POP20_SQMI, nrow(train_data_clean))
+
+# Calculate the RMSE for the Null model by comparing the predicted values (mean_POP20_SQMI) with the actual values in the training dataset.
+null_rmse <- sqrt(mean((train_data_clean$POP20_SQMI - null_predictions)^2, na.rm = TRUE))
+
+# Finally, display the RMSE values for each of the three models to facilitate comparison of their performance.
+# Lower RMSE values indicate better model performance, as they reflect smaller differences between the predicted and actual values.
+cat("RMSE for the distance_difference model: ", rmse_results_1$.estimate, "\n")
+cat("RMSE for the All Predictors model: ", rmse_results_2$.estimate, "\n")
+cat("RMSE for the Null model (using mean POP20_SQMI): ", null_rmse, "\n")
+
+print("both models are better than the null model")
+
+```
+
+#### This code block conducts cross-validation (CV) for two models, compares their performance using the Root Mean Square Error (RMSE) metric, and summarizes the results.
+```{r}
+## Cross validation of linear model
+set.seed(rndseed)
+
+cv_folds10 <- vfold_cv(train_data, v = 10)
+
+# Linear Regression Model Specification
+model_spec_distancediff <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+model_spec_allpredictors <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# define workflow for distance difference model
+workflow_distancediff <- workflow() %>%
+  add_model(model_spec_distancediff) %>%
+  add_formula(POP20_SQMI ~ distance_diff)
+
+# define workflow for all predictors model
+workflow_allpredictors <- workflow() %>%
+  add_model(model_spec_allpredictors) %>%
+  add_formula(POP20_SQMI ~ distance_diff + lat + duration_minutes + SQMI)
+
+# Perform CV for distance difference model
+cv_results_distancediff <- fit_resamples(
+  workflow_distancediff,
+  cv_folds10,
+  metrics = metric_set(rmse))
+
+# Perform CV for all predictors model
+cv_results_allpredictors <- fit_resamples(
+  workflow_allpredictors,
+  cv_folds10,
+  metrics = metric_set(rmse))
+
+# cv_results_distancediff and cv_results_all contain the cross-validation results
+
+# Extract and average RMSE for the distancediff-only model
+cv_summary_distancediff <- cv_results_distancediff %>%
+  collect_metrics() %>%
+  filter(.metric == "rmse") %>%
+  summarise(mean_rmse_cv = mean(mean, na.rm = TRUE)) %>%
+  pull(mean_rmse_cv)
+  
+# Extract and average RMSE for the all predictors model
+cv_summary_allpredictors <- cv_results_allpredictors %>%
+  collect_metrics() %>%
+  filter(.metric == "rmse") %>%
+  summarise(mean_rmse_cv_all = mean(mean, na.rm = TRUE)) %>%
+  pull(mean_rmse_cv_all)
+
+# summarize RSME for the distance difference model
+summary_distancediff <- cv_results_distancediff %>%
+  collect_metrics() 
+
+# summarize RSME for the all predictors model
+summary_allpredictors <- cv_results_allpredictors %>%
+  collect_metrics()
+
+#combine the two summaries
+combined_summary <- bind_rows(
+  data.frame(model = "Distance Difference", summary_distancediff),
+  data.frame(model = "All Predictors", summary_allpredictors)
+)
+
+# print the combined summary
+print(combined_summary)
+```
+### Interpretation:
+####Comparing the two models, the "All Predictors" model shows a lower mean RMSE of 197.51 compared to 209.63 for the "Distance Difference" model. This suggests that incorporating all predictors leads to more accurate predictions on average than using just the distance difference. Additionally, the "All Predictors" model exhibits a slightly lower standard error, indicating its RMSE estimates are more consistent across different subsets of the data. Based on these results, the "All Predictors" model appears to be the more effective model for making accurate predictions.
+```{r}
+# Calculate mean POP20_SQMI for the Null Model
+mean_POP20_SQMI <- mean(train_data_clean$POP20_SQMI, na.rm = TRUE)
+null_predictions <- rep(mean_POP20_SQMI, nrow(train_data_clean))
+
+# Combine all predictions into one dataframe for plotting
+predictions_df <- bind_rows(
+  data.frame(model = "Model 1 (Distance Difference)", observed = train_data_clean$POP20_SQMI, predicted = predictions_1$.pred),
+  data.frame(model = "Model 2 (All Predictors)", observed = train_data_clean$POP20_SQMI, predicted = predictions_2$.pred),
+  data.frame(model = "Null Model", observed = train_data_clean$POP20_SQMI, predicted = null_predictions)
+)
+
+# Plot observed vs. predicted values with color differentiation for models and a 45-degree reference line
+ggplot(predictions_df, aes(x = observed, y = predicted, color = model, shape = model)) +
+  geom_point(alpha = 0.5) + # Adjust transparency with alpha for better visibility
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "black") + # Identity line for reference
+  scale_shape_manual(values = c(16, 17, 18)) + # Manual shape settings for differentiation
+  labs(x = "Observed Population Density", y = "Predicted Population Density", title = "Model Prediction Accuracy") +
+  theme_minimal() +
+  theme(legend.position = "bottom") # Adjust legend position for better accessibility
+```
+### Residuals for Model 2
+```{r}
+# Subtract predicted values from the actual observed values to get residuals for Model 2
+# Residuals = Actual - Predicted
+residuals_2 <- predictions_2$.pred - train_data_clean$POP20_SQMI
+predictions_2 <- predictions_2 %>%
+  mutate(Observed = train_data_clean$POP20_SQMI)
+
+# Now, calculate residuals within the same data frame to ensure alignment
+predictions_2 <- predictions_2 %>%
+  mutate(Residuals = Observed - .pred)
+
+# At this point, 'predictions_2' contains both the predictions and correctly aligned residuals
+# Now you can create 'plot_data' directly from 'predictions_2'
+plot_data <- predictions_2 %>%
+  select(Predicted = .pred, Residuals)
+
+# Combine predicted values and corresponding residuals into a data frame for plotting
+# This facilitates visualization of model performance
+plot_data <- data.frame(Predicted = predictions_2$.pred, Residuals = residuals_2)
+
+# Determine the maximum absolute value among residuals to set symmetrical limits for the y-axis
+# This ensures the plot is balanced around the y=0 line and aids in identifying patterns in residuals
+max_abs_residual <- max(abs(plot_data$Residuals))
+
+# Generate a scatter plot of predicted values vs residuals for Model 2
+# Points are semi-transparent (alpha=0.5) to visualize overlapping points better
+# A horizontal dashed line at y=0 highlights where residuals equal zero (perfect predictions)
+# The y-axis limits are set symmetrically around 0 based on the maximum absolute residual
+# This plot helps identify whether there are systematic errors in predictions across different ranges
+ggplot(plot_data, aes(x = Predicted, y = Residuals)) +
+  geom_point(alpha = 0.5) + # Semi-transparent points to see overlapping areas
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") + # Line to highlight zero residuals
+  ylim(-max_abs_residual, max_abs_residual) + # Symmetrical y-axis limits based on max absolute residual
+  labs(x = "Predicted Population Density", y = "Residuals", title = "Predicted vs Residuals for Model 2") +
+  theme_minimal() # Minimal theme for a clean look
+
+```
+### Given the scatter plot of predicted values vs residuals for Model 2, we can observe the following:
+#### There is potential for model improvement
+#### The model tends to have larger residuals as the predicted values increase. This could indicate that the model underfits the data for higher population densities, or that outliers are affecting the model's predictions.
+#### 
+### Bootstrapping
+#### The following code demonstrates how to apply bootstrapping to a linear regression model to generate confidence intervals for its predictions.
+```{r}
+set.seed(4321)
+
+# Assuming workflow_2 is correctly defined with the model and recipe
+# Fit the workflow with the training data
+fit_workflow_2 <- fit(workflow_2, data = train_data_clean)
+
+# Generating 100 bootstrap samples from the training dataset
+boot_samples <- bootstraps(train_data_clean, times = 100)
+
+# Fitting the model to each bootstrap sample and making predictions on the original training data
+predictions_list <- map(boot_samples$splits, ~ {
+  bs_data <- analysis(.x) # Extracting the analysis (training) set from the bootstrap sample
+  bs_fit <- fit(workflow_2, data = bs_data) # Fitting the model to the bootstrap sample
+  predict(bs_fit, new_data = train_data_clean)$`.pred` # Predicting on the original training data
+})
+
+# Convert the list of predictions to a matrix
+pred_matrix <- do.call(cbind, predictions_list)
+
+# Calculate median and 89% confidence intervals for each observation
+pred_stats <- apply(pred_matrix, 1, function(x) quantile(x, probs = c(0.055, 0.5, 0.945), na.rm = TRUE))
+
+# Using the originally fitted workflow (fit_workflow_2) for predictions
+original_predictions <- predict(fit_workflow_2, new_data = train_data_clean)$`.pred`
+
+# Merging original predictions with bootstrap statistics
+merged_predictions <- tibble(
+  Observed = train_data_clean$POP20_SQMI,
+  Predicted = original_predictions,
+  Lower_CI = pred_stats["5.5%", ],
+  Median = pred_stats["50%", ],
+  Upper_CI = pred_stats["94.5%", ]
+)
+
+# Plotting Observed vs. Predicted with Confidence Intervals
+ggplot(merged_predictions, aes(x = Observed, y = Predicted)) +
+  geom_point(alpha = 0.6) +
+  geom_errorbar(aes(ymin = Lower_CI, ymax = Upper_CI), width = 0.2, color = "blue") +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
+  labs(title = "Observed vs Predicted Population Density with Bootstrap Confidence Intervals",
+       x = "Observed Population Density", y = "Predicted Population Density") +
+  theme_minimal()
+
+```
+
+
+
+### Model Evaluation Using Test Data
+##### This section covers the process of using both training and test data sets to evaluate the model's performance.
+
+```{r}
+# Predict on Training Data
+# First, generate predictions for the training data to see how well the model fits the data it was trained on.
+predictions_train <- predict(fit_2, new_data = train_data_clean) %>%
+  bind_cols(train_data_clean %>% select(POP20_SQMI)) %>%
+  mutate(dataset = "Training") # Annotate this data as 'Training' for later identification
+
+# Predict on Test Data
+# Next, generate predictions for the test data. This step is crucial for assessing the model's generalization ability.
+predictions_test <- predict(fit_2, new_data = test_data) %>%
+  bind_cols(test_data %>% select(POP20_SQMI)) %>%
+  mutate(dataset = "Test") # Annotate this data as 'Test' for later identification
+
+# Combine Training and Test Predictions
+# Combine the predictions from both sets into one dataset for easy comparison and visualization.
+combined_predictions <- bind_rows(predictions_train, predictions_test)
+
+# Visualize Predictions
+# Create a scatter plot to compare the observed vs. predicted population density. 
+# This visualization helps in assessing the accuracy and bias of the model on both training and test data.
+ggplot(combined_predictions, aes(x = POP20_SQMI, y = .pred, color = dataset)) +
+  geom_point() + # Plot the points
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "black") + # Add a 1:1 line for reference
+  labs(x = "Observed Pop Density", y = "Predicted Pop Density", title = "Predicted vs Observed Pop Density") +
+  theme_minimal() + # Use a minimal theme for a clean look
+  scale_color_manual(values = c("Training" = "blue", "Test" = "red")) # Distinguish training and test data by color
+
+```
+#### Model Specifications and Data Preparation
+```{r}
+# Linear Model Specification
+# Setting up a linear regression model using the least squares method.
+lm_spec <- linear_reg() %>%
+  set_engine("lm")
+
+# LASSO Model Specification
+# Configuring a LASSO regression model with a specified penalty to encourage sparsity in the model coefficients.
+lasso_spec <- linear_reg(penalty = 0.1, mixture = 1) %>%
+  set_engine("glmnet") %>%
+  set_mode("regression")
+
+# Random Forest Model Specification
+# Defining a random forest model with a specific seed for reproducibility of results.
+random_forest_spec <- rand_forest() %>%
+  set_engine("ranger", seed = 4321) %>%
+  set_mode("regression")
+
+
+# Data Preprocessing
+# Preparing the data for modeling by handling categorical variables, imputing missing values, and ensuring data integrity.
+recipe_all <- recipe(POP20_SQMI ~ distance_diff + lat + duration_minutes + SQMI, 
+                     data = train_data_clean) %>%
+  step_dummy(all_nominal(), -all_outcomes()) %>% # Convert categorical variables into dummy/indicator variables.
+  step_impute_median(all_numeric(), -all_outcomes()) %>% # Impute missing values in numeric predictors with the median.
+  step_impute_mode(all_nominal(), -all_outcomes()) # Impute missing values in nominal predictors with the mode.
+
+# Workflows for Model Training
+# Each workflow combines the preprocessing recipe with a specific model specification.
+
+# Workflow for Linear Model
+workflow_lm <- workflow() %>%
+  add_recipe(recipe_all) %>%
+  add_model(lm_spec)
+
+# Workflow for LASSO Model
+workflow_lasso <- workflow() %>%
+  add_recipe(recipe_all) %>%
+  add_model(lasso_spec)
+
+# Workflow for Random Forest Model
+workflow_rf <- workflow() %>%
+  add_recipe(recipe_all) %>%
+  add_model(random_forest_spec)
+
+# Model Fitting
+# Training each model on the cleaned and preprocessed training data.
+
+# Fit Linear Model
+fit_lm <- fit(workflow_lm, data = train_data_clean)
+
+# Fit LASSO Model
+fit_lasso <- lasso_spec %>%
+  fit(POP20_SQMI ~ ., data = train_data_clean)
+
+# Fit Random Forest Model
+fit_rf <- fit(workflow_rf, data = train_data_clean)
+```
+
+#### Making Predictions and Evaluating Models
+```{r}
+
+# Utilizing the previously fitted models to make predictions on the cleaned training data.
+predictions_lm <- predict(fit_lm, new_data = train_data_clean)
+predictions_lasso <- predict(fit_lasso, new_data = train_data_clean)
+predictions_rf <- predict(fit_rf, new_data = train_data_clean)
+
+# Adding the model predictions as new columns to the training data.
+# This facilitates direct comparison and calculation of evaluation metrics.
+train_data_clean <- train_data_clean %>%
+  bind_cols(
+    lm_pred = predictions_lm$.pred,
+    lasso_pred = predictions_lasso$.pred,
+    rf_pred = predictions_rf$.pred
+  )
+
+# Computing the Root Mean Squared Error (RMSE) for each model as a measure of prediction accuracy.
+# RMSE provides an average magnitude of the prediction errors, with lower values indicating better model performance.
+rmse_lm <- rmse(train_data_clean, truth = POP20_SQMI, estimate = lm_pred)
+rmse_lasso <- rmse(train_data_clean, truth = POP20_SQMI, estimate = lasso_pred)
+rmse_rf <- rmse(train_data_clean, truth = POP20_SQMI, estimate = rf_pred)
+
+# Displaying the RMSE values for each model to assess and compare their performance.
+print(rmse_lm)
+print(rmse_lasso)
+print(rmse_rf)
+
+# Population Density for Each Model
+# This plot helps to visually assess the accuracy of model predictions against actual values.
+ggplot(train_data_clean) +
+  geom_point(aes(x = POP20_SQMI, y = lm_pred), color = 'blue', alpha = 0.5, label = "Linear Model") +
+  geom_point(aes(x = POP20_SQMI, y = lasso_pred), color = 'red', alpha = 0.5, label = "LASSO") +
+  geom_point(aes(x = POP20_SQMI, y = rf_pred), color = 'orange', alpha = 0.5, label = "Random Forest") +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "black") +  # A reference line for perfect predictions
+  labs(x = "Observed Pop Density", y = "Predicted Pop Density", title = "Model Performance: Observed vs Predicted Pop Density") +
+  theme_minimal() +
+  scale_color_manual(values = c("Linear Model" = "blue", "LASSO" = "red", "Random Forest" = "orange")) +
+  guides(color = guide_legend(title = "Model Type"))  # Legend to distinguish models
+```
+### THis suggests that the LASSO model performs better than the other two, however, there is a risk of overfitting. 
+## Tuning
+####
+```{r}
+
+set.seed(rndseed)
+
+# Assuming the linear_reg() specification is to be used for LASSO regression
+lasso_spec <- linear_reg(penalty = tune(), mixture = 1) %>% 
+  set_engine("glmnet") %>% 
+  set_mode("regression")
+
+# Define the grid for LASSO using a log10 scale for penalty values
+lasso_grid <- grid_regular(
+  penalty(range = log10(c(1e-5, 1e+2))),
+  levels = 50
+)
+
+# Define 5-fold cross-validation, repeated 5 times, for tuning
+cv_folds <- vfold_cv(train_data_clean, v = 5, repeats = 5)
+
+# Combine the LASSO specification with the recipe into a workflow
+workflow_lasso <- workflow() %>%
+  add_recipe(recipe_all) %>%
+  add_model(lasso_spec)
+
+# Tune the LASSO model with the defined grid and cross-validation folds
+lasso_results <- tune_grid(
+  workflow_lasso,
+  resamples = cv_folds,
+  grid = lasso_grid,
+  metrics = metric_set(rmse)
+)
+
+# Collect and summarize metrics for LASSO
+lasso_metrics <- collect_metrics(lasso_results)
+
+# Identify the best RMSE value
+best_lasso <- lasso_metrics %>%
+  filter(.metric == "rmse") %>%
+  arrange(mean) %>%
+  slice(1)
+
+# Visualize tuning results for LASSO
+autoplot(lasso_results)
+
+# Print the best RMSE for LASSO
+print(best_lasso)
+```
+
+### Random Forest Tuning
+
+```{r, cache=TRUE}
+# Set the seed for reproducibility
+set.seed(4321)
+
+# Random Forest model specification with tuning placeholders
+rf_model_spec <- rand_forest(trees = 300, mtry = tune(), min_n = tune()) %>%
+  set_engine("ranger", seed = 4321) %>%
+  set_mode("regression")
+
+# Recipe definition
+rf_recipe <- recipe(POP20_SQMI ~ distance_diff + lat + duration_minutes + SQMI, data = train_data_clean)
+
+# Define the tuning grid with predefined ranges for mtry and min_n
+tuning_grid <- grid_regular(
+  mtry(range = c(1, 4)),   # Adjust as needed for the number of predictors
+  min_n(range = c(2, 20)),
+  levels = 7
+)
+
+# Create 5-fold cross-validation resamples, repeated 5 times
+rf_cv_resamples <- vfold_cv(train_data_clean, v = 5, repeats = 5)
+
+# Combine the model specification and recipe into a workflow
+rf_workflow <- workflow() %>%
+  add_model(rf_model_spec) %>%
+  add_recipe(rf_recipe)
+
+# Register parallel backend to use multiple cores
+registerDoParallel(cores = detectCores())
+
+# Tune the Random Forest model with parallel processing
+rf_cvtuned_results <- tune_grid(
+  rf_workflow,
+  resamples = rf_cv_resamples,
+  grid = tuning_grid,
+  control = control_grid(save_pred = TRUE, parallel_over = "resamples")
+)
+
+# Stop the parallel backend
+stopImplicitCluster()
+
+# Visualize the tuning results focusing on RMSE
+autoplot(rf_cvtuned_results)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

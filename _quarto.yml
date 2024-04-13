@@ -28,7 +28,7 @@ website:
             file: ml-models-exercise/ml-models-exercise.qmd   
     right:
       - icon: github 
-        href: URL-TO-THIS-REPOSITORY-HERE        
+        href: https://github.com/anjoru/andrew_ruiz-MADA-portfolio.gitE        
 
 format:
   html:
