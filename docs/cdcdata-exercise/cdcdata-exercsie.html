@@ -245,8 +245,23 @@ Attaching package: 'dplyr'</code></pre>
   method            from
   as.zoo.data.frame zoo </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the CSV file using here()</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>rabies2020 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"cdcdata-exercise"</span>, <span class="st">"Rabies2020.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Hmisc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'Hmisc'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:dplyr':
+
+    src, summarize</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    format.pval, units</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the CSV file using here()</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rabies2020 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"cdcdata-exercise"</span>, <span class="st">"Rabies2020.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 3710 Columns: 23</code></pre>
 </div>
@@ -260,14 +275,14 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now apply your renaming and cleaning</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rabies2020) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[^[:alnum:] ]"</span>, <span class="st">""</span>, <span class="fu">names</span>(rabies2020))</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rabies2020) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, <span class="fu">names</span>(rabies2020))</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>rabies2020_cleaned <span class="ot">&lt;-</span> rabies2020</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the column names</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">names</span>(rabies2020_cleaned))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now apply your renaming and cleaning</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rabies2020) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[^[:alnum:] ]"</span>, <span class="st">""</span>, <span class="fu">names</span>(rabies2020))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(rabies2020) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, <span class="fu">names</span>(rabies2020))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>rabies2020_cleaned <span class="ot">&lt;-</span> rabies2020</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the column names</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">names</span>(rabies2020_cleaned))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Reporting_Area"                          
  [2] "MMWR_Year"                               
@@ -306,7 +321,7 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 <section id="lets-look-at-the-first-few-rows" class="level4">
 <h4 class="anchored" data-anchor-id="lets-look-at-the-first-few-rows">Let’s look at the first few rows</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rabies2020)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rabies2020)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 23
   Reporting_Area MMWR_Year MMWR_Week Rabies_Animal_Current_week
@@ -325,7 +340,7 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 #   Rabies_Human_Current_week &lt;lgl&gt;, Rabies_Human_Current_week_flag &lt;chr&gt;,
 #   Rabies_Human_Previous_52_weeks_Max &lt;dbl&gt;, …</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">names</span>(rabies2020))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">names</span>(rabies2020))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Reporting_Area"                          
  [2] "MMWR_Year"                               
@@ -359,30 +374,30 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 <section id="clean-and-process-the-data" class="level1">
 <h1>Clean and process the data</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the column names have special characters that I will remove</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#names(rabies2020) &lt;- gsub("[^[:alnum:] ]", "", names(rabies2020))</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#names(rabies2020) &lt;- gsub(" ", "_", names(rabies2020))</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#print(names(rabies2020))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the column names have special characters that I will remove</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#names(rabies2020) &lt;- gsub("[^[:alnum:] ]", "", names(rabies2020))</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#names(rabies2020) &lt;- gsub(" ", "_", names(rabies2020))</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#print(names(rabies2020))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#now select the variables we will need</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>rabies2020_selected <span class="ot">&lt;-</span> rabies2020_cleaned <span class="sc">%&gt;%</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    Reporting_Area, </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    MMWR_Week,      </span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    Rabies_Animal_Current_week,  </span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    Rabies_Animal_Cum_2019,      </span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    Location_1,    </span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    Location_2</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Some of the count data has missing values.</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># these can be replaced with zeros</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace NA values with 0</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">Rabies_Animal_Current_week =</span> <span class="fu">replace_na</span>(Rabies_Animal_Current_week, <span class="dv">0</span>),</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Rabies_Animal_Cum_2019 =</span> <span class="fu">replace_na</span>(Rabies_Animal_Cum_2019, <span class="dv">0</span>)</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">names</span>(rabies2020_selected))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#now select the variables we will need</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>rabies2020_selected <span class="ot">&lt;-</span> rabies2020_cleaned <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    Reporting_Area, </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    MMWR_Week,      </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    Rabies_Animal_Current_week,  </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    Rabies_Animal_Cum_2019,      </span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    Location_1,    </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    Location_2</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Some of the count data has missing values.</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co"># these can be replaced with zeros</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace NA values with 0</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">Rabies_Animal_Current_week =</span> <span class="fu">replace_na</span>(Rabies_Animal_Current_week, <span class="dv">0</span>),</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Rabies_Animal_Cum_2019 =</span> <span class="fu">replace_na</span>(Rabies_Animal_Cum_2019, <span class="dv">0</span>)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">names</span>(rabies2020_selected))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Reporting_Area"             "MMWR_Week"                 
 [3] "Rabies_Animal_Current_week" "Rabies_Animal_Cum_2019"    
@@ -394,16 +409,16 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 <section id="the-original-dataset-does-not-provide-the-incident-case-count-by-mmwr-week-for-2019.-instead-it-only-has-the-cumulative-cases-by-week.-we-will-have-to-create-a-calculate-field-for-this-so-that-we-can-make-some-comparisons-between-the-years." class="level3">
 <h3 class="anchored" data-anchor-id="the-original-dataset-does-not-provide-the-incident-case-count-by-mmwr-week-for-2019.-instead-it-only-has-the-cumulative-cases-by-week.-we-will-have-to-create-a-calculate-field-for-this-so-that-we-can-make-some-comparisons-between-the-years.">The original dataset does not provide the incident case count by MMWR week for 2019. Instead it only has the cumulative cases by week. We will have to create a calculate field for this so that we can make some comparisons between the years.</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Focus on South Atlantic state for the rest of the analysis</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>south_atlantic_data <span class="ot">&lt;-</span> rabies2020_selected <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Location_2 <span class="sc">==</span> <span class="st">"SOUTH ATLANTIC"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate incident cases for 2019</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Reporting_Area, MMWR_Week) <span class="sc">%&gt;%</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Reporting_Area) <span class="sc">%&gt;%</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Incident_Cases_2019 =</span> Rabies_Animal_Cum_2019 <span class="sc">-</span> <span class="fu">lag</span>(Rabies_Animal_Cum_2019, <span class="at">default =</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(south_atlantic_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Focus on South Atlantic state for the rest of the analysis</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>south_atlantic_data <span class="ot">&lt;-</span> rabies2020_selected <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Location_2 <span class="sc">==</span> <span class="st">"SOUTH ATLANTIC"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate incident cases for 2019</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Reporting_Area, MMWR_Week) <span class="sc">%&gt;%</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Reporting_Area) <span class="sc">%&gt;%</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Incident_Cases_2019 =</span> Rabies_Animal_Cum_2019 <span class="sc">-</span> <span class="fu">lag</span>(Rabies_Animal_Cum_2019, <span class="at">default =</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(south_atlantic_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [53 × 7] (S3: tbl_df/tbl/data.frame)
  $ Reporting_Area            : chr [1:53] "SOUTH ATLANTIC" "SOUTH ATLANTIC" "SOUTH ATLANTIC" "SOUTH ATLANTIC" ...
@@ -423,17 +438,17 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 <section id="lets-create-a-line-graph-with-the-counts-by-mmwr-week-for-both-2020-and-2019." class="level2">
 <h2 class="anchored" data-anchor-id="lets-create-a-line-graph-with-the-counts-by-mmwr-week-for-both-2020-and-2019.">Let’s create a line graph with the counts by MMWR week for both 2020 and 2019.</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data for graphing: Pivot to long format for both 2019 and 2020</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>south_atlantic_long <span class="ot">&lt;-</span> south_atlantic_data <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure MMWR_Week and Reporting_Area are retained for grouping in the long format</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Incident_Cases_2019, Rabies_Animal_Current_week), </span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Year"</span>, </span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"Cases"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Correct the Year column to reflect actual years</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">recode</span>(Year, </span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">Incident_Cases_2019 =</span> <span class="st">"2019"</span>, </span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">Rabies_Animal_Current_week =</span> <span class="st">"2020"</span>))</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(south_atlantic_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data for graphing: Pivot to long format for both 2019 and 2020</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>south_atlantic_long <span class="ot">&lt;-</span> south_atlantic_data <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure MMWR_Week and Reporting_Area are retained for grouping in the long format</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Incident_Cases_2019, Rabies_Animal_Current_week), </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Year"</span>, </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"Cases"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Correct the Year column to reflect actual years</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">recode</span>(Year, </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">Incident_Cases_2019 =</span> <span class="st">"2019"</span>, </span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">Rabies_Animal_Current_week =</span> <span class="st">"2020"</span>))</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(south_atlantic_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 7
   Reporting_Area MMWR_Week Rabies_Animal_Cum_2019 Location_1 Location_2    Year 
@@ -446,16 +461,16 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 6 SOUTH ATLANTIC         3                    107 &lt;NA&gt;       SOUTH ATLANT… 2020 
 # ℹ 1 more variable: Cases &lt;dbl&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graph the incident animal cases from 2019 and 2020 by MMWR week</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(south_atlantic_long, <span class="fu">aes</span>(<span class="at">x =</span> MMWR_Week, <span class="at">y =</span> Cases, <span class="at">color =</span> Year, <span class="at">group =</span> Year)) <span class="sc">+</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Rabies Cases by MMWR Week for 2019 and 2020 in South Atlantic"</span>,</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"MMWR Week"</span>,</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Cases"</span>,</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"2019"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"2020"</span> <span class="ot">=</span> <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graph the incident animal cases from 2019 and 2020 by MMWR week</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(south_atlantic_long, <span class="fu">aes</span>(<span class="at">x =</span> MMWR_Week, <span class="at">y =</span> Cases, <span class="at">color =</span> Year, <span class="at">group =</span> Year)) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Rabies Cases by MMWR Week for 2019 and 2020 in South Atlantic"</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"MMWR Week"</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Cases"</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"2019"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"2020"</span> <span class="ot">=</span> <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -465,13 +480,13 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lets compare the two years with a box plot</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(south_atlantic_long, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Cases, <span class="at">color =</span> Year)) <span class="sc">+</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Weekly Rabies Cases for 2019 and 2020"</span>,</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>,</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lets compare the two years with a box plot</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(south_atlantic_long, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Cases, <span class="at">color =</span> Year)) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Weekly Rabies Cases for 2019 and 2020"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -483,10 +498,10 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 <section id="this-analysis-aims-to-understand-the-trends-in-animal-rabies-cases-reported-in-the-south-atlantic-region-during-2019-assess-the-models-fit-and-forecast-future-cases-into-the-next-year.-we-employ-time-series-analysis-techniques-focusing-on-arima-modeling-to-capture-the-underlying-patterns-in-the-weekly-reported-cases-and-predict-future-occurrences.-the-process-encompasses-data-preparation-visualization-model-selection-and-diagnostics-and-forecasting-culminating-in-a-comparison-of-forecasted-cases-against-actual-data-from-2020." class="level3">
 <h3 class="anchored" data-anchor-id="this-analysis-aims-to-understand-the-trends-in-animal-rabies-cases-reported-in-the-south-atlantic-region-during-2019-assess-the-models-fit-and-forecast-future-cases-into-the-next-year.-we-employ-time-series-analysis-techniques-focusing-on-arima-modeling-to-capture-the-underlying-patterns-in-the-weekly-reported-cases-and-predict-future-occurrences.-the-process-encompasses-data-preparation-visualization-model-selection-and-diagnostics-and-forecasting-culminating-in-a-comparison-of-forecasted-cases-against-actual-data-from-2020.">This analysis aims to understand the trends in animal rabies cases reported in the South Atlantic region during 2019, assess the model’s fit, and forecast future cases into the next year. We employ time series analysis techniques, focusing on ARIMA modeling, to capture the underlying patterns in the weekly reported cases and predict future occurrences. The process encompasses data preparation, visualization, model selection and diagnostics, and forecasting, culminating in a comparison of forecasted cases against actual data from 2020.</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the time series data</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>time_series_data <span class="ot">&lt;-</span> south_atlantic_data <span class="sc">%&gt;%</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(MMWR_Week, Incident_Cases_2019) <span class="sc">%&gt;%</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">MMWR_Week =</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(<span class="st">"2020-"</span>, MMWR_Week, <span class="st">"-1"</span>), <span class="at">format =</span> <span class="st">"%Y-%U-%u"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the time series data</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>time_series_data <span class="ot">&lt;-</span> south_atlantic_data <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(MMWR_Week, Incident_Cases_2019) <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">MMWR_Week =</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(<span class="st">"2020-"</span>, MMWR_Week, <span class="st">"-1"</span>), <span class="at">format =</span> <span class="st">"%Y-%U-%u"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: There was 1 warning in `mutate()`.
 ℹ In argument: `MMWR_Week = as.Date(paste0("2020-", MMWR_Week, "-1"), format =
@@ -494,11 +509,11 @@ lgl  (4): Rabies, Human, Current week, Rabies, Human, Previous 52 weeks Max†..
 Caused by warning in `strptime()`:
 ! (0-based) yday 369 in year 2020 is invalid</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>ts_data <span class="ot">&lt;-</span> <span class="fu">ts</span>(time_series_data<span class="sc">$</span>Incident_Cases_2019, <span class="at">frequency =</span> <span class="dv">53</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Time Series Visualization</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ts_data, <span class="at">main =</span> <span class="st">"Time Series of Rabies Animal Cases by MMWR Week for 2019"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ts_data <span class="ot">&lt;-</span> <span class="fu">ts</span>(time_series_data<span class="sc">$</span>Incident_Cases_2019, <span class="at">frequency =</span> <span class="dv">53</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Time Series Visualization</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ts_data, <span class="at">main =</span> <span class="st">"Time Series of Rabies Animal Cases by MMWR Week for 2019"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -506,11 +521,11 @@ Caused by warning in `strptime()`:
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modeling (Auto ARIMA)</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>arima_model <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(ts_data)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnostic Checking</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(arima_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modeling (Auto ARIMA)</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>arima_model <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(ts_data)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnostic Checking</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(arima_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -527,28 +542,28 @@ Q* = 16.92, df = 8, p-value = 0.03096
 
 Model df: 3.   Total lags used: 11</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model </span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">#to see if they are correlated with each other. The test statistic (Q*) </span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co">#was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096. </span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co">#This suggests that there is evidence of autocorrelation in the residuals, </span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co">#indicating that the ARIMA model may not fully capture the underlying patterns </span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co">#in the data.</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting</span></span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>forecast_values <span class="ot">&lt;-</span> <span class="fu">forecast</span>(arima_model, <span class="at">h =</span> <span class="dv">52</span>)</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast</span></span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(forecast_values, main = "Forecast of Rabies Animal Cases for the Next 52 Weeks")</span></span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast and Actual 2020 Cases</span></span>
-<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming you have the actual 2020 cases data stored in a variable called actual_2020_cases</span></span>
-<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast and Actual 2020 Cases</span></span>
-<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(forecast_values, <span class="at">main =</span> <span class="st">"Forecast vs Actual Rabies Animal Cases for 2020"</span>)</span>
-<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(south_atlantic_data<span class="sc">$</span>Rabies_Animal_Current_week, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)  <span class="co"># Add actual 2020 cases to the plot</span></span>
-<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Add legend</span></span>
-<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Forecast"</span>, <span class="st">"Actual 2020 Cases"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model </span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#to see if they are correlated with each other. The test statistic (Q*) </span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096. </span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#This suggests that there is evidence of autocorrelation in the residuals, </span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">#indicating that the ARIMA model may not fully capture the underlying patterns </span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">#in the data.</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>forecast_values <span class="ot">&lt;-</span> <span class="fu">forecast</span>(arima_model, <span class="at">h =</span> <span class="dv">52</span>)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(forecast_values, main = "Forecast of Rabies Animal Cases for the Next 52 Weeks")</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast and Actual 2020 Cases</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming you have the actual 2020 cases data stored in a variable called actual_2020_cases</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast and Actual 2020 Cases</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(forecast_values, <span class="at">main =</span> <span class="st">"Forecast vs Actual Rabies Animal Cases for 2020"</span>)</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(south_atlantic_data<span class="sc">$</span>Rabies_Animal_Current_week, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)  <span class="co"># Add actual 2020 cases to the plot</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Add legend</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Forecast"</span>, <span class="st">"Actual 2020 Cases"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -567,169 +582,268 @@ Model df: 3.   Total lags used: 11</code></pre>
 <h1>Part 2</h1>
 <section id="contributed-by-xueyan-hu" class="level2">
 <h2 class="anchored" data-anchor-id="contributed-by-xueyan-hu">Contributed by Xueyan Hu</h2>
+</section>
+<section id="contributed-by-xueyan-hu-1" class="level2">
+<h2 class="anchored" data-anchor-id="contributed-by-xueyan-hu-1">Contributed by Xueyan Hu</h2>
 <section id="first-creating-a-synthetic-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="first-creating-a-synthetic-dataset">First creating a synthetic dataset</h3>
+<p>I asked AI tool google Gemini to create the codes for generating a synthetic dataset that will look like the cleaned dataset done by Andrew. It contains reporting area, the number of wwmr week in a physical year, cumulative incident of a disease (here for mine is covid) in the first year, incident cases in first year and incident cases in second year.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate MMWR weeks from 1 to 53</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>mmwr_weeks <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">53</span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate synthetic data for 2020 (weekly incident cases)</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>covid_weekly_2020 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">53</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate synthetic data for 2021 (weekly incident cases)</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure that 2021 cases are overall higher than 2020</span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>covid_weekly_2021 <span class="ot">&lt;-</span> covid_weekly_2020 <span class="sc">+</span> <span class="fu">sample</span>(<span class="dv">50</span><span class="sc">:</span><span class="dv">150</span>, <span class="dv">53</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="dv">50</span></span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create reporting area variable</span></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>reporting_area <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"Hogwarts"</span>, <span class="dv">53</span> <span class="sc">*</span> <span class="dv">2</span>)</span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data for 2020 and 2021</span></span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">MMWR_Week =</span> <span class="fu">rep</span>(mmwr_weeks, <span class="dv">2</span>),</span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">Covid_Cum_2020 =</span> <span class="fu">c</span>(covid_weekly_2020, <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">53</span>)),  <span class="co"># Placeholder for 2021 weekly counts</span></span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">Covid_Current_Week_2021 =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">53</span>), covid_weekly_2021),  <span class="co"># 2021 weekly counts</span></span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">Reporting_Area =</span> reporting_area</span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace NA values for 2021 with a lower limit</span></span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>covid_data<span class="sc">$</span>Covid_Cum_2020[<span class="dv">54</span><span class="sc">:</span><span class="dv">106</span>] <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(<span class="fu">pmin</span>(<span class="dv">10000</span>, <span class="fu">pmax</span>(<span class="dv">0</span>, covid_weekly_2021)))</span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Add variation to incident cases in 2021</span></span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>covid_data<span class="sc">$</span>Covid_Current_Week_2021[<span class="dv">54</span><span class="sc">:</span><span class="dv">106</span>] <span class="ot">&lt;-</span> <span class="fu">pmin</span>(<span class="dv">10000</span>, <span class="fu">pmax</span>(<span class="dv">0</span>, covid_data<span class="sc">$</span>Covid_Cum_2020[<span class="dv">53</span>] <span class="sc">+</span> <span class="fu">sample</span>(<span class="dv">100</span><span class="sc">:</span><span class="dv">500</span>, <span class="dv">53</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the NA values from the weekly counts for 2021</span></span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> covid_data[<span class="fu">complete.cases</span>(covid_data), ]</span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the generated dataset</span></span>
-<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(covid_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the seed for reproducible random numbers (optional)</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the number of weeks</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>num_weeks <span class="ot">&lt;-</span> <span class="dv">53</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create vectors for each variable</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>reporting_area <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"Hogwarts"</span>, num_weeks)  <span class="co"># All Hogwarts</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>mmwr_week <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>num_weeks, <span class="at">each =</span> <span class="dv">1</span>)  <span class="co"># Weeks 1 to 53</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the desired median</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>desired_median <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate random cases between 0-18 each week</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>covid_current_week <span class="ot">&lt;-</span> <span class="fu">round</span>(</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(<span class="fu">runif</span>(num_weeks) <span class="sc">&lt;</span> <span class="fl">0.1</span>,  <span class="co"># 10% chance of 0</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>         <span class="dv">0</span>,</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>         <span class="fu">runif</span>(num_weeks, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">18</span>)),  <span class="co"># Remaining 90% with range</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">0</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Set last week to 0</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>covid_current_week[num_weeks] <span class="ot">&lt;-</span> <span class="dv">0</span>  </span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the current median</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>current_median <span class="ot">&lt;-</span> <span class="fu">median</span>(covid_current_week)</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the adjustment needed for the median</span></span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>median_adjustment <span class="ot">&lt;-</span> desired_median <span class="sc">-</span> current_median</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the adjustment to the data</span></span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>covid_current_week <span class="ot">&lt;-</span> covid_current_week <span class="sc">+</span> median_adjustment</span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure all values are non-negative</span></span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>covid_current_week <span class="ot">&lt;-</span> <span class="fu">pmax</span>(covid_current_week, <span class="dv">0</span>)</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Output the resulting covid_current_week vector</span></span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>covid_current_week</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    MMWR_Week Covid_Cum_2020 Covid_Current_Week_2021 Reporting_Area
-54          1            212                     290       Hogwarts
-55          2            487                     474       Hogwarts
-56          3            728                     348       Hogwarts
-57          4            866                     210       Hogwarts
-58          5           1070                     442       Hogwarts
-59          6           1232                     326       Hogwarts
-60          7           1460                     239       Hogwarts
-61          8           1643                     324       Hogwarts
-62          9           1803                     286       Hogwarts
-63         10           2017                     385       Hogwarts
-64         11           2266                     414       Hogwarts
-65         12           2551                     422       Hogwarts
-66         13           2735                     344       Hogwarts
-67         14           3019                     478       Hogwarts
-68         15           3181                     355       Hogwarts
-69         16           3444                     462       Hogwarts
-70         17           3638                     447       Hogwarts
-71         18           3916                     392       Hogwarts
-72         19           4153                     225       Hogwarts
-73         20           4355                     219       Hogwarts
-74         21           4561                     503       Hogwarts
-75         22           4717                     263       Hogwarts
-76         23           4892                     266       Hogwarts
-77         24           5004                     214       Hogwarts
-78         25           5199                     367       Hogwarts
-79         26           5403                     272       Hogwarts
-80         27           5605                     503       Hogwarts
-81         28           5837                     267       Hogwarts
-82         29           6001                     117       Hogwarts
-83         30           6265                     438       Hogwarts
-84         31           6411                     384       Hogwarts
-85         32           6567                     392       Hogwarts
-86         33           6760                     400       Hogwarts
-87         34           6903                     389       Hogwarts
-88         35           7083                     167       Hogwarts
-89         36           7286                     443       Hogwarts
-90         37           7420                     350       Hogwarts
-91         38           7577                     364       Hogwarts
-92         39           7766                     451       Hogwarts
-93         40           7982                     151       Hogwarts
-94         41           8187                     422       Hogwarts
-95         42           8353                     249       Hogwarts
-96         43           8572                     338       Hogwarts
-97         44           8863                     160       Hogwarts
-98         45           9071                     189       Hogwarts
-99         46           9326                     195       Hogwarts
-100        47           9482                     296       Hogwarts
-101        48           9753                     479       Hogwarts
-102        49          10006                     151       Hogwarts
-103        50          10214                     308       Hogwarts
-104        51          10397                     369       Hogwarts
-105        52          10610                     280       Hogwarts
-106        53          10796                     398       Hogwarts</code></pre>
+<pre><code> [1]  0  7  1  0 11  0  4  9  0  4  2 12  5 12 12 11  5  0  8 10  0  6  1  4  8
+[26]  3  0  1  9  5 11  0  5 15  0 13  0  0  9  3  9  3  0 11  0  5  6  8  3  6
+[51]  0  6  0</code></pre>
 </div>
-</div>
-</section>
-<section id="calculate-weekly-incident-for-2020" class="level3">
-<h3 class="anchored" data-anchor-id="calculate-weekly-incident-for-2020">calculate weekly incident for 2020</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>new_covid_data <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Incident_Cases_2020 =</span> Covid_Cum_2020 <span class="sc">-</span> <span class="fu">lag</span>(Covid_Cum_2020, <span class="at">default =</span> <span class="dv">0</span>))</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(new_covid_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the target median</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>target_median <span class="ot">&lt;-</span> <span class="dv">14</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the fixed values and the number of weeks</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>fixed_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">70</span>, <span class="dv">30</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>num_fixed_weeks <span class="ot">&lt;-</span> <span class="fu">length</span>(fixed_values)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>total_weeks <span class="ot">&lt;-</span> <span class="dv">53</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of fluctuating weeks</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>num_fluctuating_weeks <span class="ot">&lt;-</span> total_weeks <span class="sc">-</span> num_fixed_weeks</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sum of fixed values</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>fixed_sum <span class="ot">&lt;-</span> <span class="fu">sum</span>(fixed_values)</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the target sum for the fluctuating weeks</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>target_sum_fluctuating <span class="ot">&lt;-</span> target_median <span class="sc">*</span> num_fluctuating_weeks <span class="sc">-</span> fixed_sum</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate random fluctuations with the adjusted sum</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>fluctuations <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(num_fluctuating_weeks, <span class="at">mean =</span> target_sum_fluctuating <span class="sc">/</span> num_fluctuating_weeks, <span class="at">sd =</span> <span class="dv">5</span>))</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure all elements are non-negative</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>fluctuations <span class="ot">&lt;-</span> <span class="fu">pmax</span>(fluctuations, <span class="dv">0</span>)</span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine fixed values and fluctuations</span></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>incident_case_2020 <span class="ot">&lt;-</span> <span class="fu">c</span>(fixed_values, fluctuations)</span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Enforce zeros for week 52 and 53</span></span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>incident_case_2020[<span class="dv">52</span><span class="sc">:</span><span class="dv">53</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Create empty vectors for Location_1 and Location_2</span></span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>location_1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, num_weeks)</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>location_2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"Hogwarts"</span>, num_weeks)</span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the data frame</span></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>hogwarts_covid_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">Reporting_Area =</span> reporting_area,</span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">MMWR_Week =</span> mmwr_week,</span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">Covid_Current_Week =</span> covid_current_week,</span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">Covid_Cum_2020 =</span> <span class="fu">cumsum</span>(incident_case_2020),  <span class="co"># Cumulative cases</span></span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">Location_1 =</span> location_1,</span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">Location_2 =</span> <span class="fu">rep</span>(<span class="st">"Hogwarts"</span>, num_weeks),</span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">Incident_Case_2020 =</span> incident_case_2020</span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame</span></span>
+<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(hogwarts_covid_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   53 obs. of  5 variables:
- $ MMWR_Week              : int  1 2 3 4 5 6 7 8 9 10 ...
- $ Covid_Cum_2020         : num  212 487 728 866 1070 ...
- $ Covid_Current_Week_2021: num  290 474 348 210 442 326 239 324 286 385 ...
- $ Reporting_Area         : chr  "Hogwarts" "Hogwarts" "Hogwarts" "Hogwarts" ...
- $ Incident_Cases_2020    : num  212 275 241 138 204 162 228 183 160 214 ...</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(new_covid_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   MMWR_Week Covid_Cum_2020 Covid_Current_Week_2021 Reporting_Area
-54         1            212                     290       Hogwarts
-55         2            487                     474       Hogwarts
-56         3            728                     348       Hogwarts
-57         4            866                     210       Hogwarts
-58         5           1070                     442       Hogwarts
-59         6           1232                     326       Hogwarts
-   Incident_Cases_2020
-54                 212
-55                 275
-56                 241
-57                 138
-58                 204
-59                 162</code></pre>
+<pre><code>   Reporting_Area MMWR_Week Covid_Current_Week Covid_Cum_2020 Location_1
+1        Hogwarts         1                  0             10         NA
+2        Hogwarts         2                  7             80         NA
+3        Hogwarts         3                  1            110         NA
+4        Hogwarts         4                  0            129         NA
+5        Hogwarts         5                 11            140         NA
+6        Hogwarts         6                  0            159         NA
+7        Hogwarts         7                  4            163         NA
+8        Hogwarts         8                  9            178         NA
+9        Hogwarts         9                  0            190         NA
+10       Hogwarts        10                  4            203         NA
+11       Hogwarts        11                  2            217         NA
+12       Hogwarts        12                 12            226         NA
+13       Hogwarts        13                  5            236         NA
+14       Hogwarts        14                 12            243         NA
+15       Hogwarts        15                 12            249         NA
+16       Hogwarts        16                 11            262         NA
+17       Hogwarts        17                  5            276         NA
+18       Hogwarts        18                  0            288         NA
+19       Hogwarts        19                  8            304         NA
+20       Hogwarts        20                 10            326         NA
+21       Hogwarts        21                  0            335         NA
+22       Hogwarts        22                  6            335         NA
+23       Hogwarts        23                  1            352         NA
+24       Hogwarts        24                  4            360         NA
+25       Hogwarts        25                  8            368         NA
+26       Hogwarts        26                  3            385         NA
+27       Hogwarts        27                  0            395         NA
+28       Hogwarts        28                  1            401         NA
+29       Hogwarts        29                  9            414         NA
+30       Hogwarts        30                  5            425         NA
+31       Hogwarts        31                 11            437         NA
+32       Hogwarts        32                  0            451         NA
+33       Hogwarts        33                  5            461         NA
+34       Hogwarts        34                 15            476         NA
+35       Hogwarts        35                  0            487         NA
+36       Hogwarts        36                 13            500         NA
+37       Hogwarts        37                  0            517         NA
+38       Hogwarts        38                  0            531         NA
+39       Hogwarts        39                  9            541         NA
+40       Hogwarts        40                  3            559         NA
+41       Hogwarts        41                  9            576         NA
+42       Hogwarts        42                  3            591         NA
+43       Hogwarts        43                  0            604         NA
+44       Hogwarts        44                 11            613         NA
+45       Hogwarts        45                  0            632         NA
+46       Hogwarts        46                  5            641         NA
+47       Hogwarts        47                  6            664         NA
+48       Hogwarts        48                  8            683         NA
+49       Hogwarts        49                  3            694         NA
+50       Hogwarts        50                  6            701         NA
+51       Hogwarts        51                  0            709         NA
+52       Hogwarts        52                  6            709         NA
+53       Hogwarts        53                  0            709         NA
+   Location_2 Incident_Case_2020
+1    Hogwarts                 10
+2    Hogwarts                 70
+3    Hogwarts                 30
+4    Hogwarts                 19
+5    Hogwarts                 11
+6    Hogwarts                 19
+7    Hogwarts                  4
+8    Hogwarts                 15
+9    Hogwarts                 12
+10   Hogwarts                 13
+11   Hogwarts                 14
+12   Hogwarts                  9
+13   Hogwarts                 10
+14   Hogwarts                  7
+15   Hogwarts                  6
+16   Hogwarts                 13
+17   Hogwarts                 14
+18   Hogwarts                 12
+19   Hogwarts                 16
+20   Hogwarts                 22
+21   Hogwarts                  9
+22   Hogwarts                  0
+23   Hogwarts                 17
+24   Hogwarts                  8
+25   Hogwarts                  8
+26   Hogwarts                 17
+27   Hogwarts                 10
+28   Hogwarts                  6
+29   Hogwarts                 13
+30   Hogwarts                 11
+31   Hogwarts                 12
+32   Hogwarts                 14
+33   Hogwarts                 10
+34   Hogwarts                 15
+35   Hogwarts                 11
+36   Hogwarts                 13
+37   Hogwarts                 17
+38   Hogwarts                 14
+39   Hogwarts                 10
+40   Hogwarts                 18
+41   Hogwarts                 17
+42   Hogwarts                 15
+43   Hogwarts                 13
+44   Hogwarts                  9
+45   Hogwarts                 19
+46   Hogwarts                  9
+47   Hogwarts                 23
+48   Hogwarts                 19
+49   Hogwarts                 11
+50   Hogwarts                  7
+51   Hogwarts                  8
+52   Hogwarts                  0
+53   Hogwarts                  0</code></pre>
 </div>
 </div>
 </section>
 <section id="line-graph-for-incident-case-by-mmwr-week" class="level3">
 <h3 class="anchored" data-anchor-id="line-graph-for-incident-case-by-mmwr-week">line graph for incident case by MMWR Week</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data for graphing: Pivot to long format for both 2020 and 2021</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>covid_data_long <span class="ot">&lt;-</span> new_covid_data <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Incident_Cases_2020, Covid_Current_Week_2021), </span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Year"</span>, </span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"Cases"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Correct the Year column to reflect actual years</span></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">recode</span>(Year, </span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">Incident_Cases_2020 =</span> <span class="st">"2020"</span>, </span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">Covid_Current_Week_2021 =</span> <span class="st">"2021"</span>))</span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(covid_data_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data for graphing: Pivot to long format for both 2020 and 2021</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>covid_data_long <span class="ot">&lt;-</span> hogwarts_covid_data <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Incident_Case_2020, Covid_Current_Week), </span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Year"</span>, </span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"Cases"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Correct the Year column to reflect actual years</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">recode</span>(Year, </span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">Incident_Case_2020 =</span> <span class="st">"2020"</span>, </span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">Covid_Current_Week =</span> <span class="st">"2021"</span>))</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(covid_data_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 5
-  MMWR_Week Covid_Cum_2020 Reporting_Area Year  Cases
-      &lt;int&gt;          &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt; &lt;dbl&gt;
-1         1            212 Hogwarts       2020    212
-2         1            212 Hogwarts       2021    290
-3         2            487 Hogwarts       2020    275
-4         2            487 Hogwarts       2021    474
-5         3            728 Hogwarts       2020    241
-6         3            728 Hogwarts       2021    348</code></pre>
+<pre><code># A tibble: 6 × 7
+  Reporting_Area MMWR_Week Covid_Cum_2020 Location_1 Location_2 Year  Cases
+  &lt;chr&gt;              &lt;int&gt;          &lt;dbl&gt; &lt;lgl&gt;      &lt;chr&gt;      &lt;chr&gt; &lt;dbl&gt;
+1 Hogwarts               1             10 NA         Hogwarts   2020     10
+2 Hogwarts               1             10 NA         Hogwarts   2021      0
+3 Hogwarts               2             80 NA         Hogwarts   2020     70
+4 Hogwarts               2             80 NA         Hogwarts   2021      7
+5 Hogwarts               3            110 NA         Hogwarts   2020     30
+6 Hogwarts               3            110 NA         Hogwarts   2021      1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graph the incident animal cases from 2020 and 2021 by MMWR week</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(covid_data_long, <span class="fu">aes</span>(<span class="at">x =</span> MMWR_Week, <span class="at">y =</span> Cases, <span class="at">color =</span> Year, <span class="at">group =</span> Year)) <span class="sc">+</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Covid Cases by MMWR Week for 2020 and 2021 in Hogwarts"</span>,</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"MMWR Week"</span>,</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Cases"</span>,</span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"2020"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"2021"</span> <span class="ot">=</span> <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graph the incident animal cases from 2020 and 2021 by MMWR week</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(covid_data_long, <span class="fu">aes</span>(<span class="at">x =</span> MMWR_Week, <span class="at">y =</span> Cases, <span class="at">color =</span> Year, <span class="at">group =</span> Year)) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Covid Cases by MMWR Week for 2020 and 2021 in Hogwarts"</span>,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"MMWR Week"</span>,</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Cases"</span>,</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Year"</span>) <span class="sc">+</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"2020"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"2021"</span> <span class="ot">=</span> <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cdcdata-exercsie_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For this line graph, I think the general trend of each year is similar with the orginal data. I noticed the feature of first year that the case number peaked at a really high point and then decreased dramatically in the several following weeks. And both first year and second year dropped to about 0 case in the last few weeks. And the average of incidence in first year is higher than second year. I tried to ask AI tool to mimic these features for me.</p>
+</section>
+<section id="boxplot-for-incident-case-by-year" class="level3">
+<h3 class="anchored" data-anchor-id="boxplot-for-incident-case-by-year">boxplot for incident case by year</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lets compare the two years with a box plot</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(covid_data_long, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Cases, <span class="at">color =</span> Year)) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Weekly covid Cases for 2020 and 2021"</span>,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -738,31 +852,13 @@ Model df: 3.   Total lags used: 11</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="boxplot-for-incident-case-by-year" class="level3">
-<h3 class="anchored" data-anchor-id="boxplot-for-incident-case-by-year">boxplot for incident case by year</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lets compare the two years with a box plot</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(covid_data_long, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Cases, <span class="at">color =</span> Year)) <span class="sc">+</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Weekly covid Cases for 2020 and 2021"</span>,</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>,</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cdcdata-exercsie_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<p>I think basically the boxplot has similar shape with the one generated by original data, like the medium line, out liners. But there are still some differences that I cannot eliminate. First, the 3rd quartiles and 1st quartiles are different from the original data. I have tried to ask AI tools to define the fixed values but it didn’t work well. So I only keep the right median. I couldn’t control the height of the boxes.</p>
 <p><strong>???</strong> I don’t really know the model named ARIMA that Andrew use for doing forecasting in the last section of part 1 above. But I will copy and paste his code and run it to see what will happen here for the synthetic dataset.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the time series data</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>time_series_covid_data <span class="ot">&lt;-</span> new_covid_data <span class="sc">%&gt;%</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">MMWR_Week =</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(<span class="st">"2021-"</span>, MMWR_Week, <span class="st">"-1"</span>), <span class="at">format =</span> <span class="st">"%Y-%U-%u"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(MMWR_Week, Incident_Cases_2020)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the time series data</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>time_series_covid_data <span class="ot">&lt;-</span> hogwarts_covid_data <span class="sc">%&gt;%</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">MMWR_Week =</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(<span class="st">"2021-"</span>, MMWR_Week, <span class="st">"-1"</span>), <span class="at">format =</span> <span class="st">"%Y-%U-%u"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(MMWR_Week, Incident_Case_2020)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: There was 1 warning in `mutate()`.
 ℹ In argument: `MMWR_Week = as.Date(paste0("2021-", MMWR_Week, "-1"), format =
@@ -770,27 +866,27 @@ Model df: 3.   Total lags used: 11</code></pre>
 Caused by warning in `strptime()`:
 ! (0-based) yday 367 in year 2021 is invalid</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>ts_covid_data <span class="ot">&lt;-</span> <span class="fu">ts</span>(time_series_covid_data<span class="sc">$</span>Incident_Cases_2020, <span class="at">frequency =</span> <span class="dv">53</span>)</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Time Series Visualization</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ts_covid_data, <span class="at">main =</span> <span class="st">"Time Series of Synthetic Covid Cases by MMWR Week for 2020"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>ts_covid_data <span class="ot">&lt;-</span> <span class="fu">ts</span>(time_series_covid_data<span class="sc">$</span>Incident_Case_2020, <span class="at">frequency =</span> <span class="dv">53</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Time Series Visualization</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ts_covid_data, <span class="at">main =</span> <span class="st">"Time Series of Synthetic Covid Cases by MMWR Week for 2020"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="cdcdata-exercsie_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="cdcdata-exercsie_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modeling (Auto ARIMA)</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>covid_arima_model <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(ts_covid_data)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnostic Checking</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(covid_arima_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modeling (Auto ARIMA)</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>covid_arima_model <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(ts_covid_data)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnostic Checking</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(covid_arima_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="cdcdata-exercsie_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="cdcdata-exercsie_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -798,41 +894,142 @@ Caused by warning in `strptime()`:
 <pre><code>
     Ljung-Box test
 
-data:  Residuals from ARIMA(0,0,0) with non-zero mean
-Q* = 9.2378, df = 11, p-value = 0.6
+data:  Residuals from ARIMA(2,0,0) with non-zero mean
+Q* = 2.6713, df = 9, p-value = 0.9759
 
-Model df: 0.   Total lags used: 11</code></pre>
+Model df: 2.   Total lags used: 11</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model </span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co">#to see if they are correlated with each other. The test statistic (Q*) </span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co">#was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096. </span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co">#This suggests that there is evidence of autocorrelation in the residuals, </span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co">#indicating that the ARIMA model may not fully capture the underlying patterns </span></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co">#in the data.</span></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>forecast_values_covid <span class="ot">&lt;-</span> <span class="fu">forecast</span>(covid_arima_model, <span class="at">h =</span> <span class="dv">52</span>)</span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast</span></span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(forecast_values, main = "Forecast of Rabies Animal Cases for the Next 52 Weeks")</span></span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast and Actual 2020 Cases</span></span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming you have the actual 2020 cases data stored in a variable called actual_2020_cases</span></span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast and Actual 2020 Cases</span></span>
-<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(forecast_values_covid, <span class="at">main =</span> <span class="st">"Forecast vs Synthetic Covid Cases for 2021"</span>)</span>
-<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(new_covid_data<span class="sc">$</span>Covid_Current_Week_2021, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)  <span class="co"># Add actual 2020 cases to the plot</span></span>
-<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Add legend</span></span>
-<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Forecast"</span>, <span class="st">"Syntheric 2020 Cases"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model </span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co">#to see if they are correlated with each other. The test statistic (Q*) </span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co">#was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096. </span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co">#This suggests that there is evidence of autocorrelation in the residuals, </span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co">#indicating that the ARIMA model may not fully capture the underlying patterns </span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co">#in the data.</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>forecast_values_covid <span class="ot">&lt;-</span> <span class="fu">forecast</span>(covid_arima_model, <span class="at">h =</span> <span class="dv">52</span>)</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(forecast_values, main = "Forecast of Rabies Animal Cases for the Next 52 Weeks")</span></span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast and Actual 2020 Cases</span></span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming you have the actual 2020 cases data stored in a variable called actual_2020_cases</span></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Forecast and Actual 2020 Cases</span></span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(forecast_values_covid, <span class="at">main =</span> <span class="st">"Forecast vs Synthetic Covid Cases for 2021"</span>)</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(hogwarts_covid_data<span class="sc">$</span>Covid_Current_Week, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)  <span class="co"># Add actual 2020 cases to the plot</span></span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Add legend</span></span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Forecast"</span>, <span class="st">"Syntheric 2020 Cases"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="cdcdata-exercsie_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="cdcdata-exercsie_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<!-- ### First creating a synthetic dataset -->
+<!-- ```{r} -->
+<!-- # Set seed for reproducibility -->
+<!-- set.seed(123) -->
+<!-- # Generate MMWR weeks from 1 to 53 -->
+<!-- mmwr_weeks <- 1:53 -->
+<!-- # Generate synthetic data for 2020 (weekly incident cases) -->
+<!-- covid_weekly_2020 <- sample(1:100, 53, replace = TRUE) -->
+<!-- # Generate synthetic data for 2021 (weekly incident cases) -->
+<!-- # Ensure that 2021 cases are overall higher than 2020 -->
+<!-- covid_weekly_2021 <- covid_weekly_2020 + sample(50:150, 53, replace = TRUE) + 50 -->
+<!-- # Create reporting area variable -->
+<!-- reporting_area <- rep("Hogwarts", 53 * 2) -->
+<!-- # Combine data for 2020 and 2021 -->
+<!-- covid_data <- data.frame( -->
+<!--   MMWR_Week = rep(mmwr_weeks, 2), -->
+<!--   Covid_Cum_2020 = c(covid_weekly_2020, rep(NA, 53)),  # Placeholder for 2021 weekly counts -->
+<!--   Covid_Current_Week_2021 = c(rep(NA, 53), covid_weekly_2021),  # 2021 weekly counts -->
+<!--   Reporting_Area = reporting_area -->
+<!-- ) -->
+<!-- # Replace NA values for 2021 with a lower limit -->
+<!-- covid_data$Covid_Cum_2020[54:106] <- cumsum(pmin(10000, pmax(0, covid_weekly_2021))) -->
+<!-- # Add variation to incident cases in 2021 -->
+<!-- covid_data$Covid_Current_Week_2021[54:106] <- pmin(10000, pmax(0, covid_data$Covid_Cum_2020[53] + sample(100:500, 53, replace = TRUE))) -->
+<!-- # Remove the NA values from the weekly counts for 2021 -->
+<!-- covid_data <- covid_data[complete.cases(covid_data), ] -->
+<!-- # Print the generated dataset -->
+<!-- print(covid_data) -->
+<!-- ``` -->
+<!-- ### calculate weekly incident for 2020 -->
+<!-- ```{r} -->
+<!-- new_covid_data <- covid_data %>% -->
+<!--   mutate(Incident_Cases_2020 = Covid_Cum_2020 - lag(Covid_Cum_2020, default = 0)) -->
+<!-- str(new_covid_data) -->
+<!-- head(new_covid_data) -->
+<!-- ``` -->
+<!-- ### line graph for incident case by MMWR Week -->
+<!-- ```{r} -->
+<!-- # Prepare data for graphing: Pivot to long format for both 2020 and 2021 -->
+<!-- covid_data_long <- new_covid_data %>% -->
+<!--   pivot_longer(cols = c(Incident_Cases_2020, Covid_Current_Week_2021),  -->
+<!--                names_to = "Year",  -->
+<!--                values_to = "Cases") %>% -->
+<!--   # Correct the Year column to reflect actual years -->
+<!--   mutate(Year = recode(Year,  -->
+<!--                        Incident_Cases_2020 = "2020",  -->
+<!--                        Covid_Current_Week_2021 = "2021")) -->
+<!-- head(covid_data_long) -->
+<!-- # Graph the incident animal cases from 2020 and 2021 by MMWR week -->
+<!-- ggplot(covid_data_long, aes(x = MMWR_Week, y = Cases, color = Year, group = Year)) + -->
+<!--   geom_line() + -->
+<!--   geom_point() + -->
+<!--   theme_minimal() + -->
+<!--   labs(title = "Covid Cases by MMWR Week for 2020 and 2021 in Hogwarts", -->
+<!--        x = "MMWR Week", -->
+<!--        y = "Number of Cases", -->
+<!--        color = "Year") + -->
+<!--   scale_color_manual(values = c("2020" = "blue", "2021" = "red")) -->
+<!-- ``` -->
+<!-- ### boxplot for incident case by year -->
+<!-- ```{r} -->
+<!-- # Lets compare the two years with a box plot -->
+<!-- ggplot(covid_data_long, aes(x = Year, y = Cases, color = Year)) + -->
+<!--   geom_boxplot() + -->
+<!--   theme_minimal() + -->
+<!--   labs(title = "Distribution of Weekly covid Cases for 2020 and 2021", -->
+<!--        x = "Year", -->
+<!--        y = "Number of Cases") -->
+<!-- ``` -->
+<!-- **???** I don't really know the model named ARIMA that Andrew use for doing forecasting in the last section of part 1 above. But I will copy and paste his code and run it to see what will happen here for the synthetic dataset. -->
+<!-- ```{r} -->
+<!-- # Prepare the time series data -->
+<!-- time_series_covid_data <- new_covid_data %>% -->
+<!--   mutate(MMWR_Week = as.Date(paste0("2021-", MMWR_Week, "-1"), format = "%Y-%U-%u")) %>% -->
+<!--   select(MMWR_Week, Incident_Cases_2020) -->
+<!-- # Convert to time series object -->
+<!-- ts_covid_data <- ts(time_series_covid_data$Incident_Cases_2020, frequency = 53) -->
+<!-- # Time Series Visualization -->
+<!-- plot(ts_covid_data, main = "Time Series of Synthetic Covid Cases by MMWR Week for 2020") -->
+<!-- # Modeling (Auto ARIMA) -->
+<!-- covid_arima_model <- auto.arima(ts_covid_data) -->
+<!-- # Diagnostic Checking -->
+<!-- checkresiduals(covid_arima_model) -->
+<!-- # The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model  -->
+<!-- #to see if they are correlated with each other. The test statistic (Q*)  -->
+<!-- #was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096.  -->
+<!-- #This suggests that there is evidence of autocorrelation in the residuals,  -->
+<!-- #indicating that the ARIMA model may not fully capture the underlying patterns  -->
+<!-- #in the data. -->
+<!-- # Forecasting -->
+<!-- forecast_values_covid <- forecast(covid_arima_model, h = 52) -->
+<!-- # Plot Forecast -->
+<!-- #plot(forecast_values, main = "Forecast of Rabies Animal Cases for the Next 52 Weeks") -->
+<!-- # Plot Forecast and Actual 2020 Cases -->
+<!-- # Assuming you have the actual 2020 cases data stored in a variable called actual_2020_cases -->
+<!-- # Plot Forecast and Actual 2020 Cases -->
+<!-- plot(forecast_values_covid, main = "Forecast vs Synthetic Covid Cases for 2021") -->
+<!-- lines(new_covid_data$Covid_Current_Week_2021, col = "blue", lty = 2, lwd = 2)  # Add actual 2020 cases to the plot -->
+<!-- # Add legend -->
+<!-- legend("topright", legend = c("Forecast", "Syntheric 2020 Cases"), col = c("black", "blue"), lty = c(1, 2), lwd = c(1, 2)) -->
+<!-- ``` -->
 
 
 </section>
