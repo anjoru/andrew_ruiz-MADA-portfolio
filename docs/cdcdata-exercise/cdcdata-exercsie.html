@@ -582,12 +582,9 @@ Model df: 3.   Total lags used: 11</code></pre>
 <h1>Part 2</h1>
 <section id="contributed-by-xueyan-hu" class="level2">
 <h2 class="anchored" data-anchor-id="contributed-by-xueyan-hu">Contributed by Xueyan Hu</h2>
-</section>
-<section id="contributed-by-xueyan-hu-1" class="level2">
-<h2 class="anchored" data-anchor-id="contributed-by-xueyan-hu-1">Contributed by Xueyan Hu</h2>
 <section id="first-creating-a-synthetic-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="first-creating-a-synthetic-dataset">First creating a synthetic dataset</h3>
-<p>I asked AI tool google Gemini to create the codes for generating a synthetic dataset that will look like the cleaned dataset done by Andrew. It contains reporting area, the number of wwmr week in a physical year, cumulative incident of a disease (here for mine is covid) in the first year, incident cases in first year and incident cases in second year.</p>
+<p>I asked AI tool google Gemini to create the codes for generating a synthetic dataset that will look like the cleaned dataset done by Andrew, but I used different names and random 2 continuous year for this synthetic dataset. It contains reporting area, the number of wwmr week in a physical year, cumulative incident of a disease (here for mine is covid) in the first year, incident cases in first year and incident cases in second year. The result was rough and wasn’t so consistant to Andrew’s original dataset, so then I asked chatGPT 3.5 to add more conditions and also by myself. The final code is as below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the seed for reproducible random numbers (optional)</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
@@ -600,37 +597,34 @@ Model df: 3.   Total lags used: 11</code></pre>
 <span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>mmwr_week <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>num_weeks, <span class="at">each =</span> <span class="dv">1</span>)  <span class="co"># Weeks 1 to 53</span></span>
 <span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the desired median</span></span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>desired_median <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>desired_median <span class="ot">&lt;-</span> <span class="dv">6</span></span>
 <span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate random cases between 0-18 each week</span></span>
 <span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>covid_current_week <span class="ot">&lt;-</span> <span class="fu">round</span>(</span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(<span class="fu">runif</span>(num_weeks) <span class="sc">&lt;</span> <span class="fl">0.1</span>,  <span class="co"># 10% chance of 0</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(<span class="fu">runif</span>(num_weeks) <span class="sc">&lt;</span> <span class="fl">0.01</span>,  <span class="co"># 5% chance of 0</span></span>
 <span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>         <span class="dv">0</span>,</span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>         <span class="fu">runif</span>(num_weeks, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">18</span>)),  <span class="co"># Remaining 90% with range</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>         <span class="fu">runif</span>(num_weeks, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">18</span>)),  <span class="co"># Remaining 95% with range</span></span>
 <span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">0</span></span>
 <span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Set last week to 0</span></span>
-<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>covid_current_week[num_weeks] <span class="ot">&lt;-</span> <span class="dv">0</span>  </span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the current median</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>current_median <span class="ot">&lt;-</span> <span class="fu">median</span>(covid_current_week)</span>
 <span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the current median</span></span>
-<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>current_median <span class="ot">&lt;-</span> <span class="fu">median</span>(covid_current_week)</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the adjustment needed for the median</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>median_adjustment <span class="ot">&lt;-</span> desired_median <span class="sc">-</span> current_median</span>
 <span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the adjustment needed for the median</span></span>
-<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>median_adjustment <span class="ot">&lt;-</span> desired_median <span class="sc">-</span> current_median</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the adjustment to the data</span></span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>covid_current_week <span class="ot">&lt;-</span> covid_current_week <span class="sc">+</span> median_adjustment</span>
 <span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the adjustment to the data</span></span>
-<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>covid_current_week <span class="ot">&lt;-</span> covid_current_week <span class="sc">+</span> median_adjustment</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure all values are non-negative</span></span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>covid_current_week <span class="ot">&lt;-</span> <span class="fu">pmax</span>(covid_current_week, <span class="dv">0</span>)</span>
 <span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure all values are non-negative</span></span>
-<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>covid_current_week <span class="ot">&lt;-</span> <span class="fu">pmax</span>(covid_current_week, <span class="dv">0</span>)</span>
-<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Output the resulting covid_current_week vector</span></span>
-<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>covid_current_week</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Output the resulting covid_current_week vector</span></span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>covid_current_week</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1]  0  7  1  0 11  0  4  9  0  4  2 12  5 12 12 11  5  0  8 10  0  6  1  4  8
-[26]  3  0  1  9  5 11  0  5 15  0 13  0  0  9  3  9  3  0 11  0  5  6  8  3  6
-[51]  0  6  0</code></pre>
+<pre><code> [1]  0  7  1  0 11 13  4  9  0  4  2 12  5 12 12 11  5 11  8 10  0  6  1  4  8
+[26]  3  0  1  9  5 11  0  5 15 13 13  0  0  9  3  9  3  0 11  0  5  6  8  3  6
+[51] 14  6 13</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the target median</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>target_median <span class="ot">&lt;-</span> <span class="dv">14</span></span>
@@ -665,27 +659,34 @@ Model df: 3.   Total lags used: 11</code></pre>
 <span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>location_1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, num_weeks)</span>
 <span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>location_2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"Hogwarts"</span>, num_weeks)</span>
 <span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the data frame</span></span>
-<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>hogwarts_covid_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">Reporting_Area =</span> reporting_area,</span>
-<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">MMWR_Week =</span> mmwr_week,</span>
-<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">Covid_Current_Week =</span> covid_current_week,</span>
-<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">Covid_Cum_2020 =</span> <span class="fu">cumsum</span>(incident_case_2020),  <span class="co"># Cumulative cases</span></span>
-<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">Location_1 =</span> location_1,</span>
-<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">Location_2 =</span> <span class="fu">rep</span>(<span class="st">"Hogwarts"</span>, num_weeks),</span>
-<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">Incident_Case_2020 =</span> incident_case_2020</span>
-<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame</span></span>
-<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(hogwarts_covid_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the first week to 12 and decrease to 5 on week 5</span></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>covid_current_week[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a>covid_current_week[<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Set last week to 0</span></span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>covid_current_week[num_weeks] <span class="ot">&lt;-</span> <span class="dv">0</span>  </span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the data frame</span></span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>hogwarts_covid_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">Reporting_Area =</span> reporting_area,</span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">MMWR_Week =</span> mmwr_week,</span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">Covid_Current_Week =</span> covid_current_week,</span>
+<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">Covid_Cum_2020 =</span> <span class="fu">cumsum</span>(incident_case_2020),  <span class="co"># Cumulative cases</span></span>
+<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">Location_1 =</span> location_1,</span>
+<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">Location_2 =</span> <span class="fu">rep</span>(<span class="st">"Hogwarts"</span>, num_weeks),</span>
+<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">Incident_Case_2020 =</span> incident_case_2020</span>
+<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame</span></span>
+<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(hogwarts_covid_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Reporting_Area MMWR_Week Covid_Current_Week Covid_Cum_2020 Location_1
-1        Hogwarts         1                  0             10         NA
+1        Hogwarts         1                 12             10         NA
 2        Hogwarts         2                  7             80         NA
 3        Hogwarts         3                  1            110         NA
 4        Hogwarts         4                  0            129         NA
-5        Hogwarts         5                 11            140         NA
-6        Hogwarts         6                  0            159         NA
+5        Hogwarts         5                  5            140         NA
+6        Hogwarts         6                 13            159         NA
 7        Hogwarts         7                  4            163         NA
 8        Hogwarts         8                  9            178         NA
 9        Hogwarts         9                  0            190         NA
@@ -697,7 +698,7 @@ Model df: 3.   Total lags used: 11</code></pre>
 15       Hogwarts        15                 12            249         NA
 16       Hogwarts        16                 11            262         NA
 17       Hogwarts        17                  5            276         NA
-18       Hogwarts        18                  0            288         NA
+18       Hogwarts        18                 11            288         NA
 19       Hogwarts        19                  8            304         NA
 20       Hogwarts        20                 10            326         NA
 21       Hogwarts        21                  0            335         NA
@@ -714,7 +715,7 @@ Model df: 3.   Total lags used: 11</code></pre>
 32       Hogwarts        32                  0            451         NA
 33       Hogwarts        33                  5            461         NA
 34       Hogwarts        34                 15            476         NA
-35       Hogwarts        35                  0            487         NA
+35       Hogwarts        35                 13            487         NA
 36       Hogwarts        36                 13            500         NA
 37       Hogwarts        37                  0            517         NA
 38       Hogwarts        38                  0            531         NA
@@ -730,7 +731,7 @@ Model df: 3.   Total lags used: 11</code></pre>
 48       Hogwarts        48                  8            683         NA
 49       Hogwarts        49                  3            694         NA
 50       Hogwarts        50                  6            701         NA
-51       Hogwarts        51                  0            709         NA
+51       Hogwarts        51                 14            709         NA
 52       Hogwarts        52                  6            709         NA
 53       Hogwarts        53                  0            709         NA
    Location_2 Incident_Case_2020
@@ -808,7 +809,7 @@ Model df: 3.   Total lags used: 11</code></pre>
   Reporting_Area MMWR_Week Covid_Cum_2020 Location_1 Location_2 Year  Cases
   &lt;chr&gt;              &lt;int&gt;          &lt;dbl&gt; &lt;lgl&gt;      &lt;chr&gt;      &lt;chr&gt; &lt;dbl&gt;
 1 Hogwarts               1             10 NA         Hogwarts   2020     10
-2 Hogwarts               1             10 NA         Hogwarts   2021      0
+2 Hogwarts               1             10 NA         Hogwarts   2021     12
 3 Hogwarts               2             80 NA         Hogwarts   2020     70
 4 Hogwarts               2             80 NA         Hogwarts   2021      7
 5 Hogwarts               3            110 NA         Hogwarts   2020     30
