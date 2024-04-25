@@ -181,12 +181,12 @@ legend("topright", legend = c("Forecast", "Actual 2020 Cases"), col = c("black",
 
 # Part 2
 
-## Contributed by Xueyan Hu
+
 ## Contributed by Xueyan Hu
 
 ### First creating a synthetic dataset
 
-I asked AI tool google Gemini to create the codes for generating a synthetic dataset that will look like the cleaned dataset done by Andrew. It contains reporting area, the number of wwmr week in a physical year, cumulative incident of a disease (here for mine is covid) in the first year, incident cases in first year and incident cases in second year.
+I asked AI tool google Gemini to create the codes for generating a synthetic dataset that will look like the cleaned dataset done by Andrew, but I used different names and random 2 continuous year for this synthetic dataset. It contains reporting area, the number of wwmr week in a physical year, cumulative incident of a disease (here for mine is covid) in the first year, incident cases in first year and incident cases in second year. The result was rough and wasn't so consistant to Andrew's original dataset, so then I asked chatGPT 3.5 to add more conditions and also by myself. The final code is as below.
 
 ```{r}
 # Set the seed for reproducible random numbers (optional)
@@ -200,18 +200,15 @@ reporting_area <- rep("Hogwarts", num_weeks)  # All Hogwarts
 mmwr_week <- rep(1:num_weeks, each = 1)  # Weeks 1 to 53
 
 # Define the desired median
-desired_median <- 5
+desired_median <- 6
 
 # Generate random cases between 0-18 each week
 covid_current_week <- round(
-  ifelse(runif(num_weeks) < 0.1,  # 10% chance of 0
+  ifelse(runif(num_weeks) < 0.01,  # 5% chance of 0
          0,
-         runif(num_weeks, min = 0, max = 18)),  # Remaining 90% with range
+         runif(num_weeks, min = 0, max = 18)),  # Remaining 95% with range
   digits = 0
 )
-
-# Set last week to 0
-covid_current_week[num_weeks] <- 0  
 
 # Calculate the current median
 current_median <- median(covid_current_week)
@@ -260,6 +257,13 @@ incident_case_2020[52:53] <- 0
 # Create empty vectors for Location_1 and Location_2
 location_1 <- rep(NA, num_weeks)
 location_2 <- rep("Hogwarts", num_weeks)
+
+# Set the first week to 12 and decrease to 5 on week 5
+covid_current_week[1] <- 12
+covid_current_week[5] <- 5
+
+# Set last week to 0
+covid_current_week[num_weeks] <- 0  
 
 # Create the data frame
 hogwarts_covid_data <- data.frame(
@@ -360,133 +364,204 @@ lines(hogwarts_covid_data$Covid_Current_Week, col = "blue", lty = 2, lwd = 2)  #
 # Add legend
 legend("topright", legend = c("Forecast", "Syntheric 2020 Cases"), col = c("black", "blue"), lty = c(1, 2), lwd = c(1, 2))
 ```
-
 <!-- ### First creating a synthetic dataset -->
 
 <!-- ```{r} -->
+
 <!-- # Set seed for reproducibility -->
+
 <!-- set.seed(123) -->
 
 <!-- # Generate MMWR weeks from 1 to 53 -->
+
 <!-- mmwr_weeks <- 1:53 -->
 
 <!-- # Generate synthetic data for 2020 (weekly incident cases) -->
+
 <!-- covid_weekly_2020 <- sample(1:100, 53, replace = TRUE) -->
 
 <!-- # Generate synthetic data for 2021 (weekly incident cases) -->
+
 <!-- # Ensure that 2021 cases are overall higher than 2020 -->
+
 <!-- covid_weekly_2021 <- covid_weekly_2020 + sample(50:150, 53, replace = TRUE) + 50 -->
 
 <!-- # Create reporting area variable -->
+
 <!-- reporting_area <- rep("Hogwarts", 53 * 2) -->
 
 <!-- # Combine data for 2020 and 2021 -->
+
 <!-- covid_data <- data.frame( -->
+
 <!--   MMWR_Week = rep(mmwr_weeks, 2), -->
+
 <!--   Covid_Cum_2020 = c(covid_weekly_2020, rep(NA, 53)),  # Placeholder for 2021 weekly counts -->
+
 <!--   Covid_Current_Week_2021 = c(rep(NA, 53), covid_weekly_2021),  # 2021 weekly counts -->
+
 <!--   Reporting_Area = reporting_area -->
+
 <!-- ) -->
 
 <!-- # Replace NA values for 2021 with a lower limit -->
+
 <!-- covid_data$Covid_Cum_2020[54:106] <- cumsum(pmin(10000, pmax(0, covid_weekly_2021))) -->
 
 <!-- # Add variation to incident cases in 2021 -->
+
 <!-- covid_data$Covid_Current_Week_2021[54:106] <- pmin(10000, pmax(0, covid_data$Covid_Cum_2020[53] + sample(100:500, 53, replace = TRUE))) -->
 
 <!-- # Remove the NA values from the weekly counts for 2021 -->
+
 <!-- covid_data <- covid_data[complete.cases(covid_data), ] -->
 
 <!-- # Print the generated dataset -->
+
 <!-- print(covid_data) -->
+
 <!-- ``` -->
 
 <!-- ### calculate weekly incident for 2020 -->
 
 <!-- ```{r} -->
+
 <!-- new_covid_data <- covid_data %>% -->
+
 <!--   mutate(Incident_Cases_2020 = Covid_Cum_2020 - lag(Covid_Cum_2020, default = 0)) -->
+
 <!-- str(new_covid_data) -->
+
 <!-- head(new_covid_data) -->
+
 <!-- ``` -->
 
 <!-- ### line graph for incident case by MMWR Week -->
 
 <!-- ```{r} -->
+
 <!-- # Prepare data for graphing: Pivot to long format for both 2020 and 2021 -->
+
 <!-- covid_data_long <- new_covid_data %>% -->
+
 <!--   pivot_longer(cols = c(Incident_Cases_2020, Covid_Current_Week_2021),  -->
+
 <!--                names_to = "Year",  -->
+
 <!--                values_to = "Cases") %>% -->
+
 <!--   # Correct the Year column to reflect actual years -->
+
 <!--   mutate(Year = recode(Year,  -->
+
 <!--                        Incident_Cases_2020 = "2020",  -->
+
 <!--                        Covid_Current_Week_2021 = "2021")) -->
+
 <!-- head(covid_data_long) -->
+
 <!-- # Graph the incident animal cases from 2020 and 2021 by MMWR week -->
+
 <!-- ggplot(covid_data_long, aes(x = MMWR_Week, y = Cases, color = Year, group = Year)) + -->
+
 <!--   geom_line() + -->
+
 <!--   geom_point() + -->
+
 <!--   theme_minimal() + -->
+
 <!--   labs(title = "Covid Cases by MMWR Week for 2020 and 2021 in Hogwarts", -->
+
 <!--        x = "MMWR Week", -->
+
 <!--        y = "Number of Cases", -->
+
 <!--        color = "Year") + -->
+
 <!--   scale_color_manual(values = c("2020" = "blue", "2021" = "red")) -->
+
 <!-- ``` -->
 
 <!-- ### boxplot for incident case by year -->
 
 <!-- ```{r} -->
+
 <!-- # Lets compare the two years with a box plot -->
+
 <!-- ggplot(covid_data_long, aes(x = Year, y = Cases, color = Year)) + -->
+
 <!--   geom_boxplot() + -->
+
 <!--   theme_minimal() + -->
+
 <!--   labs(title = "Distribution of Weekly covid Cases for 2020 and 2021", -->
+
 <!--        x = "Year", -->
+
 <!--        y = "Number of Cases") -->
+
 <!-- ``` -->
 
 <!-- **???** I don't really know the model named ARIMA that Andrew use for doing forecasting in the last section of part 1 above. But I will copy and paste his code and run it to see what will happen here for the synthetic dataset. -->
 
 <!-- ```{r} -->
+
 <!-- # Prepare the time series data -->
+
 <!-- time_series_covid_data <- new_covid_data %>% -->
+
 <!--   mutate(MMWR_Week = as.Date(paste0("2021-", MMWR_Week, "-1"), format = "%Y-%U-%u")) %>% -->
+
 <!--   select(MMWR_Week, Incident_Cases_2020) -->
 
 <!-- # Convert to time series object -->
+
 <!-- ts_covid_data <- ts(time_series_covid_data$Incident_Cases_2020, frequency = 53) -->
 
 <!-- # Time Series Visualization -->
+
 <!-- plot(ts_covid_data, main = "Time Series of Synthetic Covid Cases by MMWR Week for 2020") -->
 
 <!-- # Modeling (Auto ARIMA) -->
+
 <!-- covid_arima_model <- auto.arima(ts_covid_data) -->
 
 <!-- # Diagnostic Checking -->
+
 <!-- checkresiduals(covid_arima_model) -->
 
 <!-- # The Ljung-Box test examined the residuals from an ARIMA(2,1,1) model  -->
+
 <!-- #to see if they are correlated with each other. The test statistic (Q*)  -->
+
 <!-- #was 16.92 with 8 degrees of freedom, resulting in a p-value of 0.03096.  -->
+
 <!-- #This suggests that there is evidence of autocorrelation in the residuals,  -->
+
 <!-- #indicating that the ARIMA model may not fully capture the underlying patterns  -->
+
 <!-- #in the data. -->
 
 <!-- # Forecasting -->
+
 <!-- forecast_values_covid <- forecast(covid_arima_model, h = 52) -->
 
 <!-- # Plot Forecast -->
+
 <!-- #plot(forecast_values, main = "Forecast of Rabies Animal Cases for the Next 52 Weeks") -->
 
 <!-- # Plot Forecast and Actual 2020 Cases -->
+
 <!-- # Assuming you have the actual 2020 cases data stored in a variable called actual_2020_cases -->
 
 <!-- # Plot Forecast and Actual 2020 Cases -->
+
 <!-- plot(forecast_values_covid, main = "Forecast vs Synthetic Covid Cases for 2021") -->
+
 <!-- lines(new_covid_data$Covid_Current_Week_2021, col = "blue", lty = 2, lwd = 2)  # Add actual 2020 cases to the plot -->
 
 <!-- # Add legend -->
+
 <!-- legend("topright", legend = c("Forecast", "Syntheric 2020 Cases"), col = c("black", "blue"), lty = c(1, 2), lwd = c(1, 2)) -->
+
 <!-- ``` -->
